@@ -28,24 +28,25 @@ internal sealed class JwtProvider
     {
         Claim[] claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.Sub, user.Email),
+            new(JwtRegisteredClaimNames.NameId, user.Email),
+            new(JwtRegisteredClaimNames.GivenName, user.Email),
             new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Iat, Guid.NewGuid().ToString(), ClaimValueTypes.Integer64),
         };
 
-        SigningCredentials signingCredentials = new(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey!)),
-            SecurityAlgorithms.HmacSha256);
+        SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey!));
+
+        SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
         JwtSecurityToken token = new(
             issuer: _options.Issuer,
             audience: _options.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            notBefore: DateTime.UtcNow,
+            expires: DateTime.UtcNow.AddMinutes(_options.ExpirationTime),
             signingCredentials: signingCredentials);
 
-        string tokenValue = new JwtSecurityTokenHandler()
-            .WriteToken(token);
-
-        return tokenValue;
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

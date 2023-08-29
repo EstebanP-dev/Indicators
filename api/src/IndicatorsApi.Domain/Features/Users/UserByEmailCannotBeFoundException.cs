@@ -14,8 +14,9 @@ public class UserByEmailCannotBeFoundException
     /// Initializes a new instance of the <see cref="UserByEmailCannotBeFoundException"/> class.
     /// </summary>
     /// <param name="email">User email.</param>
-    public UserByEmailCannotBeFoundException(string email)
-        : base($"The user with the email '{email}' cannot be found.")
+    /// <param name="innerException">Inner exception.</param>
+    public UserByEmailCannotBeFoundException(string email, Exception? innerException = null)
+        : base($"The user with the email '{email}' cannot be found.", innerException)
     {
     }
 }

@@ -5,3 +5,4 @@ global using System.Net;
 global using System.Runtime.Serialization;
 global using System.Threading.Tasks;
 global using IndicatorsApi.Domain.Exceptions;
+global using IndicatorsApi.Domain.Repositories;

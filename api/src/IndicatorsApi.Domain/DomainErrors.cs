@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Features.Users;
+﻿using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain;
@@ -76,5 +77,22 @@ public static class DomainErrors
             code: HttpStatusCode.NotFound.ToString(),
             message: $"The user with email: '{email}' was not found.",
             exception: new UserByEmailCannotBeFoundException(email));
+    }
+
+    /// <summary>
+    /// Role domain errors.
+    /// </summary>
+    public static class Role
+    {
+        /// <summary>
+        /// Gets the not found error.
+        /// </summary>
+        /// <param name="ids">Role ids.</param>
+        /// <returns>Result error.</returns>
+        public static Error NotFound(int[] ids) => new(
+            code: HttpStatusCode.NotFound.ToString(),
+            message: $"Something was wrong. Try again later.",
+            exception: new RoleOrRolesByIdCannotBeFoundException(
+                    ids: ids));
     }
 }

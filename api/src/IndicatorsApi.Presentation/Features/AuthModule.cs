@@ -14,7 +14,7 @@ public class AuthModule
     /// Initializes a new instance of the <see cref="AuthModule"/> class.
     /// </summary>
     public AuthModule()
-        : base("/api/auth")
+        : base($"{Settings.BASEAPI}/auth")
     {
     }
 

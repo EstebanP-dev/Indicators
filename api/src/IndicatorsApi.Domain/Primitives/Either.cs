@@ -12,6 +12,14 @@ public class Either<TLeft, TRight>
     private readonly bool _isLeft;
 
     /// <summary>
+    /// Gets a value indicating whether is an intance of the left type.
+    /// </summary>
+    /// <value>
+    /// If the value is an intance of the left type.
+    /// </value>
+    public bool IsLeft { get => _isLeft; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Either{TLeft, TRight}"/> class.
     /// </summary>
     /// <param name="left">Left value.</param>

@@ -28,4 +28,12 @@ public class JwtOptions
     /// The secret key that will be used to sign the token.
     /// </value>
     public string? SecretKey { get; init; }
+
+    /// <summary>
+    /// Gets the expiration time in minutes.
+    /// </summary>
+    /// <value>
+    /// The expiration time in minutes.
+    /// </value>
+    public int ExpirationTime { get; init; }
 }

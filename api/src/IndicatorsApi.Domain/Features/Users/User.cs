@@ -3,7 +3,7 @@
 /// <summary>
 /// User model from the database table.
 /// </summary>
-public class User
+public sealed class User
 {
     /// <summary>
     /// Gets or sets the <see cref="User"/>'s id/email.

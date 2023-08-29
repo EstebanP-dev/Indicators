@@ -1,25 +1,20 @@
-﻿using IndicatorsApi.Application.Abstraction.Data;
-using IndicatorsApi.Domain;
-using IndicatorsApi.Domain.Exceptions;
+﻿using IndicatorsApi.Domain;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Persistence.Repositories;
 
 /// <inheritdoc/>
 internal sealed class UserRepository
-    : IUserRepository
+    : Repository<User>, IUserRepository
 {
-    private readonly ApplicationDbContext _context;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="UserRepository"/> class.
     /// </summary>
     /// <param name="context">Instance of <see cref="ApplicationDbContext"/>.</param>
     public UserRepository(ApplicationDbContext context)
+        : base(context)
     {
-        _context = context;
     }
 
     /// <inheritdoc/>
@@ -27,37 +22,52 @@ internal sealed class UserRepository
     {
         try
         {
-            User? user = await _context.Users
-                .AsSingleQuery()
-                .SingleOrDefaultAsync(u => u.Email == email, cancellationToken)
-                .ConfigureAwait(false);
+            User? user = await SingleByEmailAsync(DbContext, email)
+                               .ConfigureAwait(false);
 
             if (user is null)
             {
-                return new Either<User, Error>(right: DomainErrors.User.NotFound(email));
+                return new(
+                    right: DomainErrors
+                        .User
+                        .NotFound(email));
             }
 
-            return new Either<User, Error>(left: user);
+            return new(left: user);
         }
         catch (OperationCanceledException ex)
         {
-            return new Either<User, Error>(
-                right: DomainErrors.General.CancelledOperation(ex));
+            return new(
+                right: DomainErrors
+                    .General
+                    .CancelledOperation(ex));
         }
         catch (ArgumentNullException ex)
         {
-            return new Either<User, Error>(
+            return new(
                 right: DomainErrors.General.UndefinedError(
-                    new BaseException(
-                        message: $"Email = {email}",
+                    new UserByEmailCannotBeFoundException(
+                        email: email,
                         innerException: ex)));
         }
     }
 
     /// <inheritdoc/>
-    public void Add(User user)
+    public void AddUserRoles(UserRole[] userRoles)
     {
-        _context.Users
-            .Add(user);
+        foreach (UserRole userRole in userRoles)
+        {
+            DbContext.UserRoles
+            .Add(new()
+            {
+                UserId = userRole.UserId,
+                RoleId = userRole.RoleId,
+            });
+        }
     }
+
+    private static Task<User?> SingleByEmailAsync(ApplicationDbContext context, string email)
+        => context.Users
+            .AsSingleQuery()
+            .SingleOrDefaultAsync(user => user.Email == email);
 }

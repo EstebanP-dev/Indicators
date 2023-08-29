@@ -12,16 +12,16 @@ namespace IndicatorsApi.WebApi.OptionsSetup;
 public class JwtBearerOptionsSetup
     : IConfigureOptions<JwtBearerOptions>
 {
-    private readonly JwtOptions _jwtOptions;
+    private readonly JwtOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JwtBearerOptionsSetup"/> class.
     /// </summary>
-    /// <param name="jwtOptions">Instance of <see cref="IOptions{JwtOptions}"/>.</param>
-    public JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
+    /// <param name="options">Instance of <see cref="IOptions{JwtOptions}"/>.</param>
+    public JwtBearerOptionsSetup(IOptions<JwtOptions> options)
     {
 #pragma warning disable CA1062 // Validate arguments of public methods
-        _jwtOptions = jwtOptions.Value;
+        _options = options.Value;
 #pragma warning restore CA1062 // Validate arguments of public methods
     }
 
@@ -35,10 +35,10 @@ public class JwtBearerOptionsSetup
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = _jwtOptions.Issuer,
-            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = _options.Issuer,
+            ValidAudience = _options.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtOptions.SecretKey ?? string.Empty)),
+                Encoding.UTF8.GetBytes(_options.SecretKey!)),
         };
 #pragma warning restore CA1062 // Validate arguments of public methods
     }

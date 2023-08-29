@@ -1,6 +1,7 @@
 ﻿using IndicatorsApi.Application.Features.Users.CreateUser;
 using IndicatorsApi.Application.Features.Users.GetUserByEmail;
 using IndicatorsApi.Domain.Primitives;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IndicatorsApi.Presentation.Features;
@@ -8,21 +9,21 @@ namespace IndicatorsApi.Presentation.Features;
 /// <summary>
 /// User endpoints.
 /// </summary>
-public class UserModule
+public sealed class UserModule
     : CarterModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserModule"/> class.
     /// </summary>
     public UserModule()
-        : base("/api/users")
+        : base($"{Settings.BASEAPI}/users")
     {
     }
 
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/", async ([FromQuery] string email, ISender sender) =>
+        app.MapGet("/{email}", async (string email, ISender sender) =>
         {
             GetUserByEmailQuery query = new(email);
 
@@ -35,7 +36,7 @@ public class UserModule
 
         app.MapPost("/", async ([FromBody] UserRequest request, ISender sender) =>
         {
-            CreateUserCommand command = new(request.Email, request.Password);
+            CreateUserCommand command = request.Adapt<CreateUserCommand>();
 
             Result result = await sender
                 .Send(command)

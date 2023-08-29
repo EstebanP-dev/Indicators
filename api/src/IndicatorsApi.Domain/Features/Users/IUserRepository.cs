@@ -1,4 +1,6 @@
-﻿using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Primitives;
+using IndicatorsApi.Domain.Repositories;
 
 namespace IndicatorsApi.Domain.Features.Users;
 
@@ -6,6 +8,7 @@ namespace IndicatorsApi.Domain.Features.Users;
 /// User repository methods.
 /// </summary>
 public interface IUserRepository
+    : IRepository<User>
 {
     /// <summary>
     /// Get the user information by email.
@@ -16,8 +19,8 @@ public interface IUserRepository
     Task<Either<User, Error>> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Add user to the database.
+    /// Add user roles to the database.
     /// </summary>
-    /// <param name="user">Instance of <see cref="User"/>.</param>
-    void Add(User user);
+    /// <param name="userRoles">List of <see cref="UserRole"/> instances.</param>
+    void AddUserRoles(UserRole[] userRoles);
 }

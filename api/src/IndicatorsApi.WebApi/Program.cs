@@ -14,17 +14,9 @@ builder.Services
         builder.Configuration,
         typeof(IServiceInstaller).Assembly);
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
-
-builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
-builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
-
-builder.Services.AddAuthorization();
-
 WebApplication app = builder.Build();
+
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

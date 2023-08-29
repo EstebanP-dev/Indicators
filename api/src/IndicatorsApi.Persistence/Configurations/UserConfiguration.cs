@@ -43,21 +43,21 @@ internal sealed class UserRoleConfiguration
     {
         builder.ToTable("rol_usuario");
 
-        builder.HasKey(user => user.FkEmail);
-        builder.HasKey(user => user.FkRol);
+        builder.HasKey(user => user.UserId);
+        builder.HasKey(user => user.RoleId);
 
-        builder.Property(user => user.FkEmail)
+        builder.Property(user => user.UserId)
             .HasColumnName("fkemail")
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasIndex(user => user.FkEmail)
+        builder.HasIndex(user => user.UserId)
             .IsUnique();
 
-        builder.Property(user => user.FkRol)
+        builder.Property(user => user.RoleId)
             .HasColumnName("fkidrol")
             .IsRequired();
 
-        builder.HasIndex(user => user.FkRol);
+        builder.HasIndex(user => user.RoleId);
     }
 }
