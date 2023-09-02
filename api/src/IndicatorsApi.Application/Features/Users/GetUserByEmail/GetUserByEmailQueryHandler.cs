@@ -10,7 +10,7 @@ namespace IndicatorsApi.Application.Features.Users.GetUserByEmail;
 /// <see cref="GetUserByEmailQuery"/> handler.
 /// </summary>
 internal sealed class GetUserByEmailQueryHandler
-    : IQueryHandler<GetUserByEmailQuery, UserResponse>
+    : IQueryHandler<GetUserByEmailQuery, UserByEmailResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -27,7 +27,7 @@ internal sealed class GetUserByEmailQueryHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<UserResponse>> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserByEmailResponse>> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
         Either<User, Error> userResponse = await _userRepository
             .GetByEmailAsync(
@@ -35,11 +35,11 @@ internal sealed class GetUserByEmailQueryHandler
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        (UserResponse?, Error?) previusResponse = userResponse
-            .Match<(UserResponse?, Error?)>(
+        (UserByEmailResponse?, Error?) previusResponse = userResponse
+            .Match<(UserByEmailResponse?, Error?)>(
                     left: left =>
                     {
-                        UserResponse userResponse = left.Adapt<UserResponse>();
+                        UserByEmailResponse userResponse = left.Adapt<UserByEmailResponse>();
 
                         return (userResponse, null);
                     },
@@ -48,7 +48,7 @@ internal sealed class GetUserByEmailQueryHandler
 
         if (previusResponse.Item2 is not null && previusResponse.Item1 is null)
         {
-            return Result.Failure<UserResponse>(previusResponse.Item2);
+            return Result.Failure<UserByEmailResponse>(previusResponse.Item2);
         }
 
         Either<IEnumerable<int>, Error> rolesResponse = await _roleRepository
@@ -57,11 +57,11 @@ internal sealed class GetUserByEmailQueryHandler
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        (UserResponse?, Error?) response = rolesResponse
-            .Match<(UserResponse?, Error?)>(
+        (UserByEmailResponse?, Error?) response = rolesResponse
+            .Match<(UserByEmailResponse?, Error?)>(
                 left: left =>
                 {
-                    UserResponse userResponse = new(request.Email, left);
+                    UserByEmailResponse userResponse = new(request.Email, left);
 
                     return (userResponse, null);
                 },
@@ -71,11 +71,11 @@ internal sealed class GetUserByEmailQueryHandler
         return MapResultFromTuple(response);
     }
 
-    private static Result<UserResponse> MapResultFromTuple((UserResponse?, Error?) tuple)
+    private static Result<UserByEmailResponse> MapResultFromTuple((UserByEmailResponse?, Error?) tuple)
     {
         if (tuple.Item1 is null && tuple.Item2 is not null)
         {
-            return Result.Failure<UserResponse>(tuple.Item2);
+            return Result.Failure<UserByEmailResponse>(tuple.Item2);
         }
 
         return Result.Success(tuple.Item1!);

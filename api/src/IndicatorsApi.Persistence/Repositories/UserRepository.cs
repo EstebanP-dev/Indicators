@@ -1,6 +1,7 @@
 ﻿using IndicatorsApi.Domain;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
+using IndicatorsApi.Domain.Utils;
 
 namespace IndicatorsApi.Persistence.Repositories;
 
@@ -22,7 +23,7 @@ internal sealed class UserRepository
     {
         try
         {
-            User? user = await SingleByEmailAsync(DbContext, email)
+            User? user = await SingleByEmailAsync(DbContext, email, cancellationToken)
                                .ConfigureAwait(false);
 
             if (user is null)
@@ -66,8 +67,65 @@ internal sealed class UserRepository
         }
     }
 
-    private static Task<User?> SingleByEmailAsync(ApplicationDbContext context, string email)
+    /// <inheritdoc/>
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+    public async Task<Either<Pagination<User>, Error>> GetPaginationAsync(int page, int rows, string[]? excludes, CancellationToken cancellationToken = default)
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
+    {
+        try
+        {
+            int totalRows = await CountAsync(DbContext, cancellationToken)
+                .ConfigureAwait(false);
+
+            int totalPages = PaginationUtils.ConvertTotalPages(totalRows: totalRows, pageSize: rows);
+
+            List<User> users = await PaginationAsync(
+                        context: DbContext,
+                        page: page,
+                        rows: rows,
+                        excludes: excludes ?? Array.Empty<string>(),
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            Pagination<User> pagination = new(
+                totalPages: totalPages,
+                currentPage: page,
+                pageSize: rows,
+                response: users);
+
+            return new(pagination);
+        }
+        catch (OperationCanceledException ex)
+        {
+            return new(
+                right: DomainErrors
+                    .General
+                    .CancelledOperation(ex));
+        }
+        catch (ArgumentNullException ex)
+        {
+            return new(
+                right: DomainErrors.General.UndefinedError(
+                    new UsersCannotBeSearchedException(
+                        innerException: ex)));
+        }
+    }
+
+    private static Task<User?> SingleByEmailAsync(ApplicationDbContext context, string email, CancellationToken cancellationToken)
         => context.Users
             .AsSingleQuery()
-            .SingleOrDefaultAsync(user => user.Email == email);
+            .SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
+
+    private static Task<List<User>> PaginationAsync(ApplicationDbContext context, int page, int rows, string[] excludes, CancellationToken cancellationToken)
+        => context.Users
+            .AsSingleQuery()
+            .Where(user => !excludes.Any(exclude => exclude == user.Email))
+            .Skip(page * rows)
+            .Take(rows)
+            .ToListAsync(cancellationToken);
+
+    private static Task<int> CountAsync(ApplicationDbContext context, CancellationToken cancellationToken)
+        => context.Users
+            .AsSingleQuery()
+            .CountAsync(cancellationToken);
 }

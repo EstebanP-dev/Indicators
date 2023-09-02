@@ -1,11 +1,13 @@
-﻿namespace IndicatorsApi.Application.Features.Users.GetUserByEmail;
+﻿using IndicatorsApi.Domain.Features.Roles;
+
+namespace IndicatorsApi.Application.Features.Users.GetUserByEmail;
 
 /// <summary>
 /// Gets user by email response.
 /// </summary>
 /// <param name="Email">User email.</param>
 /// <param name="Roles">User roles.</param>
-public sealed record class UserResponse(
+public sealed record class UserByEmailResponse(
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
     string Email,
     IEnumerable<int> Roles);

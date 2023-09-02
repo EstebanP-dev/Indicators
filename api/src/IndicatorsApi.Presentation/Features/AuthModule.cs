@@ -23,7 +23,7 @@ public class AuthModule
     {
         app.MapPost("/login", async ([FromBody] LoginRequest request, ISender sender) =>
         {
-            LoginCommand command = new(request.Email, request.Password);
+            LoginCommand command = request.Adapt<LoginCommand>();
 
             Result<string> result = await sender.Send(command).ConfigureAwait(true);
 

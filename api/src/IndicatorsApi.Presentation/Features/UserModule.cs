@@ -1,5 +1,6 @@
 ﻿using IndicatorsApi.Application.Features.Users.CreateUser;
 using IndicatorsApi.Application.Features.Users.GetUserByEmail;
+using IndicatorsApi.Application.Features.Users.GetUsersPagination;
 using IndicatorsApi.Domain.Primitives;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -23,23 +24,34 @@ public sealed class UserModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/{email}", async (string email, ISender sender) =>
+        app.MapGet("/", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
+        {
+            GetUsersPaginationQuery query = new(page, rows, (exclude ?? string.Empty).Split(";"));
+
+            Result<Pagination<UserPaginationResponse>> result = await sender
+                .Send(query, cancellationToken)
+                .ConfigureAwait(true);
+
+            return Results.Ok(result);
+        });
+
+        app.MapGet("/{email}", async (string email, ISender sender, CancellationToken cancellationToken) =>
         {
             GetUserByEmailQuery query = new(email);
 
-            Result<UserResponse> result = await sender
-            .Send(query)
+            Result<UserByEmailResponse> result = await sender
+            .Send(query, cancellationToken)
             .ConfigureAwait(true);
 
             return Results.Ok(result);
         });
 
-        app.MapPost("/", async ([FromBody] UserRequest request, ISender sender) =>
+        app.MapPost("/", async ([FromBody] UserRequest request, ISender sender, CancellationToken cancellationToken) =>
         {
             CreateUserCommand command = request.Adapt<CreateUserCommand>();
 
             Result result = await sender
-                .Send(command)
+                .Send(command, cancellationToken)
                 .ConfigureAwait(true);
 
             return Results.Ok(result);

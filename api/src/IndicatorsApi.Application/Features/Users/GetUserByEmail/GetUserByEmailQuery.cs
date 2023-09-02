@@ -10,6 +10,6 @@ namespace IndicatorsApi.Application.Features.Users.GetUserByEmail;
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 public sealed record class GetUserByEmailQuery(string Email)
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter
-    : IQuery<UserResponse>
+    : IQuery<UserByEmailResponse>
 {
 }

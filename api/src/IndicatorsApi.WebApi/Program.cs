@@ -1,10 +1,11 @@
 ﻿using Carter;
 using IndicatorsApi.WebApi.Configurations;
-using IndicatorsApi.WebApi.OptionsSetup;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter
+string Cors = "Cors";
+#pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -14,9 +15,20 @@ builder.Services
         builder.Configuration,
         typeof(IServiceInstaller).Assembly);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: Cors, builder =>
+    {
+        builder
+            .WithOrigins("*")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 WebApplication app = builder.Build();
 
-app.UseCors();
+app.UseCors(Cors);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

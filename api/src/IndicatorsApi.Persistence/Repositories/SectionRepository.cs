@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Features.Sections;
+﻿using IndicatorsApi.Domain;
+using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Persistence.Repositories;
@@ -21,12 +22,12 @@ internal sealed class SectionRepository
     {
         Section? section = await SingleByIdAsync(DbContext, id).ConfigureAwait(false);
 
-        return section == null
-            ? Either<Section, Error>.From(new NotFoundError($"Section with id {id} was not found"))
-            : Either<Section, Error>.From(section);
+        return section is not null
+            ? new(left: section)
+            : new(right: DomainErrors.Section.NotFound(id));
     }
 
-    private static readonly Task<Section?> SingleByIdAsync(ApplicationDbContext context, int id) =>
+    private static Task<Section?> SingleByIdAsync(ApplicationDbContext context, int id) =>
         context.Sections
             .AsSingleQuery()
             .SingleOrDefaultAsync(x => x.Id == id);

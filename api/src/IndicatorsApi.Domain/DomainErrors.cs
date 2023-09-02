@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
 
@@ -75,7 +76,7 @@ public static class DomainErrors
         /// <returns>Result error.</returns>
         public static Error NotFound(string email) => new(
             code: HttpStatusCode.NotFound.ToString(),
-            message: $"The user with email: '{email}' was not found.",
+            message: $"The user was not found.",
             exception: new UserByEmailCannotBeFoundException(email));
     }
 
@@ -94,5 +95,32 @@ public static class DomainErrors
             message: $"Something was wrong. Try again later.",
             exception: new RoleOrRolesByIdCannotBeFoundException(
                     ids: ids));
+
+        /// <summary>
+        /// Gets the not found error.
+        /// </summary>
+        /// <param name="userId">User id.</param>
+        /// <returns>Result error.</returns>
+        public static Error NotFound(string userId) => new(
+            code: HttpStatusCode.NotFound.ToString(),
+            message: $"Something was wrong. Try again later.",
+            exception: new RoleOrRolesByUserIdCannotBeFoundException(
+                    userId: userId));
+    }
+
+    /// <summary>
+    /// Sections domain errors.
+    /// </summary>
+    public static class Section
+    {
+        /// <summary>
+        /// Gets the NotFound error.
+        /// </summary>
+        /// <param name="id">Section id.</param>
+        /// <returns>Result error.</returns>
+        public static Error NotFound(int id) => new(
+            code: HttpStatusCode.NotFound.ToString(),
+            message: "The section was not found.",
+            exception: new SectionByIdCannotBeFoundException(id));
     }
 }

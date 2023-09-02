@@ -2,7 +2,7 @@
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
-using IndicatorsApi.Domain.Repositories;
+using IndicatorsApi.Domain.Utils;
 
 namespace IndicatorsApi.Persistence.Repositories;
 
@@ -55,9 +55,47 @@ internal sealed class RoleRepository
     }
 
     /// <inheritdoc/>
-    public Task<Either<IEnumerable<Role>, Error>> GetPaginationAsync(int page, int rows, out int totalPages, CancellationToken cancellationToken)
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+    public async Task<Either<Pagination<Role>, Error>> GetPaginationAsync(int page, int rows, int[]? excludes, CancellationToken cancellationToken = default)
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
     {
-        throw new NotImplementedException();
+        try
+        {
+            int totalRows = await CountAsync(DbContext, cancellationToken)
+                .ConfigureAwait(false);
+
+            int totalPages = PaginationUtils.ConvertTotalPages(totalRows: totalRows, pageSize: rows);
+
+            List<Role> roles = await PaginationAsync(
+                        context: DbContext,
+                        page: page,
+                        rows: rows,
+                        excludes: excludes ?? Array.Empty<int>(),
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            Pagination<Role> pagination = new(
+                    totalPages: totalPages,
+                    currentPage: page,
+                    pageSize: rows,
+                    response: roles);
+
+            return new(left: pagination);
+        }
+        catch (OperationCanceledException ex)
+        {
+            return new(
+                right: DomainErrors
+                    .General
+                    .CancelledOperation(ex));
+        }
+        catch (ArgumentNullException ex)
+        {
+            return new(
+                right: DomainErrors.General.UndefinedError(
+                    new RolesCannotBeSearchedException(
+                        innerException: ex)));
+        }
     }
 
     /// <inheritdoc/>
@@ -128,6 +166,19 @@ internal sealed class RoleRepository
                         innerException: ex)));
         }
     }
+
+    private static Task<int> CountAsync(ApplicationDbContext context, CancellationToken cancellationToken)
+        => context.Roles
+            .AsSingleQuery()
+            .CountAsync(cancellationToken);
+
+    private static Task<List<Role>> PaginationAsync(int page, int rows, int[] excludes, ApplicationDbContext context, CancellationToken cancellationToken)
+        => context.Roles
+            .AsSingleQuery()
+            .Where(role => !excludes.Any(exclude => exclude == role.Id))
+            .Skip(page * rows)
+            .Take(rows)
+            .ToListAsync(cancellationToken);
 
     private static Task<Role?> SingleByIdAsync(ApplicationDbContext context, int id, CancellationToken cancellationToken)
         => context.Roles

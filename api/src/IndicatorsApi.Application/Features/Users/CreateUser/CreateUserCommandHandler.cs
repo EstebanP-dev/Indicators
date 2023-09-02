@@ -62,8 +62,7 @@ internal sealed class CreateUserCommandHandler
                                 ids: request.Roles.ToArray()));
             }
 
-            _userRepository.Add(
-                user: user);
+            _userRepository.Add(entity: user);
 
             await _unitOfWork
                 .SaveChangesAsync(cancellationToken)

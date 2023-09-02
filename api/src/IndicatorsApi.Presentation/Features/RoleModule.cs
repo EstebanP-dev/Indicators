@@ -1,4 +1,6 @@
 ﻿using IndicatorsApi.Application.Features.Roles.GetRoleById;
+using IndicatorsApi.Application.Features.Roles.GetRolesPagination;
+using IndicatorsApi.Application.Features.Users.GetUsersPagination;
 using IndicatorsApi.Domain.Primitives;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +23,25 @@ public sealed class RoleModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
+        app.MapGet("/", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
+        {
+            string[] excludes = (exclude ?? string.Empty).Split(";");
+#pragma warning disable CA1305 // Specify IFormatProvider
+            int[] ids = excludes
+                .Where(ex => int.TryParse(ex, out var intExclude))
+                .Select(ex => int.Parse(ex))
+                .ToArray();
+#pragma warning restore CA1305 // Specify IFormatProvider
+
+            GetRolesPaginationQuery query = new(page, rows, ids);
+
+            Result<Pagination<UserPaginationResponse>> result = await sender
+                .Send(query, cancellationToken)
+                .ConfigureAwait(false);
+
+            return Results.Ok(result);
+        });
+
         app.MapGet("/{id}", async (int id, ISender sender) =>
         {
             GetRoleByIdQuery query = new(id);

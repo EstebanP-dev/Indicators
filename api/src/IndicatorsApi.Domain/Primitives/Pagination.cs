@@ -28,7 +28,7 @@ public class Pagination<TResponse>
     /// <value>
     /// Total pages.
     /// </value>
-    required public int TotalPages { get; init; }
+    public int TotalPages { get; init; }
 
     /// <summary>
     /// Gets current page.
@@ -36,7 +36,7 @@ public class Pagination<TResponse>
     /// <value>
     /// Current page.
     /// </value>
-    required public int CurrentPage { get; init; }
+    public int CurrentPage { get; init; }
 
     /// <summary>
     /// Gets page size.
@@ -44,7 +44,7 @@ public class Pagination<TResponse>
     /// <value>
     /// Page size.
     /// </value>
-    required public int PageSize { get; init; }
+    public int PageSize { get; init; }
 
     /// <summary>
     /// Gets the response list.
@@ -52,5 +52,5 @@ public class Pagination<TResponse>
     /// <value>
     /// The response list.
     /// </value>
-    required public IEnumerable<TResponse> Response { get; init; }
+    public IEnumerable<TResponse> Response { get; init; }
 }

@@ -14,10 +14,12 @@ public interface IRoleRepository
     /// </summary>
     /// <param name="page">Page number.</param>
     /// <param name="rows">Page size.</param>
-    /// <param name="totalPages">Total pages.</param>
+    /// <param name="excludes">Exclude roles ids.</param>
     /// <param name="cancellationToken">Instance of <see cref="CancellationToken"/>.</param>
     /// <returns>Returns a list of response type values.</returns>
-    Task<Either<IEnumerable<Role>, Error>> GetPaginationAsync(int page, int rows, out int totalPages, CancellationToken cancellationToken);
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+    Task<Either<Pagination<Role>, Error>> GetPaginationAsync(int page, int rows, int[]? excludes, CancellationToken cancellationToken = default);
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 
     /// <summary>
     /// Gets a role by id.
