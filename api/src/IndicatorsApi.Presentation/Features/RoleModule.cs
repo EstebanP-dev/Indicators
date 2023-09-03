@@ -1,6 +1,9 @@
 ﻿using IndicatorsApi.Application.Features.Roles.GetRoleById;
 using IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 using IndicatorsApi.Application.Features.Users.GetUsersPagination;
+using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
+using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
+using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Primitives;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +13,7 @@ namespace IndicatorsApi.Presentation.Features;
 /// Role endpoints.
 /// </summary>
 public sealed class RoleModule
-    : CarterModule
+    : BaseModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleModule"/> class.
@@ -35,22 +38,22 @@ public sealed class RoleModule
 
             GetRolesPaginationQuery query = new(page, rows, ids);
 
-            Result<Pagination<UserPaginationResponse>> result = await sender
+            ErrorOr<Pagination<Role>> result = await sender
                 .Send(query, cancellationToken)
                 .ConfigureAwait(false);
 
-            return Results.Ok(result);
+            return Result<Pagination<Role>, Pagination<RolePaginationResponse>>(result);
         });
 
         app.MapGet("/{id}", async (int id, ISender sender) =>
         {
             GetRoleByIdQuery query = new(id);
 
-            Result<RoleResponse> result = await sender
+            ErrorOr<Role> result = await sender
                 .Send(query, default)
                 .ConfigureAwait(true);
 
-            return Results.Ok(result);
+            return Result<Role, RoleByIdResponse>(result);
         });
     }
 }

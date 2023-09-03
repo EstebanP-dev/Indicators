@@ -1,6 +1,7 @@
 ﻿global using System.Collections.Generic;
 global using System.Linq;
 global using System.Threading.Tasks;
+global using ErrorOr;
 global using FluentValidation;
 global using IndicatorsApi.Application.Abstraction.Messaging;
 global using IndicatorsApi.Domain;

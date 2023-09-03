@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Application.Features.Users.GetUsersPagination;
+using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
@@ -13,5 +14,5 @@ namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Necessary.")]
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
 public sealed record class GetRolesPaginationQuery(int Page, int Rows, int[]? Excludes)
-    : IQuery<Pagination<UserPaginationResponse>>;
+    : IQuery<Pagination<Role>>;
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly

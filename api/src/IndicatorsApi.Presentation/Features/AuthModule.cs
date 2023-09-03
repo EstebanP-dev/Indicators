@@ -1,6 +1,5 @@
-﻿using IndicatorsApi.Application.Features.Users.Login;
-using IndicatorsApi.Domain.Primitives;
-using Microsoft.AspNetCore.Mvc;
+﻿using IndicatorsApi.Application.Features.Auth.Login;
+using IndicatorsApi.Application.Features.Users.Login;
 
 namespace IndicatorsApi.Presentation.Features;
 
@@ -8,7 +7,7 @@ namespace IndicatorsApi.Presentation.Features;
 /// Auth endpoints.
 /// </summary>
 public class AuthModule
-    : CarterModule
+    : BaseModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthModule"/> class.
@@ -25,11 +24,10 @@ public class AuthModule
         {
             LoginCommand command = request.Adapt<LoginCommand>();
 
-            Result<string> result = await sender.Send(command).ConfigureAwait(true);
+            ErrorOr<string> result = await sender.Send(command)
+                .ConfigureAwait(true);
 
-            return result.IsSuccess
-                ? Results.Ok(result)
-                : Results.BadRequest(result);
+            return Result(result);
         });
     }
 }

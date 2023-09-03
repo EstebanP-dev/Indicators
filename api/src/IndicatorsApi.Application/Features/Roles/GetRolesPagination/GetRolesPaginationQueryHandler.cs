@@ -6,7 +6,7 @@ namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 
 /// <inheritdoc/>
 internal sealed class GetRolesPaginationQueryHandler
-    : IQueryHandler<GetRolesPaginationQuery, Pagination<UserPaginationResponse>>
+    : IQueryHandler<GetRolesPaginationQuery, Pagination<Role>>
 {
     private readonly IRoleRepository _roleRepository;
 
@@ -20,19 +20,19 @@ internal sealed class GetRolesPaginationQueryHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<Pagination<UserPaginationResponse>>> Handle(GetRolesPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Pagination<Role>>> Handle(GetRolesPaginationQuery request, CancellationToken cancellationToken)
     {
-        Either<Pagination<Role>, Error> either = await _roleRepository
+        Pagination<Role> pagination = await _roleRepository
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,
-                    excludes: request.Excludes,
+                    ids: (request.Excludes ?? Array.Empty<int>())
+                        .Select(
+                            id => new RoleId(id))
+                        .ToArray(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-        return either
-                .Match(
-                left: left => left.Adapt<Pagination<UserPaginationResponse>>(),
-                right: Result.Failure<Pagination<UserPaginationResponse>>);
+        return pagination;
     }
 }

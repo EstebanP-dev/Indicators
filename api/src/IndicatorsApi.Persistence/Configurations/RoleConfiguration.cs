@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.Persistence.Configurations;
 
@@ -14,6 +15,9 @@ internal sealed class RoleConfiguration
         builder.HasKey(role => role.Id);
 
         builder.Property(role => role.Id)
+            .HasConversion(
+                roleId => roleId.Value,
+                value => new RoleId(value))
             .HasColumnName("id")
             .IsRequired();
 

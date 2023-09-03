@@ -1,10 +1,11 @@
 ﻿using IndicatorsApi.Application.Abstraction;
 using IndicatorsApi.Application.Abstraction.Data;
+using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Exceptions;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Services;
 
-namespace IndicatorsApi.Application.Features.Users.Login;
+namespace IndicatorsApi.Application.Features.Auth.Login;
 
 /// <inheritdoc/>
 internal sealed class LoginCommandHandler
@@ -28,48 +29,35 @@ internal sealed class LoginCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        Either<User, Error> user = await _userRepository
-            .GetByEmailAsync(request.Email, cancellationToken)
+        User? user = await _userRepository
+            .GetByIdAsync(
+                id: new UserId(request.Email),
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return user
-            .Match(
-                left: left => ComparePasswords(left, request.Password),
-                right: ErrorHandler);
-    }
-
-    private static Result<string> ErrorHandler(Error error)
-    {
-        if (error.Exception is UserByEmailCannotBeFoundException)
+        if (user is null)
         {
-            return Result.Failure<string>(DomainErrors.Auth.InvalidCredentials());
+            return AuthErrors.InvalidCredentials;
         }
 
-        return Result.Failure<string>(error);
-    }
-
-    private Result<string> ComparePasswords(User user, string password)
-    {
-        if (user.Salt is null)
+        if (user.Salt == null)
         {
-            return Result.Failure<string>(DomainErrors.Auth.NullPasswordSalt(user.Email));
+            return AuthErrors.RestorePassword;
         }
 
         bool isValid = _passwordChecker
-            .VerifyPassword(password, user.Password, user.Salt[0]);
+            .VerifyPassword(
+                password: request.Password,
+                hash: user.Password,
+                salt: user.Salt[0]);
 
         if (!isValid)
         {
-            return Result.Failure<string>(DomainErrors.Auth.InvalidCredentials());
+            return AuthErrors.InvalidCredentials;
         }
 
-        return GenerateJwt(user);
-    }
-
-    private Result<string> GenerateJwt(User user)
-    {
         return _jwtProvider.GenerateJwt(user);
     }
 }

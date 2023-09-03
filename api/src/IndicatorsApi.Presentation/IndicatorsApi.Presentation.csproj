@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IndicatorsApi.Contracts\IndicatorsApi.Contracts.csproj" />
     <ProjectReference Include="..\IndicatorsApi.Infrastructure\IndicatorsApi.Infrastructure.csproj" />
     <ProjectReference Include="..\IndicatorsApi.Persistence\IndicatorsApi.Persistence.csproj" />
   </ItemGroup>

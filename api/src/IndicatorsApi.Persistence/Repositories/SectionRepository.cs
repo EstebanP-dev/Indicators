@@ -1,12 +1,14 @@
-﻿using IndicatorsApi.Domain;
+﻿using IndicatorsApi.Domain.Errors;
+using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Primitives;
+using IndicatorsApi.Domain.Utils;
 
 namespace IndicatorsApi.Persistence.Repositories;
 
 /// <inheritdoc/>
 internal sealed class SectionRepository
-    : Repository<Section>, ISectionRepository
+    : Repository<Section, SectionId>, ISectionRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SectionRepository"/> class.
@@ -16,19 +18,4 @@ internal sealed class SectionRepository
         : base(context)
     {
     }
-
-    /// <inheritdoc/>
-    public async Task<Either<Section, Error>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        Section? section = await SingleByIdAsync(DbContext, id).ConfigureAwait(false);
-
-        return section is not null
-            ? new(left: section)
-            : new(right: DomainErrors.Section.NotFound(id));
-    }
-
-    private static Task<Section?> SingleByIdAsync(ApplicationDbContext context, int id) =>
-        context.Sections
-            .AsSingleQuery()
-            .SingleOrDefaultAsync(x => x.Id == id);
 }

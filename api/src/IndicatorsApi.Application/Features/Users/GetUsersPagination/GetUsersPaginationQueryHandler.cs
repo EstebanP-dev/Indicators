@@ -4,7 +4,7 @@ namespace IndicatorsApi.Application.Features.Users.GetUsersPagination;
 
 /// <inheritdoc/>
 internal sealed class GetUsersPaginationQueryHandler
-    : IQueryHandler<GetUsersPaginationQuery, Pagination<UserPaginationResponse>>
+    : IQueryHandler<GetUsersPaginationQuery, Pagination<User>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -18,19 +18,18 @@ internal sealed class GetUsersPaginationQueryHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<Pagination<UserPaginationResponse>>> Handle(GetUsersPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Pagination<User>>> Handle(GetUsersPaginationQuery request, CancellationToken cancellationToken)
     {
-        Either<Pagination<User>, Error> either = await _userRepository
+        Pagination<User> pagination = await _userRepository
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,
-                    excludes: request.Excludes,
+                    ids: (request.Excludes ?? Array.Empty<string>())
+                        .Select(id => new UserId(id))
+                        .ToArray(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-        return either
-                .Match(
-                left: left => left.Adapt<Pagination<UserPaginationResponse>>(),
-                right: Result.Failure<Pagination<UserPaginationResponse>>);
+        return pagination;
     }
 }

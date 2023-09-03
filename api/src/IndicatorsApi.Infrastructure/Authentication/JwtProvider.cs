@@ -28,9 +28,9 @@ internal sealed class JwtProvider
     {
         Claim[] claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.NameId, user.Email),
-            new(JwtRegisteredClaimNames.GivenName, user.Email),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.NameId, user.Id.Value),
+            new(JwtRegisteredClaimNames.GivenName, user.Id.Value),
+            new(JwtRegisteredClaimNames.Email, user.Id.Value),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, Guid.NewGuid().ToString(), ClaimValueTypes.Integer64),
         };

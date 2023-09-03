@@ -1,10 +1,11 @@
-﻿using IndicatorsApi.Domain.Features.Roles;
+﻿using IndicatorsApi.Domain.Errors;
+using IndicatorsApi.Domain.Features.Roles;
 
 namespace IndicatorsApi.Application.Features.Roles.GetRoleById;
 
 /// <inheritdoc/>
 internal sealed class GetRoleByIdQueryHandler
-    : IQueryHandler<GetRoleByIdQuery, RoleResponse>
+    : IQueryHandler<GetRoleByIdQuery, Role>
 {
     private readonly IRoleRepository _roleRepository;
 
@@ -18,25 +19,19 @@ internal sealed class GetRoleByIdQueryHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<RoleResponse>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Role>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-        Either<Role, Error> roleResponse = await _roleRepository
+        Role? role = await _roleRepository
             .GetByIdAsync(
-                id: request.Id,
+                id: new RoleId(request.Id),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return roleResponse
-                .Match(MapRoleResponse, MapErrorResponse);
-    }
+        if (role is null)
+        {
+            return DomainErrors.NotFound<Role>();
+        }
 
-    private Result<RoleResponse> MapErrorResponse(Error error)
-    {
-        return Result.Failure<RoleResponse>(error);
-    }
-
-    private Result<RoleResponse> MapRoleResponse(Role role)
-    {
-        return role.Adapt<RoleResponse>();
+        return role;
     }
 }

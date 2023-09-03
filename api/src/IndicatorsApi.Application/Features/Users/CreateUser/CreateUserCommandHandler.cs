@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using IndicatorsApi.Application.Abstraction;
+using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Exceptions;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Users;
@@ -9,7 +10,7 @@ namespace IndicatorsApi.Application.Features.Users.CreateUser;
 
 /// <inheritdoc/>
 internal sealed class CreateUserCommandHandler
-    : ICommandHandler<CreateUserCommand>
+    : ICommandHandler<CreateUserCommand, User>
 {
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUserRepository _userRepository;
@@ -36,30 +37,34 @@ internal sealed class CreateUserCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
             string passwordHash = _passwordHasher.HashPasword(request.Password, out byte[] salt);
 
-            User user = new()
+            User user = new(new UserId(request.Email))
             {
-                Email = request.Email,
                 Password = passwordHash,
                 Salt = new[] { salt },
             };
 
-            Either<IEnumerable<Role>, Error> eitherRoles = await _roleRepository
-                .GetBulkByIdsAsync(ids: request.Roles.ToArray(), cancellationToken: cancellationToken)
+            IEnumerable<Role> roles = await _roleRepository
+                .GetBulkIdsAsync(
+                    ids: request.Roles
+                        .Select(roleId => new RoleId(roleId))
+                        .ToArray(),
+                    cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (!eitherRoles.IsLeft)
+            if (roles.All(role => request.Roles.Any(roleId => roleId == role.Id.Value)))
             {
-                return Result.Failure(
-                        DomainErrors
-                        .Role
-                        .NotFound(
-                                ids: request.Roles.ToArray()));
+                return DomainErrors.BulkNotFound;
+            }
+
+            foreach (Role role in roles)
+            {
+                user.Add(role);
             }
 
             _userRepository.Add(entity: user);
@@ -68,55 +73,11 @@ internal sealed class CreateUserCommandHandler
                 .SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            Either<User, Error> either = await _userRepository
-                .GetByEmailAsync(
-                    email: request.Email,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            _userRepository.AddUserRoles(
-                userRoles: eitherRoles
-                        .Match(
-                            left: left => left
-                                .Select(role => new UserRole()
-                                {
-                                    RoleId = role.Id,
-                                    UserId = request.Email,
-                                })
-                                .ToArray(),
-                            right: right => throw new InvalidEitherOperationBaseOnTheBusinessLogicException()));
-
-            await _unitOfWork
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            return either.Match(
-                            left: MapSuccessResult,
-                            right: MapFailureResult);
+            return user;
         }
-        catch (InvalidEitherOperationBaseOnTheBusinessLogicException ex)
+        catch (OperationCanceledException)
         {
-            return Result.Failure(
-                    DomainErrors
-                    .General
-                    .UndefinedError(exception: ex));
+            return DomainErrors.CancelledOperation;
         }
-        catch (OperationCanceledException ex)
-        {
-            return Result.Failure(
-                    DomainErrors
-                    .General
-                    .CancelledOperation(exception: ex));
-        }
-    }
-
-    private static Result MapFailureResult(Error error)
-    {
-        return Result.Failure(error: error);
-    }
-
-    private static Result MapSuccessResult(User user)
-    {
-        return Result.Success();
     }
 }

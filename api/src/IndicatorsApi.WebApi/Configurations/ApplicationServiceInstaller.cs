@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using Scrutor;
-
-namespace IndicatorsApi.WebApi.Configurations;
+﻿namespace IndicatorsApi.WebApi.Configurations;
 
 /// <summary>
 /// Application configuration.

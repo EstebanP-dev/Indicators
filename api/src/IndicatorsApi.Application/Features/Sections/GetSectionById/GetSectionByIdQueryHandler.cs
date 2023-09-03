@@ -1,10 +1,11 @@
-﻿using IndicatorsApi.Domain.Features.Sections;
+﻿using IndicatorsApi.Domain.Errors;
+using IndicatorsApi.Domain.Features.Sections;
 
 namespace IndicatorsApi.Application.Features.Sections.GetSectionById;
 
 /// <inheritdoc/>
 internal sealed class GetSectionByIdQueryHandler
-    : IQueryHandler<GetSectionByIdQuery, SectionResponse>
+    : IQueryHandler<GetSectionByIdQuery, Section>
 {
     private readonly ISectionRepository _sectionRepository;
 
@@ -18,25 +19,17 @@ internal sealed class GetSectionByIdQueryHandler
     }
 
     /// <inheritdoc/>
-    public async Task<Result<SectionResponse>> Handle(GetSectionByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Section>> Handle(GetSectionByIdQuery request, CancellationToken cancellationToken)
     {
-        Either<Section, Error> either = await _sectionRepository
-                .GetByIdAsync(request.Id, cancellationToken)
+        Section? section = await _sectionRepository
+                .GetByIdAsync(new SectionId(request.Id), cancellationToken)
                 .ConfigureAwait(false);
 
-        return either
-            .Match(
-                left: MapSectionResponse,
-                right: MapErrorResponse);
-    }
+        if (section == null)
+        {
+            return DomainErrors.NotFound<Section>();
+        }
 
-    private Result<SectionResponse> MapErrorResponse(Error error)
-    {
-       return Result.Failure<SectionResponse>(error);
-    }
-
-    private Result<SectionResponse> MapSectionResponse(Section section)
-    {
-        return section.Adapt<SectionResponse>();
+        return section;
     }
 }

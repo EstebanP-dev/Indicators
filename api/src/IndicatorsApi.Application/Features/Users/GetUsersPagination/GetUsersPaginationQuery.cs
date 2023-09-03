@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Application.Features.Users.GetUserByEmail;
+using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.Application.Features.Users.GetUsersPagination;
 
@@ -14,4 +15,4 @@ namespace IndicatorsApi.Application.Features.Users.GetUsersPagination;
 public sealed record class GetUsersPaginationQuery(int Page, int Rows, string[]? Excludes)
 #pragma warning restore CA1819 // Properties should not return arrays
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
-    : IQuery<Pagination<UserPaginationResponse>>;
+    : IQuery<Pagination<User>>;

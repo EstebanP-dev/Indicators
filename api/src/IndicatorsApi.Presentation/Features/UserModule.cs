@@ -1,9 +1,10 @@
 ﻿using IndicatorsApi.Application.Features.Users.CreateUser;
 using IndicatorsApi.Application.Features.Users.GetUserByEmail;
 using IndicatorsApi.Application.Features.Users.GetUsersPagination;
+using IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
+using IndicatorsApi.Contracts.Features.Users.GetUsersPagination;
+using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IndicatorsApi.Presentation.Features;
 
@@ -11,7 +12,7 @@ namespace IndicatorsApi.Presentation.Features;
 /// User endpoints.
 /// </summary>
 public sealed class UserModule
-    : CarterModule
+    : BaseModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserModule"/> class.
@@ -28,33 +29,33 @@ public sealed class UserModule
         {
             GetUsersPaginationQuery query = new(page, rows, (exclude ?? string.Empty).Split(";"));
 
-            Result<Pagination<UserPaginationResponse>> result = await sender
+            ErrorOr<Pagination<User>> result = await sender
                 .Send(query, cancellationToken)
                 .ConfigureAwait(true);
 
-            return Results.Ok(result);
+            return Result<Pagination<User>, Pagination<UserPaginationResponse>>(result);
         });
 
         app.MapGet("/{email}", async (string email, ISender sender, CancellationToken cancellationToken) =>
         {
             GetUserByEmailQuery query = new(email);
 
-            Result<UserByEmailResponse> result = await sender
+            ErrorOr<User> result = await sender
             .Send(query, cancellationToken)
             .ConfigureAwait(true);
 
-            return Results.Ok(result);
+            return Result<User, UserByEmailResponse>(result);
         });
 
-        app.MapPost("/", async ([FromBody] UserRequest request, ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("/", async ([FromBody] CreateUserRequest request, ISender sender, CancellationToken cancellationToken) =>
         {
             CreateUserCommand command = request.Adapt<CreateUserCommand>();
 
-            Result result = await sender
+            await sender
                 .Send(command, cancellationToken)
                 .ConfigureAwait(true);
 
-            return Results.Ok(result);
+            return Results.Ok();
         });
     }
 }

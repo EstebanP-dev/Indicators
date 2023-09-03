@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Abstraction.Messaging;
 /// </summary>
 /// <typeparam name="TResponse">Returns value type.</typeparam>
 #pragma warning disable CA1040 // Avoid empty interfaces
-public interface IQuery<TResponse> : IRequest<Result<TResponse>>
+public interface IQuery<TResponse> : IRequest<ErrorOr<TResponse>>
 #pragma warning restore CA1040 // Avoid empty interfaces
 {
 }

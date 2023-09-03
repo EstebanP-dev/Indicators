@@ -1,17 +1,21 @@
-﻿namespace IndicatorsApi.Domain.Features.Roles;
+﻿using IndicatorsApi.Domain.Primitives;
+
+namespace IndicatorsApi.Domain.Features.Roles;
 
 /// <summary>
 /// Role model from the database table.
 /// </summary>
 public class Role
+    : Entity<RoleId>
 {
     /// <summary>
-    /// Gets or sets the <see cref="Role"/>'s id.
+    /// Initializes a new instance of the <see cref="Role"/> class.
     /// </summary>
-    /// <value>
-    /// The <see cref="Role"/>'s id.
-    /// </value>
-    public int Id { get; set; }
+    /// <param name="id">Role id.</param>
+    public Role(RoleId id)
+        : base(id)
+    {
+    }
 
     /// <summary>
     /// Gets or sets the <see cref="Role"/>'s name.

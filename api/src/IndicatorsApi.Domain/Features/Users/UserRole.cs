@@ -13,7 +13,7 @@ public class UserRole
     /// <value>
     /// The <see cref="User"/>'s id.
     /// </value>
-    required public string UserId { get; init; }
+    required public UserId UserId { get; init; }
 
     /// <summary>
     /// Gets the <see cref="Role"/>'s id.
@@ -21,5 +21,21 @@ public class UserRole
     /// <value>
     /// The <see cref="Role"/>'s id.
     /// </value>
-    required public int RoleId { get; init; }
+    required public RoleId RoleId { get; init; }
+
+    /// <summary>
+    /// Gets user instance.
+    /// </summary>
+    /// <value>
+    /// User instance.
+    /// </value>
+    required public User User { get; init; }
+
+    /// <summary>
+    /// Gets role instance.
+    /// </summary>
+    /// <value>
+    /// Role instance.
+    /// </value>
+    required public Role Role { get; init; }
 }

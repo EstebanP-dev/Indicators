@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Features.Users;
+﻿using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Features.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,14 +14,17 @@ internal sealed class UserConfiguration
     {
         builder.ToTable("usuario");
 
-        builder.HasKey(user => user.Email);
+        builder.HasKey(user => user.Id);
 
-        builder.Property(user => user.Email)
+        builder.Property(user => user.Id)
+            .HasConversion(
+                userId => userId.Value,
+                value => new UserId(value))
             .HasColumnName("email")
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.HasIndex(user => user.Email)
+        builder.HasIndex(user => user.Id)
             .IsUnique();
 
         builder.Property(user => user.Password)
@@ -31,33 +35,9 @@ internal sealed class UserConfiguration
         builder.Property(user => user.Salt)
             .HasColumnName("salt")
             .HasColumnType("bytea[]");
-    }
-}
 
-/// <inheritdoc/>
-internal sealed class UserRoleConfiguration
-    : IEntityTypeConfiguration<UserRole>
-{
-    /// <inheritdoc/>
-    public void Configure(EntityTypeBuilder<UserRole> builder)
-    {
-        builder.ToTable("rol_usuario");
-
-        builder.HasKey(user => user.UserId);
-        builder.HasKey(user => user.RoleId);
-
-        builder.Property(user => user.UserId)
-            .HasColumnName("fkemail")
-            .HasMaxLength(100)
-            .IsRequired();
-
-        builder.HasIndex(user => user.UserId)
-            .IsUnique();
-
-        builder.Property(user => user.RoleId)
-            .HasColumnName("fkidrol")
-            .IsRequired();
-
-        builder.HasIndex(user => user.RoleId);
+        builder.HasMany(user => user.Roles)
+            .WithMany()
+            .UsingEntity<UserRole>();
     }
 }
