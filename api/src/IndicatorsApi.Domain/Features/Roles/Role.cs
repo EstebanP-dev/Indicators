@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Features.Users;
+using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.Roles;
 
@@ -12,9 +13,11 @@ public class Role
     /// Initializes a new instance of the <see cref="Role"/> class.
     /// </summary>
     /// <param name="id">Role id.</param>
-    public Role(RoleId id)
+    /// <param name="name">Role name.</param>
+    public Role(RoleId id, string name)
         : base(id)
     {
+        Name = name;
     }
 
     /// <summary>
@@ -23,5 +26,13 @@ public class Role
     /// <value>
     /// The <see cref="Role"/>'s name.
     /// </value>
-    required public string Name { get; set; }
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Gets a collection of users.
+    /// </summary>
+    /// <value>
+    /// A collection of users.
+    /// </value>
+    public ICollection<User> Users { get; } = new List<User>();
 }

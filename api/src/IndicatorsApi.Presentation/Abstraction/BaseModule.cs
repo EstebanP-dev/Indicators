@@ -7,9 +7,9 @@ public abstract class BaseModule
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseModule"/> class.
     /// </summary>
-    /// <param name="basePath">Base path.</param>
-    protected BaseModule(string basePath)
-        : base(basePath)
+    /// <param name="slug">Struct url.</param>
+    protected BaseModule(string slug)
+        : base($"{Settings.BASEAPI}/{slug}")
     {
     }
 
@@ -62,5 +62,32 @@ public abstract class BaseModule
             .Match(
                 onValue: value => Results.Ok(value!.Adapt<TReturn>()),
                 onError: Problem);
+    }
+
+    /// <summary>
+    /// Gets a list of string from exclude parameter.
+    /// </summary>
+    /// <param name="exclude">Exclude parameter value.</param>
+    /// <returns>Returns a list of string.</returns>
+    protected static string[] GetStringsFromExcludeParameter(string? exclude)
+    {
+        return (exclude ?? string.Empty).Split(";");
+    }
+
+    /// <summary>
+    /// Gets a list of int from exclude parameter.
+    /// </summary>
+    /// <param name="exclude">Exclude parameter value.</param>
+    /// <returns>Returns a list of int.</returns>
+    protected static int[] GetIntsFromExcludeParameter(string? exclude)
+    {
+        string[] excludes = GetStringsFromExcludeParameter(exclude);
+#pragma warning disable CA1305 // Specify IFormatProvider
+        int[] ids = excludes
+            .Where(ex => int.TryParse(ex, out var intExclude))
+            .Select(ex => int.Parse(ex))
+            .ToArray();
+#pragma warning restore CA1305 // Specify IFormatProvider
+        return ids;
     }
 }

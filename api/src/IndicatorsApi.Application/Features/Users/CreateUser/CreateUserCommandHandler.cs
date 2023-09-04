@@ -43,16 +43,15 @@ internal sealed class CreateUserCommandHandler
         {
             string passwordHash = _passwordHasher.HashPasword(request.Password, out byte[] salt);
 
-            User user = new(new UserId(request.Email))
+            User user = new(id: UserId.ToUserId(request.Email), password: passwordHash)
             {
-                Password = passwordHash,
                 Salt = new[] { salt },
             };
 
             IEnumerable<Role> roles = await _roleRepository
                 .GetBulkIdsAsync(
                     ids: request.Roles
-                        .Select(roleId => new RoleId(roleId))
+                        .Select(roleId => RoleId.ToRoleId(roleId))
                         .ToArray(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

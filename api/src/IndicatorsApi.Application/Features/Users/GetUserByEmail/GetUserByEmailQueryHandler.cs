@@ -29,7 +29,7 @@ internal sealed class GetUserByEmailQueryHandler
     {
         User? user = await _userRepository
             .GetByIdAsync(
-                id: new UserId(request.Email),
+                id: UserId.ToUserId(request.Email),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

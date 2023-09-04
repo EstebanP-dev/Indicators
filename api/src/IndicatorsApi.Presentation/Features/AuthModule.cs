@@ -6,14 +6,14 @@ namespace IndicatorsApi.Presentation.Features;
 /// <summary>
 /// Auth endpoints.
 /// </summary>
-public class AuthModule
+public sealed class AuthModule
     : BaseModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthModule"/> class.
     /// </summary>
     public AuthModule()
-        : base($"{Settings.BASEAPI}/auth")
+        : base("auth")
     {
     }
 

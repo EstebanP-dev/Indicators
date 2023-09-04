@@ -25,7 +25,7 @@ internal sealed class GetUsersPaginationQueryHandler
                     page: request.Page,
                     rows: request.Rows,
                     ids: (request.Excludes ?? Array.Empty<string>())
-                        .Select(id => new UserId(id))
+                        .Select(id => UserId.ToUserId(id))
                         .ToArray(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

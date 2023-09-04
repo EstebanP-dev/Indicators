@@ -23,7 +23,7 @@ internal sealed class GetRoleByIdQueryHandler
     {
         Role? role = await _roleRepository
             .GetByIdAsync(
-                id: new RoleId(request.Id),
+                id: RoleId.ToRoleId(request.Id),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

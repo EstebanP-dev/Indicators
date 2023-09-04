@@ -22,20 +22,4 @@ public class UserRole
     /// The <see cref="Role"/>'s id.
     /// </value>
     required public RoleId RoleId { get; init; }
-
-    /// <summary>
-    /// Gets user instance.
-    /// </summary>
-    /// <value>
-    /// User instance.
-    /// </value>
-    required public User User { get; init; }
-
-    /// <summary>
-    /// Gets role instance.
-    /// </summary>
-    /// <value>
-    /// Role instance.
-    /// </value>
-    required public Role Role { get; init; }
 }

@@ -28,7 +28,7 @@ internal sealed class GetRolesPaginationQueryHandler
                     rows: request.Rows,
                     ids: (request.Excludes ?? Array.Empty<int>())
                         .Select(
-                            id => new RoleId(id))
+                            id => RoleId.ToRoleId(id))
                         .ToArray(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

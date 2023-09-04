@@ -18,7 +18,7 @@ public sealed class UserModule
     /// Initializes a new instance of the <see cref="UserModule"/> class.
     /// </summary>
     public UserModule()
-        : base($"{Settings.BASEAPI}/users")
+        : base("users")
     {
     }
 
@@ -27,10 +27,12 @@ public sealed class UserModule
     {
         app.MapGet("/", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
         {
-            GetUsersPaginationQuery query = new(page, rows, (exclude ?? string.Empty).Split(";"));
+            string[] ids = GetStringsFromExcludeParameter(exclude);
+
+            GetUsersPaginationQuery query = new(Page: page, Rows: rows, Excludes: ids);
 
             ErrorOr<Pagination<User>> result = await sender
-                .Send(query, cancellationToken)
+                .Send(request: query, cancellationToken: cancellationToken)
                 .ConfigureAwait(true);
 
             return Result<Pagination<User>, Pagination<UserPaginationResponse>>(result);
@@ -52,7 +54,7 @@ public sealed class UserModule
             CreateUserCommand command = request.Adapt<CreateUserCommand>();
 
             await sender
-                .Send(command, cancellationToken)
+                .Send(request: command, cancellationToken: cancellationToken)
                 .ConfigureAwait(true);
 
             return Results.Ok();

@@ -27,14 +27,6 @@ public interface IApplicationDbContext
     DbSet<Role> Roles { get; set; }
 
     /// <summary>
-    /// Gets or sets the user role table.
-    /// </summary>
-    /// <value>
-    /// The user role table.
-    /// </value>
-    DbSet<UserRole> UserRoles { get; set; }
-
-    /// <summary>
     /// Gets or sets the section table.
     /// </summary>
     /// <value>

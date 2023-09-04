@@ -6,17 +6,18 @@ namespace IndicatorsApi.Domain.Features.Users;
 /// <summary>
 /// User model from the database table.
 /// </summary>
-public sealed class User : Entity<UserId>
+public class User
+    : Entity<UserId>
 {
-    private readonly HashSet<Role> _roles = new();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="User"/> class.
     /// </summary>
     /// <param name="id">User id.</param>
-    public User(UserId id)
+    /// <param name="password">User password.</param>
+    public User(UserId id, string password)
         : base(id)
     {
+        Password = password;
     }
 
     /// <summary>
@@ -25,7 +26,7 @@ public sealed class User : Entity<UserId>
     /// <value>
     /// The <see cref="User"/>'s password.
     /// </value>
-    required public string Password { get; set; }
+    public string Password { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="User"/>'s salt.
@@ -45,9 +46,7 @@ public sealed class User : Entity<UserId>
     /// <value>
     /// The <see cref="User"/>'s <see cref="IReadOnlyList{T}"/> roles.
     /// </value>
-#pragma warning disable S2365 // Properties should not make collection or array copies
-    public IReadOnlyList<Role> Roles => _roles.ToList();
-#pragma warning restore S2365 // Properties should not make collection or array copies
+    public virtual ICollection<Role> Roles { get; } = new List<Role>();
 
     /// <summary>
     /// Add roles to an user.
@@ -55,6 +54,6 @@ public sealed class User : Entity<UserId>
     /// <param name="role"><see cref="Role"/> instance.</param>
     public void Add(Role role)
     {
-        _roles.Add(role);
+        Roles.Add(role);
     }
 }

@@ -24,8 +24,8 @@ internal sealed class GetSectionsPaginationQueryHandler
             .GetPaginationAsync(
                 page: request.Page,
                 rows: request.Rows,
-                ids: (request.Excludes ?? Array.Empty<int>())
-                    .Select(id => new SectionId(id))
+                ids: (request.Excludes ?? Array.Empty<string>())
+                    .Select(selector: SectionId.ToSectionId)
                     .ToArray(),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);

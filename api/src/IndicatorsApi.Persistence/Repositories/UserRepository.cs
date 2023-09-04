@@ -17,4 +17,17 @@ internal sealed class UserRepository
         : base(context)
     {
     }
+
+    /// <inheritdoc/>
+    public override async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Users
+            .Include(user => user.Roles)
+            .IgnoreAutoIncludes()
+            .AsSingleQuery()
+            .FirstOrDefaultAsync(
+                predicate: user => user.Id == id,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
 }

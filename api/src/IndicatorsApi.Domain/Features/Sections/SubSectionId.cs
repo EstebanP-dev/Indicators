@@ -3,16 +3,16 @@
 namespace IndicatorsApi.Domain.Features.Sections;
 
 /// <summary>
-/// Section id type.
+/// SubSection id type.
 /// </summary>
-public sealed class SectionId
+public sealed class SubSectionId
     : ValueObject
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SectionId"/> class.
+    /// Initializes a new instance of the <see cref="SubSectionId"/> class.
     /// </summary>
     /// <param name="value">Value instance.</param>
-    private SectionId(string value)
+    private SubSectionId(string value)
     {
         Value = value;
     }
@@ -32,18 +32,18 @@ public sealed class SectionId
     }
 
     /// <summary>
-    /// Returns implicit an instance of <see cref="SectionId"/>.
+    /// Returns implicit an instance of <see cref="SubSectionId"/>.
     /// </summary>
     /// <param name="value">Id value.</param>
-    public static implicit operator SectionId(string value) => ToSectionId(value);
+    public static implicit operator SubSectionId(string value) => ToSubSectionId(value);
 
     /// <summary>
-    /// Create a <see cref="SectionId"/> instance.
+    /// Create a <see cref="SubSectionId"/> instance.
     /// </summary>
     /// <param name="value">Id value.</param>
-    /// <returns>Returns an instance of <see cref="SectionId"/>.</returns>
-    public static SectionId ToSectionId(string value)
+    /// <returns>Returns an instance of <see cref="SubSectionId"/>.</returns>
+    public static SubSectionId ToSubSectionId(string value)
     {
-        return new SectionId(value);
+        return new SubSectionId(value);
     }
 }

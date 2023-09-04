@@ -28,9 +28,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Role> Roles { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<UserRole> UserRoles { get; set; }
-
-    /// <inheritdoc/>
     public DbSet<Section> Sections { get; set; }
 
     /// <inheritdoc/>
