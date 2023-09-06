@@ -27,7 +27,7 @@ internal sealed class SourceConfiguration
 
         builder.Property(source => source.Name)
             .HasColumnName("nombre")
-            .HasMaxLength(100)
+            .HasMaxLength(2000)
             .IsRequired();
     }
 }

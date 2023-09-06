@@ -8,7 +8,7 @@ namespace IndicatorsApi.Persistence.Repositories;
 
 /// <inheritdoc/>
 internal sealed class RoleRepository
-    : Repository<Role, RoleId>, ISourceRepository
+    : Repository<Role, RoleId>, IRoleRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleRepository"/> class.

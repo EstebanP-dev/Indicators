@@ -70,9 +70,6 @@ public static class DomainErrors
     /// <param name="right">Right value.</param>
     /// <returns>Returns a no coincidence error.</returns>
     public static Error NoCoincidence<T>(T left, T right)
-        where T : struct
-#pragma warning disable CA1308 // Normalize strings to uppercase
-        => Error.Conflict(
+        where T : struct => Error.Conflict(
         description: $"The value '{left}' does not coincide with '{right}'.");
-#pragma warning restore CA1308 // Normalize strings to uppercase
 }

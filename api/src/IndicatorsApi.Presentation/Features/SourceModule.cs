@@ -2,6 +2,7 @@
 using IndicatorsApi.Application.Features.Sources.DeleteSource;
 using IndicatorsApi.Application.Features.Sources.GetSourceById;
 using IndicatorsApi.Application.Features.Sources.GetSourcesPagination;
+using IndicatorsApi.Application.Features.Sources.UpdateSection;
 using IndicatorsApi.Contracts.Features.Sources.GetSourceById;
 using IndicatorsApi.Contracts.Features.Sources.GetSourcesPagination;
 using IndicatorsApi.Contracts.Sources;
@@ -52,6 +53,17 @@ public sealed class SourceModule
             return Result<Pagination<Source>, Pagination<SourcePaginationResponse>>(value: result);
         });
 
+        app.MapGet("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
+        {
+            GetSourceByIdQuery query = new(Id: id);
+
+            ErrorOr<Source> result = await sender
+                .Send(request: query, cancellationToken: cancellationToken)
+                .ConfigureAwait(true);
+
+            return Result<Source, SourceByIdResponse>(value: result);
+        });
+
         app.MapPut("/{id}", async (int id, [FromBody] UpdateSourceRequest request, ISender sender, CancellationToken cancellationToken) =>
         {
             if (id != request.Id)
@@ -59,13 +71,13 @@ public sealed class SourceModule
                 return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
             }
 
-            GetSourceByIdQuery query = new(id);
+            UpdateSourceCommand query = request.Adapt<UpdateSourceCommand>();
 
-            ErrorOr<Source> result = await sender
+            ErrorOr<Success> result = await sender
                 .Send(request: query, cancellationToken: cancellationToken)
                 .ConfigureAwait(true);
 
-            return Result<Source, SourceByIdResponse>(value: result);
+            return Result(value: result);
         });
 
         app.MapDelete("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>

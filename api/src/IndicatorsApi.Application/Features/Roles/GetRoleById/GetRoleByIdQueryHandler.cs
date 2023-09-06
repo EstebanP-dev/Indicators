@@ -7,13 +7,13 @@ namespace IndicatorsApi.Application.Features.Roles.GetRoleById;
 internal sealed class GetRoleByIdQueryHandler
     : IQueryHandler<GetRoleByIdQuery, Role>
 {
-    private readonly ISourceRepository _roleRepository;
+    private readonly IRoleRepository _roleRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetRoleByIdQueryHandler"/> class.
     /// </summary>
-    /// <param name="roleRepository">Instance of <see cref="ISourceRepository"/>.</param>
-    public GetRoleByIdQueryHandler(ISourceRepository roleRepository)
+    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
+    public GetRoleByIdQueryHandler(IRoleRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }
