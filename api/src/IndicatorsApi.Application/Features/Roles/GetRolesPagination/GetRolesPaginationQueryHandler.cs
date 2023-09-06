@@ -8,13 +8,13 @@ namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 internal sealed class GetRolesPaginationQueryHandler
     : IQueryHandler<GetRolesPaginationQuery, Pagination<Role>>
 {
-    private readonly IRoleRepository _roleRepository;
+    private readonly ISourceRepository _roleRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetRolesPaginationQueryHandler"/> class.
     /// </summary>
-    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
-    public GetRolesPaginationQueryHandler(IRoleRepository roleRepository)
+    /// <param name="roleRepository">Instance of <see cref="ISourceRepository"/>.</param>
+    public GetRolesPaginationQueryHandler(ISourceRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }

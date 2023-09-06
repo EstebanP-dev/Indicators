@@ -4,7 +4,7 @@
 /// Interface of <see cref="IRequestHandler{TRequest, TResponse}"/>.
 /// </summary>
 /// <typeparam name="TCommand">Command type.</typeparam>
-public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
+public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand, ErrorOr<Success>>
         where TCommand : ICommand
 {
 }

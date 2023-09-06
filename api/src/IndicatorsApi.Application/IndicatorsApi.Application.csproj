@@ -20,6 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\IndicatorsApi.Contracts\IndicatorsApi.Contracts.csproj" />
 	  <ProjectReference Include="..\IndicatorsApi.Domain\IndicatorsApi.Domain.csproj" />
 	</ItemGroup>
 </Project>

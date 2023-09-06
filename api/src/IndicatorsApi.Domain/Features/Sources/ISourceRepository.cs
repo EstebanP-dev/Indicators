@@ -1,12 +1,12 @@
 ﻿using IndicatorsApi.Domain.Primitives;
 using IndicatorsApi.Domain.Repositories;
 
-namespace IndicatorsApi.Domain.Features.Roles;
+namespace IndicatorsApi.Domain.Features.Sources;
 
 /// <summary>
-/// Role repository methods.
+/// Source repository methods.
 /// </summary>
 public interface ISourceRepository
-    : IRepository<Role, RoleId>
+    : IRepository<Source, SourceId>
 {
 }

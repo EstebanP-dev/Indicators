@@ -49,4 +49,30 @@ public static class DomainErrors
     /// </value>
     public static Error BulkNotFound => Error.Unexpected(
         description: "Something was wrong. Try again later.");
+
+    /// <summary>
+    /// Gets the already exists error.
+    /// </summary>
+    /// <typeparam name="T">Class type.</typeparam>
+    /// <returns>Returns the already exists error.</returns>
+    public static Error AlreadyExists<T>()
+        where T : class
+#pragma warning disable CA1308 // Normalize strings to uppercase
+        => Error.Conflict(
+        description: $"The {typeof(T).Name.ToLowerInvariant()} already exists.");
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+    /// <summary>
+    /// Gets the no coicidence error.
+    /// </summary>
+    /// <typeparam name="T">Value type.</typeparam>
+    /// <param name="left">Left value.</param>
+    /// <param name="right">Right value.</param>
+    /// <returns>Returns a no coincidence error.</returns>
+    public static Error NoCoincidence<T>(T left, T right)
+        where T : struct
+#pragma warning disable CA1308 // Normalize strings to uppercase
+        => Error.Conflict(
+        description: $"The value '{left}' does not coincide with '{right}'.");
+#pragma warning restore CA1308 // Normalize strings to uppercase
 }

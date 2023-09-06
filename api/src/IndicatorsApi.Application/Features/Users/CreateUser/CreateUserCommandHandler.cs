@@ -14,7 +14,7 @@ internal sealed class CreateUserCommandHandler
 {
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUserRepository _userRepository;
-    private readonly IRoleRepository _roleRepository;
+    private readonly ISourceRepository _roleRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
@@ -22,12 +22,12 @@ internal sealed class CreateUserCommandHandler
     /// </summary>
     /// <param name="passwordHasher">Instance of <see cref="IPasswordHasher"/>.</param>
     /// <param name="userRepository">Instance of <see cref="IUserRepository"/>.</param>
-    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
+    /// <param name="roleRepository">Instance of <see cref="ISourceRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
     public CreateUserCommandHandler(
         IPasswordHasher passwordHasher,
         IUserRepository userRepository,
-        IRoleRepository roleRepository,
+        ISourceRepository roleRepository,
         IUnitOfWork unitOfWork)
     {
         _passwordHasher = passwordHasher;

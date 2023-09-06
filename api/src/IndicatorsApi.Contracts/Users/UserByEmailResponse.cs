@@ -1,5 +1,4 @@
 ﻿using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Domain.Features.Roles;
 
 namespace IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
 

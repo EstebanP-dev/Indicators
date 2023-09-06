@@ -16,6 +16,24 @@ public abstract class BaseModule
     /// <summary>
     /// Problem response.
     /// </summary>
+    /// <param name="error"><see cref="Error"/> instance.</param>
+    /// <returns>Returns an instance of <see cref="IResult"/>.</returns>
+    protected static IResult Problem(Error error)
+    {
+        int statusCode = error.Type switch
+        {
+            ErrorType.Conflict => StatusCodes.Status409Conflict,
+            ErrorType.Validation => StatusCodes.Status400BadRequest,
+            ErrorType.NotFound => StatusCodes.Status404NotFound,
+            _ => StatusCodes.Status500InternalServerError,
+        };
+
+        return Results.Problem(statusCode: statusCode, title: error.Description);
+    }
+
+    /// <summary>
+    /// Problem response.
+    /// </summary>
     /// <param name="errors">List of errors.</param>
     /// <returns>Returns an instance of <see cref="IResult"/>.</returns>
 #pragma warning disable CA1002 // Do not expose generic lists
@@ -24,15 +42,7 @@ public abstract class BaseModule
     {
         Error firtsError = errors.FirstOrDefault();
 
-        int statusCode = firtsError.Type switch
-        {
-            ErrorType.Conflict => StatusCodes.Status409Conflict,
-            ErrorType.Validation => StatusCodes.Status400BadRequest,
-            ErrorType.NotFound => StatusCodes.Status404NotFound,
-            _ => StatusCodes.Status500InternalServerError,
-        };
-
-        return Results.Problem(statusCode: statusCode, title: firtsError.Description);
+        return Problem(error: firtsError);
     }
 
     /// <summary>

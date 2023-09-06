@@ -4,7 +4,7 @@
 /// Interface of <see cref="IRequest"/> and <seealso cref="ICommandBase"/>.
 /// </summary>
 #pragma warning disable CA1040 // Avoid empty interfaces
-public interface ICommand : IRequest, ICommandBase
+public interface ICommand : IRequest<ErrorOr<Success>>, ICommandBase
 #pragma warning restore CA1040 // Avoid empty interfaces
 {
 }

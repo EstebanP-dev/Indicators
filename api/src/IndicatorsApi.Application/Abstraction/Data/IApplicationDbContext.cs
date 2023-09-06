@@ -1,5 +1,6 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
+using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,4 +42,12 @@ public interface IApplicationDbContext
     /// The sub section table.
     /// </value>
     DbSet<SubSection> SubSections { get; set; }
+
+    /// <summary>
+    /// Gets or sets the section table.
+    /// </summary>
+    /// <value>
+    /// The section table.
+    /// </value>
+    DbSet<Source> Sources { get; set; }
 }

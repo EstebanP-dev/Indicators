@@ -1,6 +1,7 @@
 ﻿using IndicatorsApi.Application.Abstraction.Data;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
+using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.Users;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     /// <inheritdoc/>
     public DbSet<SubSection> SubSections { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<Source> Sources { get; set; }
 
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

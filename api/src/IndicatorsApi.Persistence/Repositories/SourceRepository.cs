@@ -1,5 +1,5 @@
 ﻿using IndicatorsApi.Domain;
-using IndicatorsApi.Domain.Features.Roles;
+using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
 using IndicatorsApi.Domain.Utils;
@@ -7,14 +7,14 @@ using IndicatorsApi.Domain.Utils;
 namespace IndicatorsApi.Persistence.Repositories;
 
 /// <inheritdoc/>
-internal sealed class RoleRepository
-    : Repository<Role, RoleId>, ISourceRepository
+internal sealed class SourceRepository
+    : Repository<Source, SourceId>, ISourceRepository
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RoleRepository"/> class.
+    /// Initializes a new instance of the <see cref="SourceRepository"/> class.
     /// </summary>
     /// <param name="context"><see cref="ApplicationDbContext"/> instance.</param>
-    public RoleRepository(ApplicationDbContext context)
+    public SourceRepository(ApplicationDbContext context)
         : base(context)
     {
     }

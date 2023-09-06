@@ -25,15 +25,19 @@ public sealed class UserModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
         {
-            string[] ids = GetStringsFromExcludeParameter(exclude);
+            string[] ids = GetStringsFromExcludeParameter(exclude: parameters.Exclude);
 
-            GetUsersPaginationQuery query = new(Page: page, Rows: rows, Excludes: ids);
+            GetUsersPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
             ErrorOr<Pagination<User>> result = await sender
                 .Send(request: query, cancellationToken: cancellationToken)
                 .ConfigureAwait(true);
+
+            var test = result.Value.Adapt<Pagination<UserPaginationResponse>>();
+
+            Console.WriteLine(test);
 
             return Result<Pagination<User>, Pagination<UserPaginationResponse>>(result);
         });
