@@ -46,7 +46,7 @@ internal sealed class DeleteSourceCommandHandler
         }
         catch (DbUpdateException)
         {
-            return SectionErrors.CreationOrUpdatingFailed;
+            return DomainErrors.CreationOrUpdatingFailed;
         }
         catch (OperationCanceledException)
         {

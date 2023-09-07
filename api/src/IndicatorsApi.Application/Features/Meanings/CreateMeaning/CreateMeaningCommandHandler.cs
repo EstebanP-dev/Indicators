@@ -1,34 +1,34 @@
 ﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Sources;
+using IndicatorsApi.Domain.Features.Meanings;
 using IndicatorsApi.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace IndicatorsApi.Application.Features.Sources.CreateSource;
+namespace IndicatorsApi.Application.Features.Meanings.CreateMeaning;
 
 /// <inheritdoc/>
-internal sealed class CreateSourceCommandHandler
-    : ICommandHandler<CreateSourceCommand>
+internal sealed class CreateMeaningCommandHandler
+    : ICommandHandler<CreateMeaningCommand>
 {
-    private readonly ISourceRepository _sourceRepository;
+    private readonly IMeaningRepository _meaningRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateSourceCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="CreateMeaningCommandHandler"/> class.
     /// </summary>
-    /// <param name="sourceRepository">Instance of <see cref="ISourceRepository"/>.</param>
+    /// <param name="meaningRepository">Instance of <see cref="IMeaningRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
-    public CreateSourceCommandHandler(ISourceRepository sourceRepository, IUnitOfWork unitOfWork)
+    public CreateMeaningCommandHandler(IMeaningRepository meaningRepository, IUnitOfWork unitOfWork)
     {
-        _sourceRepository = sourceRepository;
+        _meaningRepository = meaningRepository;
         _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(CreateMeaningCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            _sourceRepository.Add(entity: request.Adapt<Source>());
+            _meaningRepository.Add(entity: request.Adapt<Meaning>());
 
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);

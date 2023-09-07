@@ -16,16 +16,6 @@ public static class UserErrors
         description: "The user was not found.");
 
     /// <summary>
-    /// Gets the bulk not found error.
-    /// </summary>
-    /// <value>
-    /// The bulk not found error.
-    /// </value>
-    public static Error BulkNotFound => Error.Unexpected(
-        code: "User.BulkNotFound",
-        description: "Something was wrong. Try again later.");
-
-    /// <summary>
     /// Gets the duplicate user email error.
     /// </summary>
     /// <returns>Result error.</returns>

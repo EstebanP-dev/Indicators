@@ -1,34 +1,34 @@
 ﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Sources;
+using IndicatorsApi.Domain.Features.Displays;
 using IndicatorsApi.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace IndicatorsApi.Application.Features.Sources.CreateSource;
+namespace IndicatorsApi.Application.Features.Displays.CreateDisplay;
 
 /// <inheritdoc/>
-internal sealed class CreateSourceCommandHandler
-    : ICommandHandler<CreateSourceCommand>
+internal sealed class CreateDisplayCommandHandler
+    : ICommandHandler<CreateDisplayCommand>
 {
-    private readonly ISourceRepository _sourceRepository;
+    private readonly IDisplayRepository _displayRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateSourceCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="CreateDisplayCommandHandler"/> class.
     /// </summary>
-    /// <param name="sourceRepository">Instance of <see cref="ISourceRepository"/>.</param>
+    /// <param name="displayRepository">Instance of <see cref="IDisplayRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
-    public CreateSourceCommandHandler(ISourceRepository sourceRepository, IUnitOfWork unitOfWork)
+    public CreateDisplayCommandHandler(IDisplayRepository displayRepository, IUnitOfWork unitOfWork)
     {
-        _sourceRepository = sourceRepository;
+        _displayRepository = displayRepository;
         _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(CreateDisplayCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            _sourceRepository.Add(entity: request.Adapt<Source>());
+            _displayRepository.Add(entity: request.Adapt<Display>());
 
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);

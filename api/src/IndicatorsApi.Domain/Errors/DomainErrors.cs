@@ -72,4 +72,13 @@ public static class DomainErrors
     public static Error NoCoincidence<T>(T left, T right)
         where T : struct => Error.Conflict(
         description: $"The value '{left}' does not coincide with '{right}'.");
+
+    /// <summary>
+    /// Gets the creation or updation failed error.
+    /// </summary>
+    /// <value>
+    /// The creation or updation failed error.
+    /// </value>
+    public static Error CreationOrUpdatingFailed => Error.Failure(
+        description: "Something was wrong. Try again later.");
 }

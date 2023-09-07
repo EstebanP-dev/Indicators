@@ -1,41 +1,41 @@
-﻿using IndicatorsApi.Application.Features.Sources.UpdateSection;
+﻿using IndicatorsApi.Application.Features.Meanings.UpdateSection;
 using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Sources;
+using IndicatorsApi.Domain.Features.Meanings;
 using IndicatorsApi.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace IndicatorsApi.Application.Features.Sources.UpdateSource;
+namespace IndicatorsApi.Application.Features.Meanings.UpdateMeaning;
 
 /// <inheritdoc/>
-internal sealed class UpdateSourceCommandHandler
-    : ICommandHandler<UpdateSourceCommand>
+internal sealed class UpdateMeaningCommandHandler
+    : ICommandHandler<UpdateMeaningCommand>
 {
-    private readonly ISourceRepository _sourceRepository;
+    private readonly IMeaningRepository _sourceRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateSourceCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="UpdateMeaningCommandHandler"/> class.
     /// </summary>
-    /// <param name="sourceRepository">Instance of <see cref="ISourceRepository"/>.</param>
+    /// <param name="sourceRepository">Instance of <see cref="IMeaningRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
-    public UpdateSourceCommandHandler(ISourceRepository sourceRepository, IUnitOfWork unitOfWork)
+    public UpdateMeaningCommandHandler(IMeaningRepository sourceRepository, IUnitOfWork unitOfWork)
     {
         _sourceRepository = sourceRepository;
         _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(UpdateMeaningCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            Source? source = await _sourceRepository
-                    .GetByIdAsync(id: SourceId.ToSourceId(value: request.Id), cancellationToken: cancellationToken)
+            Meaning? source = await _sourceRepository
+                    .GetByIdAsync(id: MeaningId.ToMeaningId(value: request.Id), cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             if (source is null)
             {
-                return DomainErrors.NotFound<Source>();
+                return DomainErrors.NotFound<Meaning>();
             }
 
             source.Name = request.Name;
