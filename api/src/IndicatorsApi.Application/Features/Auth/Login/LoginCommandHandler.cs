@@ -9,7 +9,7 @@ namespace IndicatorsApi.Application.Features.Auth.Login;
 
 /// <inheritdoc/>
 internal sealed class LoginCommandHandler
-    : ICommandHandler<LoginCommand, string>
+    : ICommandHandler<LoginCommand, (string, User)>
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtProvider _jwtProvider;
@@ -29,7 +29,7 @@ internal sealed class LoginCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<(string, User)>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         User? user = await _userRepository
             .GetByIdAsync(
@@ -58,6 +58,6 @@ internal sealed class LoginCommandHandler
             return AuthErrors.InvalidCredentials;
         }
 
-        return _jwtProvider.GenerateJwt(user);
+        return (_jwtProvider.GenerateJwt(user), user);
     }
 }

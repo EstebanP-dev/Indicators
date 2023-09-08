@@ -1,1 +1,0 @@
-export { ProtectRoutes } from "./ProtectRoutes";

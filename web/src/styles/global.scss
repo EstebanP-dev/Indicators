@@ -17,9 +17,11 @@ a
 {
   font-family: "Inter", sans-serif;
   background-color: $main-bg;
+  color: $main-color;
   display: flex;
   flex-flow: column;
-  height: 100vh;
+  height: 100%;
+  
   .navbar
   {
     height: 10%;
@@ -49,5 +51,19 @@ a
   {
     height: 10%;
     width: 100%;
+  }
+}
+
+.info
+{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  button
+  {
+      padding: 5px;
+      cursor: pointer;
   }
 }

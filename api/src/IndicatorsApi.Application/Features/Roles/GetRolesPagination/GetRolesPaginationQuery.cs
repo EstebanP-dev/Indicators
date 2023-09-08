@@ -1,11 +1,9 @@
-﻿using IndicatorsApi.Application.Features.Users.GetUsersPagination;
-using IndicatorsApi.Domain.Features.Roles;
-using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Features.Roles;
 
 namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 
 /// <summary>
-/// Gets the roles pagination query.
+/// Gets the pagination query.
 /// </summary>
 /// <param name="Page">Page number.</param>
 /// <param name="Rows">Page size.</param>

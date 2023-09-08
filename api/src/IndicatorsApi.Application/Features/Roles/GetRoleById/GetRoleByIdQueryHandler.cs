@@ -7,31 +7,31 @@ namespace IndicatorsApi.Application.Features.Roles.GetRoleById;
 internal sealed class GetRoleByIdQueryHandler
     : IQueryHandler<GetRoleByIdQuery, Role>
 {
-    private readonly IRoleRepository _roleRepository;
+    private readonly IRoleRepository _actorTypeRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetRoleByIdQueryHandler"/> class.
     /// </summary>
-    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
-    public GetRoleByIdQueryHandler(IRoleRepository roleRepository)
+    /// <param name="actorTypeRepository">Instance of <see cref="IRoleRepository"/>.</param>
+    public GetRoleByIdQueryHandler(IRoleRepository actorTypeRepository)
     {
-        _roleRepository = roleRepository;
+        _actorTypeRepository = actorTypeRepository;
     }
 
     /// <inheritdoc/>
     public async Task<ErrorOr<Role>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-        Role? role = await _roleRepository
+        Role? actorType = await _actorTypeRepository
             .GetByIdAsync(
                 id: RoleId.ToRoleId(request.Id),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (role is null)
+        if (actorType is null)
         {
             return DomainErrors.NotFound<Role>();
         }
 
-        return role;
+        return actorType;
     }
 }

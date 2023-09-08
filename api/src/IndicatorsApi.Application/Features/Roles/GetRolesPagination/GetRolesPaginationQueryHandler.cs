@@ -1,6 +1,4 @@
-﻿using IndicatorsApi.Application.Features.Users.GetUsersPagination;
-using IndicatorsApi.Domain.Features.Roles;
-using IndicatorsApi.Domain.Features.Users;
+﻿using IndicatorsApi.Domain.Features.Roles;
 
 namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 
@@ -8,21 +6,21 @@ namespace IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 internal sealed class GetRolesPaginationQueryHandler
     : IQueryHandler<GetRolesPaginationQuery, Pagination<Role>>
 {
-    private readonly IRoleRepository _roleRepository;
+    private readonly IRoleRepository _actorTypeRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetRolesPaginationQueryHandler"/> class.
     /// </summary>
-    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
-    public GetRolesPaginationQueryHandler(IRoleRepository roleRepository)
+    /// <param name="actorTypeRepository">Instance of <see cref="IRoleRepository"/>.</param>
+    public GetRolesPaginationQueryHandler(IRoleRepository actorTypeRepository)
     {
-        _roleRepository = roleRepository;
+        _actorTypeRepository = actorTypeRepository;
     }
 
     /// <inheritdoc/>
     public async Task<ErrorOr<Pagination<Role>>> Handle(GetRolesPaginationQuery request, CancellationToken cancellationToken)
     {
-        Pagination<Role> pagination = await _roleRepository
+        Pagination<Role> pagination = await _actorTypeRepository
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,

@@ -1,7 +1,7 @@
 ﻿namespace IndicatorsApi.Contracts.Displays;
 
 /// <summary>
-/// Create display request.
+/// Create request.
 /// </summary>
 /// <param name="Name">Display name.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter

@@ -1,13 +1,19 @@
-import { Footer, Home, Menu, Navbar } from "./shared";
-import { Login } from "./auth"
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
 } from "react-router-dom";
-import { Users } from "./users";
-import { Roles } from "./roles";
 import "./styles/global.scss"
+import { SnackbarProvider } from "notistack";
+import { SnackbarUtilsConfigurator } from "./utilities";
+import { Suspense, lazy } from "react";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { Footer, Menu, Navbar } from "./components";
+import { Home, Login, Roles, Users } from "./pages";
+
+const DisplayList = lazy(() => import("./pages/Displays/List/DisplayList"))
+const DisplayDetails = lazy(() => import("./pages/Displays/Details/DisplayDetails"))
 
 function App() {
 
@@ -42,7 +48,7 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home/>
+          element: <Home />
         },
         {
           path: "/users",
@@ -52,6 +58,14 @@ function App() {
           path: "/roles",
           element: <Roles/>
         },
+        {
+          path: "/displays",
+          element: <DisplayList />
+        },
+        {
+          path: "/displays/:id",
+          element: <DisplayDetails />
+        }
       ]
     },
     {
@@ -61,7 +75,14 @@ function App() {
   ]);
 
   return (
-    <RouterProvider router={router} />
+    <SnackbarProvider>
+      <SnackbarUtilsConfigurator />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </Suspense>
+    </SnackbarProvider>
   )
 }
 

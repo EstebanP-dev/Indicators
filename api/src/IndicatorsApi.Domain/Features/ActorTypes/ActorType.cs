@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Domain.Features.Sources;
-using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.ActorTypes;
 

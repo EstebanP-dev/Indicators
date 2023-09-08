@@ -3,15 +3,13 @@ using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.Users;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Persistence;
 
 /// <summary>
 /// Application database context.
 /// </summary>
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.

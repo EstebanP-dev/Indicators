@@ -1,18 +1,16 @@
-﻿using IndicatorsApi.Application.Features.Users.GetUserByEmail;
-using IndicatorsApi.Domain.Features.Users;
+﻿using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.Application.Features.Users.GetUsersPagination;
 
 /// <summary>
-/// Gets user pagination.
+/// Gets the pagination query.
 /// </summary>
 /// <param name="Page">Page number.</param>
 /// <param name="Rows">Page size.</param>
-/// <param name="Excludes">Exclude users emails.</param>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Record class")]
+/// <param name="Excludes">Exclude roles ids.</param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "Record class.")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Necessary.")]
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-#pragma warning disable CA1819 // Properties should not return arrays
 public sealed record class GetUsersPaginationQuery(int Page, int Rows, string[]? Excludes)
-#pragma warning restore CA1819 // Properties should not return arrays
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
     : IQuery<Pagination<User>>;
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
