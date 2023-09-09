@@ -1,7 +1,8 @@
-import { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import { AxiosCall } from "../models";
+# Use Fetch and Load
 
+Este hook ejecuta funciones y nos regresa la promesa del servicio que le enviemos como parametro.
+
+```ts
 const useFetchAndLoad = () => {
   const [loading, setLoading] = useState(false);
   let controller: AbortController;
@@ -35,3 +36,4 @@ const useFetchAndLoad = () => {
 };
   
 export default useFetchAndLoad;
+```

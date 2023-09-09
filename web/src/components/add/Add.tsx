@@ -33,7 +33,7 @@ const Add = (props: Props) => {
                     .map((column) => (
                         <div className="item">
                             <label>{column.headerName}</label>
-                            <input type={column.type} placeholder={column.field} />
+                            <input type={column.type} placeholder={column.field}  />
                         </div>
                     ))
                 }
