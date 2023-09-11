@@ -8,7 +8,7 @@ export const getDisplaysPagination = (page: number, rows: number, token: string)
     const url = enviroment.api + endpoints.displays.getUsersPagination(page, rows, null);
 
     return {
-        call: axios.get<Pagination<Display> | Error>(
+        call: axios.get<Pagination<Display>>(
             url,
             {
                 signal: controller.signal,

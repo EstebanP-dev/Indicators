@@ -4,7 +4,7 @@ import { Add, DataTable } from "../../../components";
 import { GridColDef } from "@mui/x-data-grid";
 import { useFetchAndLoad } from "../../../hooks";
 import { getDisplaysPagination } from "../../../services";
-import { AccountInfo, Display, Pagination } from "../../../models";
+import { AccountInfo, Display, Pagination, ErrorOr, AuthMessages, ExceptionMessages } from "../../../models";
 import { useDispatch, useSelector } from "react-redux";
 import { AppStore } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -37,21 +37,27 @@ const DisplayList = () => {
   const [open, setOpen] = useState(false);
   const { loading, callEndpoint } = useFetchAndLoad();
   const [pagination, setPagination ] = useState<Pagination<Display> | undefined>(undefined);
-  const [error, setError ] = useState<Error | undefined>(undefined);
+  const [error, setError ] = useState<ErrorOr | undefined>(undefined);
 
   useEffect(() => {
     callEndpoint(getDisplaysPagination(page, pageSize, accountInfo.token))
     .then((res) => {
       setPagination(res.data)
-      setError(res.data)
     })
-    .catch((error) => {
-      if (error?.response?.status === 401) {
-        SnackbarUtilities.info("Se ha vencido tu sesión.");
+    .catch((exception) => {
+      setError(JSON.parse(JSON.stringify(exception?.response?.data)));
+      
+      if (error !== undefined) {
+        SnackbarUtilities.error(error.title);
+      }
+      else if (exception?.response?.status === 401) {
+        SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
         dispatch(resetAccountInfo())
         navigate(PublicRoutes.LOGIN, {
           replace: true
         });
+      }else {
+        SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
       }
       console.log(JSON.stringify(error));
     });
@@ -66,7 +72,7 @@ const DisplayList = () => {
           <>
             {
               pagination === undefined ? (
-                <div><h3>{error?.message}</h3></div>
+                <div><h3>{error?.title}</h3></div>
               ) : (
                 <>
                   <div className="list" >

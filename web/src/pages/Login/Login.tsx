@@ -1,7 +1,7 @@
 import "./login.scss"
 import { SnackbarUtilities } from "../../utilities";
 import { useEffect, useState } from "react";
-import { AccountInfo } from "../../models";
+import { AccountInfo, AuthMessages, ErrorOr, ExceptionMessages } from "../../models";
 import { useFetchAndLoad } from "../../hooks";
 import { loginService } from "../../services";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { loading, callEndpoint } = useFetchAndLoad();
   const [accountInfo, setAccountInfo ] = useState<AccountInfo | undefined>(undefined);
-  const [error, setError ] = useState<Error | undefined>(undefined);
+  const [error, setError ] = useState<ErrorOr | undefined>(undefined);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -38,33 +38,36 @@ const Login = () => {
       if(validateEmail(username) && validatePassword(password)) {
         const result = await callEndpoint(loginService(username, password));
         setAccountInfo(result.data);
-        setError(result.data);
   
         if (accountInfo !== undefined) {
-          SnackbarUtilities.success("Sesión iniciada.");
+          SnackbarUtilities.success(AuthMessages.LOG_IN);
           dispatch(createAccountInfo(accountInfo));
           navigate(PrivateRoutes.HOME);
         }
-        else if (error !== undefined) {
-          SnackbarUtilities.error(error.message);
-        }
         else{
           console.log(accountInfo, error, result);
-          SnackbarUtilities.error("Nothing happend.");
+          SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
         }
       }
       else {
-        SnackbarUtilities.warning('El email o la contraseña no pueden estar vacios.');
+        SnackbarUtilities.warning(AuthMessages.EMPTY_FIELDS);
       }
-    } catch (error) {
-      SnackbarUtilities.error("Something was wrong. Try again later.");
-      console.log(`ERROR ${JSON.stringify(error)}`);
+    } catch (exception: any) {
+      setError(JSON.parse(JSON.stringify(exception?.response?.data)));
+
+      if (error === undefined) {
+        SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
+      }else {
+        SnackbarUtilities.error(error.title);
+      }
+      
+      console.log(`ERROR ${JSON.stringify(exception)}`);
     }
   }
 
   useEffect(() => {
     if (accountInfoStored.token !== ''){
-      SnackbarUtilities.warning('Ya has iniciado sesión.');
+      SnackbarUtilities.warning(AuthMessages.ALREADY_LOG_IN);
       navigate(PrivateRoutes.HOME)
     }
   }, [])
