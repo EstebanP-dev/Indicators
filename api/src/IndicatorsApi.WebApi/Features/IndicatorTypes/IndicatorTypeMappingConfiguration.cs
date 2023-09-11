@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypeById;
-using IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypesPagination;
+﻿using IndicatorsApi.Contracts.IndicatorTypes;
 using IndicatorsApi.Domain.Features.IndicatorTypes;
 
 namespace IndicatorsApi.WebApi.Features.IndicatorTypes;

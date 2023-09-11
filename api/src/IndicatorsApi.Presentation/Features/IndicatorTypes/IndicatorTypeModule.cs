@@ -3,8 +3,6 @@ using IndicatorsApi.Application.Features.IndicatorTypes.DeleteIndicatorType;
 using IndicatorsApi.Application.Features.IndicatorTypes.GetIndicatorTypeById;
 using IndicatorsApi.Application.Features.IndicatorTypes.GetIndicatorTypesPagination;
 using IndicatorsApi.Application.Features.IndicatorTypes.UpdateSection;
-using IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypeById;
-using IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypesPagination;
 using IndicatorsApi.Contracts.IndicatorTypes;
 using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.IndicatorTypes;
@@ -22,73 +20,111 @@ public sealed class IndicatorTypeModule
     /// Initializes a new instance of the <see cref="IndicatorTypeModule"/> class.
     /// </summary>
     public IndicatorTypeModule()
-        : base("indicatortypes")
+        : base("indicatorTypes")
     {
     }
 
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", async ([FromBody] CreateIndicatorTypeRequest request, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateIndicatorType)
+            .WithTags("IndicatorTypes")
+            .WithName(nameof(CreateIndicatorType));
+
+        app
+            .MapPut("/", UpdateIndicatorType)
+            .WithTags("IndicatorTypes")
+            .WithName(nameof(UpdateIndicatorType));
+
+        app
+            .MapDelete("/{id}", DeleteIndicatorType)
+            .WithTags("IndicatorTypes")
+            .WithName(nameof(DeleteIndicatorType));
+
+        app
+            .MapGet("/", GetIndicatorTypes)
+            .WithTags("IndicatorTypes")
+            .WithName(nameof(GetIndicatorTypes));
+
+        app
+            .MapGet("/{id}", GetIndicatorType)
+            .WithTags("IndicatorTypes")
+            .WithName(nameof(GetIndicatorType));
+    }
+
+    private static async Task<IResult> CreateIndicatorType(
+        [FromBody] CreateIndicatorTypeRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateIndicatorTypeCommand command = request.Adapt<CreateIndicatorTypeCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateIndicatorType(
+        int id,
+        [FromBody] UpdateIndicatorTypeRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            CreateIndicatorTypeCommand command = request.Adapt<CreateIndicatorTypeCommand>();
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            ErrorOr<Success> result = await sender
-                .Send(request: command, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        UpdateIndicatorTypeCommand query = request.Adapt<UpdateIndicatorTypeCommand>();
 
-            return Result(value: result);
-        });
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
-        {
-            int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
+        return Result(value: result);
+    }
 
-            GetIndicatorTypesPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+    private static async Task<IResult> DeleteIndicatorType(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteIndicatorTypeCommand query = new(id);
 
-            ErrorOr<Pagination<IndicatorType>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<IndicatorType>, Pagination<IndicatorTypePaginationResponse>>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetIndicatorTypeByIdQuery query = new(Id: id);
+    private static async Task<IResult> GetIndicatorTypes(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
 
-            ErrorOr<IndicatorType> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        GetIndicatorTypesPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            return Result<IndicatorType, IndicatorTypeByIdResponse>(value: result);
-        });
+        ErrorOr<Pagination<IndicatorType>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        app.MapPut("/{id}", async (int id, [FromBody] UpdateIndicatorTypeRequest request, ISender sender, CancellationToken cancellationToken) =>
-        {
-            if (id != request.Id)
-            {
-                return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
-            }
+        return Result<Pagination<IndicatorType>, Pagination<IndicatorTypePaginationResponse>>(value: result);
+    }
 
-            UpdateIndicatorTypeCommand query = request.Adapt<UpdateIndicatorTypeCommand>();
+    private static async Task<IResult> GetIndicatorType(int id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetIndicatorTypeByIdQuery query = new(Id: id);
 
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<IndicatorType> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result(value: result);
-        });
-
-        app.MapDelete("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            DeleteIndicatorTypeCommand query = new(id);
-
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
-
-            return Result(value: result);
-        });
+        return Result<IndicatorType, IndicatorTypeByIdResponse>(value: result);
     }
 }

@@ -1,6 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.Users.CreateUser;
-
-namespace IndicatorsApi.Application.Features.ActorTypes.CreateActorType;
+﻿namespace IndicatorsApi.Application.Features.ActorTypes.CreateActorType;
 
 /// <summary>
 /// Create command.
@@ -8,5 +6,5 @@ namespace IndicatorsApi.Application.Features.ActorTypes.CreateActorType;
 /// <param name="Name">ActorType name.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 public sealed record class CreateActorTypeCommand(string Name)
-    : ICommand;
+    : ICreateCommand;
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter

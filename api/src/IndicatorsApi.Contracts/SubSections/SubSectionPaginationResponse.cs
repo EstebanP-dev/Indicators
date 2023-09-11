@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Sections.GetSubSectionsPagination;
+﻿namespace IndicatorsApi.Contracts.SubSections;
 
 /// <summary>
 /// Gets the section pagination response.

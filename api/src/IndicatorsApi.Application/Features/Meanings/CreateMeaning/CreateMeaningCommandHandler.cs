@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Meanings.CreateMeaning;
 
 /// <inheritdoc/>
 internal sealed class CreateMeaningCommandHandler
-    : ICommandHandler<CreateMeaningCommand>
+    : ICommandHandler<CreateMeaningCommand, Created>
 {
     private readonly IMeaningRepository _meaningRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class CreateMeaningCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateMeaningCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateMeaningCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -33,7 +33,7 @@ internal sealed class CreateMeaningCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Created;
         }
         catch (DbUpdateException)
         {

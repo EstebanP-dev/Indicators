@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Sources.CreateSource;
 
 /// <inheritdoc/>
 internal sealed class CreateSourceCommandHandler
-    : ICommandHandler<CreateSourceCommand>
+    : ICommandHandler<CreateSourceCommand, Created>
 {
     private readonly ISourceRepository _sourceRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class CreateSourceCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -33,7 +33,7 @@ internal sealed class CreateSourceCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Created;
         }
         catch (DbUpdateException)
         {

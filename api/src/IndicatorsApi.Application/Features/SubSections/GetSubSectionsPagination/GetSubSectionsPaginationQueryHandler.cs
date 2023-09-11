@@ -1,6 +1,6 @@
-﻿using IndicatorsApi.Domain.Features.Sections;
+﻿using IndicatorsApi.Domain.Features.SubSections;
 
-namespace IndicatorsApi.Application.Features.Sections.GetSubSectionsPagination;
+namespace IndicatorsApi.Application.Features.SubSections.GetSubSectionsPagination;
 
 /// <inheritdoc/>
 internal sealed class GetSubSectionsPaginationQueryHandler

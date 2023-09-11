@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Meanings.GetMeaningsPagination;
+﻿namespace IndicatorsApi.Contracts.Meanings;
 
 /// <summary>
 /// Gets pagination response.

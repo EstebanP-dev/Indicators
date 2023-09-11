@@ -1,6 +1,6 @@
 ﻿using IndicatorsApi.Domain.Primitives;
 
-namespace IndicatorsApi.Domain.Features.Sections;
+namespace IndicatorsApi.Domain.Features.SubSections;
 
 /// <summary>
 /// SubSection model from the database table.

@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
+﻿namespace IndicatorsApi.Contracts.Roles;
 
 /// <summary>
 /// Gets role pagination response.

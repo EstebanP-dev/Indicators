@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.Meanings.GetMeaningById;
-using IndicatorsApi.Contracts.Features.Meanings.GetMeaningsPagination;
+﻿using IndicatorsApi.Contracts.Meanings;
 using IndicatorsApi.Domain.Features.Meanings;
 
 namespace IndicatorsApi.WebApi.Features.Meanings;

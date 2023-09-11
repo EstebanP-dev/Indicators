@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Roles.GetRoleById;
+﻿namespace IndicatorsApi.Contracts.Roles;
 
 /// <summary>
 /// Gets role by id response.

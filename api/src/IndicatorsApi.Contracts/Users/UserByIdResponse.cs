@@ -1,7 +1,6 @@
-﻿using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
+﻿using IndicatorsApi.Contracts.Roles;
 
-namespace IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
+namespace IndicatorsApi.Contracts.Users;
 
 /// <summary>
 /// Gets user by email response.

@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Displays.GetDisplaysPagination;
+﻿namespace IndicatorsApi.Contracts.Displays;
 
 /// <summary>
 /// Gets display pagination response.

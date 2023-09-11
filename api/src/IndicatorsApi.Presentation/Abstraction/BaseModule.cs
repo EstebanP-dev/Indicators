@@ -1,4 +1,6 @@
-﻿namespace IndicatorsApi.Presentation.Abstraction;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+namespace IndicatorsApi.Presentation.Abstraction;
 
 /// <inheritdoc/>
 public abstract class BaseModule
@@ -11,6 +13,7 @@ public abstract class BaseModule
     protected BaseModule(string slug)
         : base($"{Settings.BASEAPI}/{slug}")
     {
+        RequireAuthorization();
     }
 
     /// <summary>
@@ -55,7 +58,7 @@ public abstract class BaseModule
     {
         return value
             .Match(
-                onValue: Results.Ok,
+                onValue: value => Results.NoContent(),
                 onError: Problem);
     }
 

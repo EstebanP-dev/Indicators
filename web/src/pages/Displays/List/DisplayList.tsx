@@ -4,7 +4,6 @@ import { Add, DataTable } from "../../../components";
 import { GridColDef } from "@mui/x-data-grid";
 import { useFetchAndLoad } from "../../../hooks";
 import { getDisplaysPagination } from "../../../services";
-import { SnackbarUtilities } from "../../../utilities";
 import { Display, Pagination } from "../../../models";
 
 const pageSize: number = 100;
@@ -36,6 +35,9 @@ const DisplayList = () => {
     .then((res) => {
       setPagination(res.data)
       setError(res.data)
+    })
+    .catch((error) => {
+      console.log(JSON.stringify(error));
     });
   }, []);
 
@@ -51,7 +53,7 @@ const DisplayList = () => {
                 <div><h3>{error?.message}</h3></div>
               ) : (
                 <>
-                  <div className="list">
+                  <div className="list" >
                       <div className="info">
                           <h1>Representaciones Visuales</h1>
                           <button onClick={() => setOpen(true)}>Nueva Representación Visual</button>

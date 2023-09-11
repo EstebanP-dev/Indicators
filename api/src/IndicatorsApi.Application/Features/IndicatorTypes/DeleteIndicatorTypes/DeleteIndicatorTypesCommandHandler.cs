@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.IndicatorTypes.DeleteIndicatorType;
 
 /// <inheritdoc/>
 internal sealed class DeleteIndicatorTypeCommandHandler
-    : ICommandHandler<DeleteIndicatorTypeCommand>
+    : ICommandHandler<DeleteIndicatorTypeCommand, Deleted>
 {
     private readonly IIndicatorTypeRepository _indicatorTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class DeleteIndicatorTypeCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteIndicatorTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteIndicatorTypeCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +42,7 @@ internal sealed class DeleteIndicatorTypeCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Users.GetUsersPagination;
+﻿namespace IndicatorsApi.Contracts.Users;
 
 /// <summary>
 /// Gets users pagination response.

@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.Displays.GetDisplayById;
-using IndicatorsApi.Contracts.Features.Displays.GetDisplaysPagination;
+﻿using IndicatorsApi.Contracts.Displays;
 using IndicatorsApi.Domain.Features.Displays;
 
 namespace IndicatorsApi.WebApi.Features.Displays;

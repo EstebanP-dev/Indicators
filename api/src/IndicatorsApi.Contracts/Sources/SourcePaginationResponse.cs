@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Sources.GetSourcesPagination;
+﻿namespace IndicatorsApi.Contracts.Sources;
 
 /// <summary>
 /// Gets source pagination response.

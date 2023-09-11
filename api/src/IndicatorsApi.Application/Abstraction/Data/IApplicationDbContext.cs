@@ -1,6 +1,7 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Sources;
+using IndicatorsApi.Domain.Features.SubSections;
 using IndicatorsApi.Domain.Features.Users;
 using Microsoft.EntityFrameworkCore;
 

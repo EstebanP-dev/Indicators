@@ -8,7 +8,7 @@ namespace IndicatorsApi.Application.Features.Roles.UpdateRole;
 
 /// <inheritdoc/>
 internal sealed class UpdateRoleCommandHandler
-    : ICommandHandler<UpdateRoleCommand>
+    : ICommandHandler<UpdateRoleCommand, Updated>
 {
     private readonly IRoleRepository _actionTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ internal sealed class UpdateRoleCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Updated>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -45,7 +45,7 @@ internal sealed class UpdateRoleCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Updated;
         }
         catch (DbUpdateException)
         {

@@ -4,8 +4,6 @@ using IndicatorsApi.Application.Features.Displays.GetDisplayById;
 using IndicatorsApi.Application.Features.Displays.GetDisplaysPagination;
 using IndicatorsApi.Application.Features.Displays.UpdateSection;
 using IndicatorsApi.Contracts.Displays;
-using IndicatorsApi.Contracts.Features.Displays.GetDisplayById;
-using IndicatorsApi.Contracts.Features.Displays.GetDisplaysPagination;
 using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.Displays;
 using IndicatorsApi.Domain.Primitives;
@@ -29,66 +27,104 @@ public sealed class DisplayModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", async ([FromBody] CreateDisplayRequest request, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateDisplay)
+            .WithTags("Displays")
+            .WithName(nameof(CreateDisplay));
+
+        app
+            .MapPut("/", UpdateDisplay)
+            .WithTags("Displays")
+            .WithName(nameof(UpdateDisplay));
+
+        app
+            .MapDelete("/{id}", DeleteDisplay)
+            .WithTags("Displays")
+            .WithName(nameof(DeleteDisplay));
+
+        app
+            .MapGet("/", GetDisplays)
+            .WithTags("Displays")
+            .WithName(nameof(GetDisplays));
+
+        app
+            .MapGet("/{id}", GetDisplay)
+            .WithTags("Displays")
+            .WithName(nameof(GetDisplay));
+    }
+
+    private static async Task<IResult> CreateDisplay(
+        [FromBody] CreateDisplayRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateDisplayCommand command = request.Adapt<CreateDisplayCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateDisplay(
+        int id,
+        [FromBody] UpdateDisplayRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            CreateDisplayCommand command = request.Adapt<CreateDisplayCommand>();
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            ErrorOr<Success> result = await sender
-                .Send(request: command, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        UpdateDisplayCommand query = request.Adapt<UpdateDisplayCommand>();
 
-            return Result(value: result);
-        });
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
-        {
-            int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
+        return Result(value: result);
+    }
 
-            GetDisplaysPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+    private static async Task<IResult> DeleteDisplay(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteDisplayCommand query = new(id);
 
-            ErrorOr<Pagination<Display>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<Display>, Pagination<DisplayPaginationResponse>>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetDisplayByIdQuery query = new(Id: id);
+    private static async Task<IResult> GetDisplays(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
 
-            ErrorOr<Display> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        GetDisplaysPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            return Result<Display, DisplayByIdResponse>(value: result);
-        });
+        ErrorOr<Pagination<Display>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        app.MapPut("/{id}", async (int id, [FromBody] UpdateDisplayRequest request, ISender sender, CancellationToken cancellationToken) =>
-        {
-            if (id != request.Id)
-            {
-                return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
-            }
+        return Result<Pagination<Display>, Pagination<DisplayPaginationResponse>>(value: result);
+    }
 
-            UpdateDisplayCommand query = request.Adapt<UpdateDisplayCommand>();
+    private static async Task<IResult> GetDisplay(int id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetDisplayByIdQuery query = new(Id: id);
 
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Display> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result(value: result);
-        });
-
-        app.MapDelete("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            DeleteDisplayCommand query = new(id);
-
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
-
-            return Result(value: result);
-        });
+        return Result<Display, DisplayByIdResponse>(value: result);
     }
 }

@@ -22,14 +22,20 @@ public sealed class AuthModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/login", async ([FromBody] LoginRequest request, ISender sender) =>
-        {
-            LoginCommand command = request.Adapt<LoginCommand>();
+        app
+            .MapPost("/login", Login)
+            .WithTags("Authentication")
+            .WithName(nameof(Login))
+            .AllowAnonymous();
+    }
 
-            ErrorOr<(string, User)> result = await sender.Send(command)
-                .ConfigureAwait(true);
+    private static async Task<IResult> Login([FromBody] LoginRequest request, ISender sender)
+    {
+        LoginCommand command = request.Adapt<LoginCommand>();
 
-            return Result<(string, User), LoginResponse>(result);
-        });
+        ErrorOr<(string, User)> result = await sender.Send(command)
+            .ConfigureAwait(true);
+
+        return Result<(string, User), LoginResponse>(result);
     }
 }

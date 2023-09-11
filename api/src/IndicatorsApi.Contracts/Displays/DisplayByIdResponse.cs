@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Displays.GetDisplayById;
+﻿namespace IndicatorsApi.Contracts.Displays;
 
 /// <summary>
 /// Gets display by id response.

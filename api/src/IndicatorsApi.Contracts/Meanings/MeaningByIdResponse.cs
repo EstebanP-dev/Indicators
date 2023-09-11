@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Meanings.GetMeaningById;
+﻿namespace IndicatorsApi.Contracts.Meanings;
 
 /// <summary>
 /// Gets by id response.

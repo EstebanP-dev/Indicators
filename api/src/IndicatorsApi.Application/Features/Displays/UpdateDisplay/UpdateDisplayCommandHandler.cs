@@ -8,7 +8,7 @@ namespace IndicatorsApi.Application.Features.Displays.UpdateDisplay;
 
 /// <inheritdoc/>
 internal sealed class UpdateDisplayCommandHandler
-    : ICommandHandler<UpdateDisplayCommand>
+    : ICommandHandler<UpdateDisplayCommand, Updated>
 {
     private readonly IDisplayRepository _displayRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ internal sealed class UpdateDisplayCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateDisplayCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Updated>> Handle(UpdateDisplayCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -45,7 +45,7 @@ internal sealed class UpdateDisplayCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Updated;
         }
         catch (DbUpdateException)
         {

@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
+﻿using IndicatorsApi.Contracts.Roles;
 using IndicatorsApi.Domain.Features.Roles;
 
 namespace IndicatorsApi.WebApi.Features.Roles;

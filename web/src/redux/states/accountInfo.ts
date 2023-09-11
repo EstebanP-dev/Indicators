@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AccountInfo } from "../../models";
 
+const localStorageKey: string = 'accountInfo'
+
 export const AccountInfoEmptyState: AccountInfo = {
     token: '', user: {
         email: '',
@@ -8,12 +10,28 @@ export const AccountInfoEmptyState: AccountInfo = {
     }
 }
 
+export const persistAccountInfoInLocalStorage = (accountInfo: AccountInfo) => {
+    localStorage.setItem(localStorageKey, JSON.stringify({ ...accountInfo }));
+}
+
+export const clearAccountInfoFromLocalStorage = () => {
+    localStorage.removeItem(localStorageKey);
+}
+
 export const accountInfoSlice = createSlice({
-    name: 'accountInfo',
-    initialState: AccountInfoEmptyState,
+    name: localStorageKey,
+    initialState: localStorage.getItem(localStorageKey) 
+        ? JSON.parse(localStorage.getItem(localStorageKey) as string)
+        : AccountInfoEmptyState,
     reducers: {
-        createAccountInfo: (state, action) => action.payload,
-        modifyAccountInfo: (state, action) => ({ ...state, ...action.payload }),
+        createAccountInfo: (_, action) => {
+            persistAccountInfoInLocalStorage(action.payload)
+            return action.payload;
+        },
+        modifyAccountInfo: (state, action) => {
+            persistAccountInfoInLocalStorage(action.payload)
+            return ({ ...state, ...action.payload });
+        },
         resetAccountInfo: () => AccountInfoEmptyState
     }
 });

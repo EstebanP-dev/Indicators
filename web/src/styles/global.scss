@@ -13,14 +13,15 @@ a
   color: $main-color;
 }
 
-.main
+.main, .login
 {
   font-family: "Inter", sans-serif;
   background-color: $main-bg;
   color: $main-color;
   display: flex;
   flex-flow: column;
-  height: 100%;
+  height: 100vh;
+  position: inherit;
   
   .navbar
   {
@@ -63,7 +64,7 @@ a
 
   button
   {
-      padding: 5px;
-      cursor: pointer;
+    padding: 5px;
+    cursor: pointer;
   }
 }

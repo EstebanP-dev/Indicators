@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Displays.DeleteDisplay;
 
 /// <inheritdoc/>
 internal sealed class DeleteDisplayCommandHandler
-    : ICommandHandler<DeleteDisplayCommand>
+    : ICommandHandler<DeleteDisplayCommand, Deleted>
 {
     private readonly IDisplayRepository _displayRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class DeleteDisplayCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteDisplayCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteDisplayCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +42,7 @@ internal sealed class DeleteDisplayCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

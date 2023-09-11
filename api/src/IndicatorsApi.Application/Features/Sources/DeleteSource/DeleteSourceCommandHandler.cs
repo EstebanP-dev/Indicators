@@ -1,13 +1,11 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Sources;
+﻿using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Application.Features.Sources.DeleteSource;
 
 /// <inheritdoc/>
 internal sealed class DeleteSourceCommandHandler
-    : ICommandHandler<DeleteSourceCommand>
+    : ICommandHandler<DeleteSourceCommand, Deleted>
 {
     private readonly ISourceRepository _sourceRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +22,7 @@ internal sealed class DeleteSourceCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteSourceCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +40,7 @@ internal sealed class DeleteSourceCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

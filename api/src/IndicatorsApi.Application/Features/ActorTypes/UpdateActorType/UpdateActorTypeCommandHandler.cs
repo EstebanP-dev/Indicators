@@ -8,7 +8,7 @@ namespace IndicatorsApi.Application.Features.ActorTypes.UpdateActorType;
 
 /// <inheritdoc/>
 internal sealed class UpdateActorTypeCommandHandler
-    : ICommandHandler<UpdateActorTypeCommand>
+    : ICommandHandler<UpdateActorTypeCommand, Updated>
 {
     private readonly IActorTypeRepository _actionTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ internal sealed class UpdateActorTypeCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateActorTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Updated>> Handle(UpdateActorTypeCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -45,7 +45,7 @@ internal sealed class UpdateActorTypeCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Updated;
         }
         catch (DbUpdateException)
         {

@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Sections.GetSubSectionById;
+﻿namespace IndicatorsApi.Contracts.SubSections;
 
 /// <summary>
 /// Section response.

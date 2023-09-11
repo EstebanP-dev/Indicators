@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Users.DeleteUser;
 
 /// <inheritdoc/>
 internal sealed class DeleteUserCommandHandler
-    : ICommandHandler<DeleteUserCommand>
+    : ICommandHandler<DeleteUserCommand, Deleted>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class DeleteUserCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +42,7 @@ internal sealed class DeleteUserCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

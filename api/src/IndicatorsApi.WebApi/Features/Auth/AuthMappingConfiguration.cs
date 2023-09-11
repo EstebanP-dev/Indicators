@@ -1,10 +1,7 @@
 ﻿using IndicatorsApi.Application.Features.Auth.Login;
 using IndicatorsApi.Application.Features.Users.Login;
 using IndicatorsApi.Contracts.Auth;
-using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
-using IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
-using IndicatorsApi.Contracts.Features.Users.GetUsersPagination;
+using IndicatorsApi.Contracts.Users;
 using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.WebApi.Features.Auth;

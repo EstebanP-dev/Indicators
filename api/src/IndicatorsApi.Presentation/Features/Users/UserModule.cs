@@ -2,10 +2,7 @@
 using IndicatorsApi.Application.Features.Users.DeleteUser;
 using IndicatorsApi.Application.Features.Users.GetUserById;
 using IndicatorsApi.Application.Features.Users.GetUsersPagination;
-using IndicatorsApi.Contracts.Features.Users.CreateUser;
-using IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
-using IndicatorsApi.Contracts.Features.Users.GetUsersPagination;
-using IndicatorsApi.Domain.Errors;
+using IndicatorsApi.Contracts.Users;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Primitives;
 
@@ -28,50 +25,79 @@ public sealed class UserModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", async ([FromBody] CreateUserRequest request, ISender sender, CancellationToken cancellationToken) =>
-        {
-            CreateUserCommand command = request.Adapt<CreateUserCommand>();
+        app
+            .MapPost("/", CreateUser)
+            .WithTags("Users")
+            .WithName(nameof(CreateUser));
 
-            ErrorOr<Success> result = await sender
-                .Send(request: command, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        app
+            .MapGet("/", GetUsers)
+            .WithTags("Users")
+            .WithName(nameof(GetUsers));
 
-            return Result(value: result);
-        });
+        app
+            .MapGet("/{id}", GetUser)
+            .WithTags("Users")
+            .WithName(nameof(GetUser));
 
-        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
-        {
-            string[] ids = GetStringsFromExcludeParameter(exclude: parameters.Exclude);
+        app
+            .MapDelete("/{id}", DeleteUser)
+            .WithTags("Users")
+            .WithName(nameof(DeleteUser));
+    }
 
-            GetUsersPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+    private static async Task<IResult> CreateUser(
+        [FromBody] CreateUserRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateUserCommand command = request.Adapt<CreateUserCommand>();
 
-            ErrorOr<Pagination<User>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<User>, Pagination<UserPaginationResponse>>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (string id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetUserByIdQuery query = new(Id: id);
+    private static async Task<IResult> DeleteUser(
+        string id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteUserCommand query = new(id);
 
-            ErrorOr<User> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<User, UserByIdResponse>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapDelete("/{id}", async (string id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            DeleteUserCommand query = new(id);
+    private static async Task<IResult> GetUsers(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        string[] ids = GetStringsFromExcludeParameter(exclude: parameters.Exclude);
 
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        GetUsersPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            return Result(value: result);
-        });
+        ErrorOr<Pagination<User>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return Result<Pagination<User>, Pagination<UserPaginationResponse>>(value: result);
+    }
+
+    private static async Task<IResult> GetUser(string id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetUserByIdQuery query = new(Id: id);
+
+        ErrorOr<User> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result<User, UserByIdResponse>(value: result);
     }
 }

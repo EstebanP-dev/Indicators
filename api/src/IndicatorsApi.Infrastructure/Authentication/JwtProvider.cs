@@ -26,27 +26,30 @@ internal sealed class JwtProvider
     /// <inheritdoc/>
     public string GenerateJwt(User user)
     {
+        JwtSecurityTokenHandler tokenHandler = new();
+        byte[] key = Encoding.UTF8.GetBytes(_options.SecretKey!);
+        SecurityKey securityKey = new SymmetricSecurityKey(key);
+        SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256Signature);
+
         Claim[] claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.NameId, user.Id.Value),
-            new(JwtRegisteredClaimNames.GivenName, user.Id.Value),
-            new(JwtRegisteredClaimNames.Email, user.Id.Value),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat, Guid.NewGuid().ToString(), ClaimValueTypes.Integer64),
+            new(JwtRegisteredClaimNames.Sub, user.Id.Value),
+            new(JwtRegisteredClaimNames.Email, user.Id.Value),
         };
 
-        SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey!));
+        SecurityTokenDescriptor tokenDescriptor = new()
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(_options.ExpirationTime),
+            Audience = _options.Audience,
+            Issuer = _options.Issuer,
+            SigningCredentials = signingCredentials,
+        };
 
-        SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
+        SecurityToken securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        string token = tokenHandler.WriteToken(securityToken);
 
-        JwtSecurityToken token = new(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
-            claims: claims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddMinutes(_options.ExpirationTime),
-            signingCredentials: signingCredentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return token;
     }
 }

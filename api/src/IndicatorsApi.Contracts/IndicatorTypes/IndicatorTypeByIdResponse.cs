@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypeById;
+﻿namespace IndicatorsApi.Contracts.IndicatorTypes;
 
 /// <summary>
 /// Gets by id response.

@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.ActorTypes.DeleteActorType;
 
 /// <inheritdoc/>
 internal sealed class DeleteActorTypeCommandHandler
-    : ICommandHandler<DeleteActorTypeCommand>
+    : ICommandHandler<DeleteActorTypeCommand, Deleted>
 {
     private readonly IActorTypeRepository _actorTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class DeleteActorTypeCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteActorTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteActorTypeCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +42,7 @@ internal sealed class DeleteActorTypeCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

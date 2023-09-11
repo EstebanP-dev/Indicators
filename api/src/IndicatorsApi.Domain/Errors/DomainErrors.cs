@@ -48,6 +48,7 @@ public static class DomainErrors
     /// The bulk not found error.
     /// </value>
     public static Error BulkNotFound => Error.Unexpected(
+        code: "General.BulkNotFound",
         description: "Something was wrong. Try again later.");
 
     /// <summary>
@@ -59,6 +60,7 @@ public static class DomainErrors
         where T : class
 #pragma warning disable CA1308 // Normalize strings to uppercase
         => Error.Conflict(
+        code: "General.AlreadyExists",
         description: $"The {typeof(T).Name.ToLowerInvariant()} already exists.");
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
@@ -69,8 +71,8 @@ public static class DomainErrors
     /// <param name="left">Left value.</param>
     /// <param name="right">Right value.</param>
     /// <returns>Returns a no coincidence error.</returns>
-    public static Error NoCoincidence<T>(T left, T right)
-        where T : struct => Error.Conflict(
+    public static Error NoCoincidence<T>(T left, T right) => Error.Conflict(
+        code: "General.NoCoincidence",
         description: $"The value '{left}' does not coincide with '{right}'.");
 
     /// <summary>
@@ -80,5 +82,6 @@ public static class DomainErrors
     /// The creation or updation failed error.
     /// </value>
     public static Error CreationOrUpdatingFailed => Error.Failure(
+        code: "General.CreationOrUpdatingFailed",
         description: "Something was wrong. Try again later.");
 }

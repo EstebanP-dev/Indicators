@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.ActorTypes.GetActorTypeById;
+﻿namespace IndicatorsApi.Contracts.ActorTypes;
 
 /// <summary>
 /// Gets by id response.

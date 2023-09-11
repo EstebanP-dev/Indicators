@@ -8,7 +8,7 @@ namespace IndicatorsApi.Application.Features.Sources.UpdateSource;
 
 /// <inheritdoc/>
 internal sealed class UpdateSourceCommandHandler
-    : ICommandHandler<UpdateSourceCommand>
+    : ICommandHandler<UpdateSourceCommand, Updated>
 {
     private readonly ISourceRepository _sourceRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ internal sealed class UpdateSourceCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Updated>> Handle(UpdateSourceCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -45,7 +45,7 @@ internal sealed class UpdateSourceCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Updated;
         }
         catch (DbUpdateException)
         {

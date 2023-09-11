@@ -3,8 +3,6 @@ using IndicatorsApi.Application.Features.Meanings.DeleteMeaning;
 using IndicatorsApi.Application.Features.Meanings.GetMeaningById;
 using IndicatorsApi.Application.Features.Meanings.GetMeaningsPagination;
 using IndicatorsApi.Application.Features.Meanings.UpdateSection;
-using IndicatorsApi.Contracts.Features.Meanings.GetMeaningById;
-using IndicatorsApi.Contracts.Features.Meanings.GetMeaningsPagination;
 using IndicatorsApi.Contracts.Meanings;
 using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.Meanings;
@@ -29,66 +27,104 @@ public sealed class MeaningModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", async ([FromBody] CreateMeaningRequest request, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateMeaning)
+            .WithTags("Meanings")
+            .WithName(nameof(CreateMeaning));
+
+        app
+            .MapPut("/", UpdateMeaning)
+            .WithTags("Meanings")
+            .WithName(nameof(UpdateMeaning));
+
+        app
+            .MapDelete("/{id}", DeleteMeaning)
+            .WithTags("Meanings")
+            .WithName(nameof(DeleteMeaning));
+
+        app
+            .MapGet("/", GetMeanings)
+            .WithTags("Meanings")
+            .WithName(nameof(GetMeanings));
+
+        app
+            .MapGet("/{id}", GetMeaning)
+            .WithTags("Meanings")
+            .WithName(nameof(GetMeaning));
+    }
+
+    private static async Task<IResult> CreateMeaning(
+        [FromBody] CreateMeaningRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateMeaningCommand command = request.Adapt<CreateMeaningCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateMeaning(
+        int id,
+        [FromBody] UpdateMeaningRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            CreateMeaningCommand command = request.Adapt<CreateMeaningCommand>();
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            ErrorOr<Success> result = await sender
-                .Send(request: command, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        UpdateMeaningCommand query = request.Adapt<UpdateMeaningCommand>();
 
-            return Result(value: result);
-        });
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
-        {
-            int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
+        return Result(value: result);
+    }
 
-            GetMeaningsPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+    private static async Task<IResult> DeleteMeaning(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteMeaningCommand query = new(id);
 
-            ErrorOr<Pagination<Meaning>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<Meaning>, Pagination<MeaningPaginationResponse>>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetMeaningByIdQuery query = new(Id: id);
+    private static async Task<IResult> GetMeanings(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
 
-            ErrorOr<Meaning> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        GetMeaningsPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            return Result<Meaning, MeaningByIdResponse>(value: result);
-        });
+        ErrorOr<Pagination<Meaning>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        app.MapPut("/{id}", async (int id, [FromBody] UpdateMeaningRequest request, ISender sender, CancellationToken cancellationToken) =>
-        {
-            if (id != request.Id)
-            {
-                return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
-            }
+        return Result<Pagination<Meaning>, Pagination<MeaningPaginationResponse>>(value: result);
+    }
 
-            UpdateMeaningCommand query = request.Adapt<UpdateMeaningCommand>();
+    private static async Task<IResult> GetMeaning(int id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetMeaningByIdQuery query = new(Id: id);
 
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Meaning> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result(value: result);
-        });
-
-        app.MapDelete("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            DeleteMeaningCommand query = new(id);
-
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
-
-            return Result(value: result);
-        });
+        return Result<Meaning, MeaningByIdResponse>(value: result);
     }
 }

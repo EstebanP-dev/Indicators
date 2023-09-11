@@ -1,7 +1,10 @@
-﻿using IndicatorsApi.Application.Features.Roles.GetRoleById;
+﻿using IndicatorsApi.Application.Features.Roles.CreateRole;
+using IndicatorsApi.Application.Features.Roles.DeleteRole;
+using IndicatorsApi.Application.Features.Roles.GetRoleById;
 using IndicatorsApi.Application.Features.Roles.GetRolesPagination;
-using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
+using IndicatorsApi.Application.Features.Roles.UpdateSection;
+using IndicatorsApi.Contracts.Roles;
+using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Primitives;
 
@@ -24,28 +27,104 @@ public sealed class RoleModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateRole)
+            .WithTags("Roles")
+            .WithName(nameof(CreateRole));
+
+        app
+            .MapPut("/", UpdateRole)
+            .WithTags("Roles")
+            .WithName(nameof(UpdateRole));
+
+        app
+            .MapDelete("/{id}", DeleteRole)
+            .WithTags("Roles")
+            .WithName(nameof(DeleteRole));
+
+        app
+            .MapGet("/", GetRoles)
+            .WithTags("Roles")
+            .WithName(nameof(GetRoles));
+
+        app
+            .MapGet("/{id}", GetRole)
+            .WithTags("Roles")
+            .WithName(nameof(GetRole));
+    }
+
+    private static async Task<IResult> CreateRole(
+        [FromBody] CreateRoleRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateRoleCommand command = request.Adapt<CreateRoleCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateRole(
+        int id,
+        [FromBody] UpdateRoleRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            int[] ids = GetIntsFromExcludeParameter(exclude: exclude);
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            GetRolesPaginationQuery query = new(page, rows, ids);
+        UpdateRoleCommand query = request.Adapt<UpdateRoleCommand>();
 
-            ErrorOr<Pagination<Role>> result = await sender
-                .Send(query, cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<Role>, Pagination<RolePaginationResponse>>(result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (int id, ISender sender) =>
-        {
-            GetRoleByIdQuery query = new(id);
+    private static async Task<IResult> DeleteRole(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteRoleCommand query = new(id);
 
-            ErrorOr<Role> result = await sender
-                .Send(query, default)
-                .ConfigureAwait(true);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Role, RoleByIdResponse>(result);
-        });
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> GetRoles(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
+
+        GetRolesPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+
+        ErrorOr<Pagination<Role>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return Result<Pagination<Role>, Pagination<RolePaginationResponse>>(value: result);
+    }
+
+    private static async Task<IResult> GetRole(int id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetRoleByIdQuery query = new(Id: id);
+
+        ErrorOr<Role> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result<Role, RoleByIdResponse>(value: result);
     }
 }

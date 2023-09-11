@@ -1,6 +1,6 @@
-﻿using IndicatorsApi.Domain.Features.Sections;
+﻿using IndicatorsApi.Domain.Features.SubSections;
 
-namespace IndicatorsApi.Persistence.Features.Sections;
+namespace IndicatorsApi.Persistence.Features.SubSections;
 
 /// <inheritdoc/>
 internal sealed class SubSectionConfiguration

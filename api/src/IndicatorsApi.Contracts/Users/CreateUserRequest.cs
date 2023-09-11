@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Users.CreateUser;
+﻿namespace IndicatorsApi.Contracts.Users;
 
 /// <summary>
 /// Create User Request.

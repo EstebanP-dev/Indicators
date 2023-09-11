@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.IndicatorTypes.GetIndicatorTypesPagination;
+﻿namespace IndicatorsApi.Contracts.IndicatorTypes;
 
 /// <summary>
 /// Gets pagination response.

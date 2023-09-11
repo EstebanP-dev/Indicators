@@ -4,8 +4,6 @@ using IndicatorsApi.Application.Features.ActorTypes.GetActorTypeById;
 using IndicatorsApi.Application.Features.ActorTypes.GetActorTypesPagination;
 using IndicatorsApi.Application.Features.ActorTypes.UpdateSection;
 using IndicatorsApi.Contracts.ActorTypes;
-using IndicatorsApi.Contracts.Features.ActorTypes.GetActorTypeById;
-using IndicatorsApi.Contracts.Features.ActorTypes.GetActorTypesPagination;
 using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.ActorTypes;
 using IndicatorsApi.Domain.Primitives;
@@ -22,73 +20,111 @@ public sealed class ActorTypeModule
     /// Initializes a new instance of the <see cref="ActorTypeModule"/> class.
     /// </summary>
     public ActorTypeModule()
-        : base("actortypes")
+        : base("actorTypes")
     {
     }
 
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", async ([FromBody] CreateActorTypeRequest request, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateActorType)
+            .WithTags("ActorTypes")
+            .WithName(nameof(CreateActorType));
+
+        app
+            .MapPut("/", UpdateActorType)
+            .WithTags("ActorTypes")
+            .WithName(nameof(UpdateActorType));
+
+        app
+            .MapDelete("/{id}", DeleteActorType)
+            .WithTags("ActorTypes")
+            .WithName(nameof(DeleteActorType));
+
+        app
+            .MapGet("/", GetActorTypes)
+            .WithTags("ActorTypes")
+            .WithName(nameof(GetActorTypes));
+
+        app
+            .MapGet("/{id}", GetActorType)
+            .WithTags("ActorTypes")
+            .WithName(nameof(GetActorType));
+    }
+
+    private static async Task<IResult> CreateActorType(
+        [FromBody] CreateActorTypeRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateActorTypeCommand command = request.Adapt<CreateActorTypeCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateActorType(
+        int id,
+        [FromBody] UpdateActorTypeRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            CreateActorTypeCommand command = request.Adapt<CreateActorTypeCommand>();
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            ErrorOr<Success> result = await sender
-                .Send(request: command, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        UpdateActorTypeCommand query = request.Adapt<UpdateActorTypeCommand>();
 
-            return Result(value: result);
-        });
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-        app.MapGet("/", async ([AsParameters] PaginationQueryParameters parameters, ISender sender, CancellationToken cancellationToken) =>
-        {
-            int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
+        return Result(value: result);
+    }
 
-            GetActorTypesPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
+    private static async Task<IResult> DeleteActorType(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteActorTypeCommand query = new(id);
 
-            ErrorOr<Pagination<ActorType>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<ActorType>, Pagination<ActorTypePaginationResponse>>(value: result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetActorTypeByIdQuery query = new(Id: id);
+    private static async Task<IResult> GetActorTypes(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
 
-            ErrorOr<ActorType> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        GetActorTypesPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            return Result<ActorType, ActorTypeByIdResponse>(value: result);
-        });
+        ErrorOr<Pagination<ActorType>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-        app.MapPut("/{id}", async (int id, [FromBody] UpdateActorTypeRequest request, ISender sender, CancellationToken cancellationToken) =>
-        {
-            if (id != request.Id)
-            {
-                return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
-            }
+        return Result<Pagination<ActorType>, Pagination<ActorTypePaginationResponse>>(value: result);
+    }
 
-            UpdateActorTypeCommand query = request.Adapt<UpdateActorTypeCommand>();
+    private static async Task<IResult> GetActorType(int id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetActorTypeByIdQuery query = new(Id: id);
 
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<ActorType> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result(value: result);
-        });
-
-        app.MapDelete("/{id}", async (int id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            DeleteActorTypeCommand query = new(id);
-
-            ErrorOr<Success> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
-
-            return Result(value: result);
-        });
+        return Result<ActorType, ActorTypeByIdResponse>(value: result);
     }
 }

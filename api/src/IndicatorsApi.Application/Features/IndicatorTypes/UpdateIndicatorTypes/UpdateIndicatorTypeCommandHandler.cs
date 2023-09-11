@@ -8,7 +8,7 @@ namespace IndicatorsApi.Application.Features.IndicatorTypes.UpdateIndicatorType;
 
 /// <inheritdoc/>
 internal sealed class UpdateIndicatorTypeCommandHandler
-    : ICommandHandler<UpdateIndicatorTypeCommand>
+    : ICommandHandler<UpdateIndicatorTypeCommand, Updated>
 {
     private readonly IIndicatorTypeRepository _indicatorTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ internal sealed class UpdateIndicatorTypeCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(UpdateIndicatorTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Updated>> Handle(UpdateIndicatorTypeCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -45,7 +45,7 @@ internal sealed class UpdateIndicatorTypeCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Updated;
         }
         catch (DbUpdateException)
         {

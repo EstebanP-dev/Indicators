@@ -4,10 +4,11 @@ import { menu } from "../../data";
 import { AppStore } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { AccountInfo } from "../../models";
+import React from "react";
 
 export const Menu = () => {
 
-  const accountInfoState = useSelector<AppStore, AccountInfo>((store: AppStore) => store.accountInfo);
+  const accountInfoState: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
 
   return (
     <div className="menu">
@@ -19,14 +20,13 @@ export const Menu = () => {
               {
                 accountInfoState.user.roles.some(role => listItem.roles.includes(role.id)) ? (
                   <>
-                  </>
-                ) : (
-                  <>
                     <Link to={listItem.url} className="listItem" key={listItem.id}>
                       <img src={listItem.icon} alt={listItem.id + "_" + listItem.title + " icon"} />
                       <span className="listItemTitle">{listItem.title}</span>
                     </Link>
                   </>
+                ) : (
+                  <React.Fragment key={item.id}/>
                 )
               }
             </>

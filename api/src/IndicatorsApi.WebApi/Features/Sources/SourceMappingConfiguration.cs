@@ -1,6 +1,4 @@
-﻿using IndicatorsApi.Application.Features.Sources.UpdateSection;
-using IndicatorsApi.Contracts.Features.Sources.GetSourceById;
-using IndicatorsApi.Contracts.Features.Sources.GetSourcesPagination;
+﻿using IndicatorsApi.Contracts.Sources;
 using IndicatorsApi.Domain.Features.Sources;
 
 namespace IndicatorsApi.WebApi.Features.Sources;

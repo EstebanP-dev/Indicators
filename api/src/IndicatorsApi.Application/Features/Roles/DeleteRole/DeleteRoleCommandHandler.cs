@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Roles.DeleteRole;
 
 /// <inheritdoc/>
 internal sealed class DeleteRoleCommandHandler
-    : ICommandHandler<DeleteRoleCommand>
+    : ICommandHandler<DeleteRoleCommand, Deleted>
 {
     private readonly IRoleRepository _roleRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class DeleteRoleCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +42,7 @@ internal sealed class DeleteRoleCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

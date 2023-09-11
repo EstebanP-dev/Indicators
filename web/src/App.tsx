@@ -9,14 +9,14 @@ import { SnackbarUtilsConfigurator } from "./utilities";
 import { Suspense, lazy } from "react";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { Footer, Menu, Navbar } from "./components";
+import { Footer, Menu, Navbar, ProtectedRoute } from "./components";
 import { Home, Login, Roles, Users } from "./pages";
+import { PrivateRoutes, PublicRoutes } from "./enviroments";
 
 const DisplayList = lazy(() => import("./pages/Displays/List/DisplayList"))
 const DisplayDetails = lazy(() => import("./pages/Displays/Details/DisplayDetails"))
 
 function App() {
-
   const Layout = () => {
     return (
       <div className="main">
@@ -41,13 +41,12 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      // element: <ProtectRoutes>
-      //   <Layout />,
-      // </ProtectRoutes>,
-      element: <Layout/>,
+      element:<ProtectedRoute>
+        <Layout />,
+      </ProtectedRoute>,
       children: [
         {
-          path: "/",
+          path: PrivateRoutes.HOME,
           element: <Home />
         },
         {
@@ -69,7 +68,7 @@ function App() {
       ]
     },
     {
-      path: "/login",
+      path: PublicRoutes.LOGIN,
       element: <Login />
     }
   ]);
@@ -86,4 +85,5 @@ function App() {
   )
 }
 
-export default App
+export default App;
+

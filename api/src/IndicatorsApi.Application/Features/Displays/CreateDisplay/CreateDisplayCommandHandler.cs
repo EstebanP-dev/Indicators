@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.Displays.CreateDisplay;
 
 /// <inheritdoc/>
 internal sealed class CreateDisplayCommandHandler
-    : ICommandHandler<CreateDisplayCommand>
+    : ICommandHandler<CreateDisplayCommand, Created>
 {
     private readonly IDisplayRepository _displayRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class CreateDisplayCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateDisplayCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateDisplayCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -33,7 +33,7 @@ internal sealed class CreateDisplayCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Created;
         }
         catch (DbUpdateException)
         {

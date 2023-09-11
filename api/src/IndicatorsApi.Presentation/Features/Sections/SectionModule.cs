@@ -1,17 +1,18 @@
-﻿using IndicatorsApi.Application.Features.Sections.GetSectionById;
+﻿using IndicatorsApi.Application.Features.Sections.CreateSection;
+using IndicatorsApi.Application.Features.Sections.DeleteSection;
+using IndicatorsApi.Application.Features.Sections.GetSectionById;
 using IndicatorsApi.Application.Features.Sections.GetSectionsPagination;
-using IndicatorsApi.Application.Features.Sections.GetSubSectionById;
-using IndicatorsApi.Application.Features.Sections.GetSubSectionsPagination;
-using IndicatorsApi.Contracts.Features.Sections.GetSectionById;
-using IndicatorsApi.Contracts.Features.Sections.GetSectionsPagination;
-using IndicatorsApi.Contracts.Features.Sections.GetSubSectionById;
-using IndicatorsApi.Contracts.Features.Sections.GetSubSectionsPagination;
+using IndicatorsApi.Application.Features.Sections.UpdateSection;
+using IndicatorsApi.Contracts.Sections;
+using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Presentation.Features.Sections;
 
-/// <inheritdoc/>
+/// <summary>
+/// Section endpoints.
+/// </summary>
 public sealed class SectionModule
     : BaseModule
 {
@@ -26,56 +27,104 @@ public sealed class SectionModule
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/section", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
+        app
+            .MapPost("/", CreateSection)
+            .WithTags("Sections")
+            .WithName(nameof(CreateSection));
+
+        app
+            .MapPut("/", UpdateSection)
+            .WithTags("Sections")
+            .WithName(nameof(UpdateSection));
+
+        app
+            .MapDelete("/{id}", DeleteSection)
+            .WithTags("Sections")
+            .WithName(nameof(DeleteSection));
+
+        app
+            .MapGet("/", GetSections)
+            .WithTags("Sections")
+            .WithName(nameof(GetSections));
+
+        app
+            .MapGet("/{id}", GetSection)
+            .WithTags("Sections")
+            .WithName(nameof(GetSection));
+    }
+
+    private static async Task<IResult> CreateSection(
+        [FromBody] CreateSectionRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateSectionCommand command = request.Adapt<CreateSectionCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> UpdateSection(
+        string id,
+        [FromBody] UpdateSectionRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
         {
-            string[] ids = GetStringsFromExcludeParameter(exclude: exclude);
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
 
-            GetSectionsPaginationQuery query = new(Page: page, Rows: rows, Excludes: ids);
+        UpdateSectionCommand query = request.Adapt<UpdateSectionCommand>();
 
-            ErrorOr<Pagination<Section>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<Pagination<Section>, Pagination<SectionPaginationResponse>>(result);
-        });
+        return Result(value: result);
+    }
 
-        app.MapGet("/subsection", async ([FromQuery] int page, [FromQuery] int rows, [FromQuery] string? exclude, ISender sender, CancellationToken cancellationToken) =>
-        {
-            string[] ids = GetStringsFromExcludeParameter(exclude: exclude);
+    private static async Task<IResult> DeleteSection(
+        string id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        DeleteSectionCommand query = new(id);
 
-            GetSubSectionsPaginationQuery query = new(Page: page, Rows: rows, Excludes: ids);
+        ErrorOr<Deleted> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            ErrorOr<Pagination<SubSection>> result = await sender
-                .Send(request: query, cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        return Result(value: result);
+    }
 
-            return Result<Pagination<SubSection>, Pagination<SubSectionPaginationResponse>>(result);
-        });
+    private static async Task<IResult> GetSections(
+        [AsParameters] PaginationQueryParameters parameters,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        string[] ids = GetStringsFromExcludeParameter(exclude: parameters.Exclude);
 
-        app.MapGet("/section/{id}", async (string id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetSectionByIdQuery query = new(Id: id);
+        GetSectionsPaginationQuery query = new(Page: parameters.Page, Rows: parameters.Rows, Excludes: ids);
 
-            ErrorOr<Section> result = await sender
-                .Send(
-                    request: query,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Pagination<Section>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-            return Result<Section, SectionByIdResponse>(result);
-        });
+        return Result<Pagination<Section>, Pagination<SectionPaginationResponse>>(value: result);
+    }
 
-        app.MapGet("/subsection/{id}", async (string id, ISender sender, CancellationToken cancellationToken) =>
-        {
-            GetSubSectionByIdQuery query = new(Id: id);
+    private static async Task<IResult> GetSection(string id, ISender sender, CancellationToken cancellationToken)
+    {
+        GetSectionByIdQuery query = new(Id: id);
 
-            ErrorOr<SubSection> result = await sender
-                .Send(
-                    request: query,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(true);
+        ErrorOr<Section> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
-            return Result<SubSection, SubSectionByIdResponse>(result);
-        });
+        return Result<Section, SectionByIdResponse>(value: result);
     }
 }

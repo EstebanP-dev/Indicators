@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Contracts.Features.Sources.GetSourceById;
+﻿namespace IndicatorsApi.Contracts.Sources;
 
 /// <summary>
 /// Gets source by id response.

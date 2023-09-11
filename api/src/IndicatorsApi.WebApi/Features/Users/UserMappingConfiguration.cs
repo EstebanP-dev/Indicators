@@ -1,8 +1,5 @@
-﻿using IndicatorsApi.Contracts.Features.Roles.GetRoleById;
-using IndicatorsApi.Contracts.Features.Roles.GetRolesPagination;
-using IndicatorsApi.Contracts.Features.Users.GetUserByEmail;
-using IndicatorsApi.Contracts.Features.Users.GetUsersPagination;
-using IndicatorsApi.Domain.Features.Roles;
+﻿using IndicatorsApi.Contracts.Roles;
+using IndicatorsApi.Contracts.Users;
 using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.WebApi.Features.Users;

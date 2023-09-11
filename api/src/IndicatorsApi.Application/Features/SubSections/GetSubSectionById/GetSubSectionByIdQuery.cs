@@ -1,6 +1,6 @@
-﻿using IndicatorsApi.Domain.Features.Sections;
+﻿using IndicatorsApi.Domain.Features.SubSections;
 
-namespace IndicatorsApi.Application.Features.Sections.GetSubSectionById;
+namespace IndicatorsApi.Application.Features.SubSections.GetSubSectionById;
 
 /// <summary>
 /// Get section by id query.

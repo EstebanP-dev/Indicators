@@ -1,13 +1,11 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Meanings;
+﻿using IndicatorsApi.Domain.Features.Meanings;
 using IndicatorsApi.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Application.Features.Meanings.DeleteMeaning;
 
 /// <inheritdoc/>
 internal sealed class DeleteMeaningCommandHandler
-    : ICommandHandler<DeleteMeaningCommand>
+    : ICommandHandler<DeleteMeaningCommand, Deleted>
 {
     private readonly IMeaningRepository _meaningRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +22,7 @@ internal sealed class DeleteMeaningCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(DeleteMeaningCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(DeleteMeaningCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,7 +40,7 @@ internal sealed class DeleteMeaningCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Deleted;
         }
         catch (DbUpdateException)
         {

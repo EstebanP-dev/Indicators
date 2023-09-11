@@ -1,7 +1,7 @@
 ﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Sections;
+using IndicatorsApi.Domain.Features.SubSections;
 
-namespace IndicatorsApi.Application.Features.Sections.GetSubSectionById;
+namespace IndicatorsApi.Application.Features.SubSections.GetSubSectionById;
 
 /// <inheritdoc/>
 internal sealed class GetSubSectionByIdQueryHandler

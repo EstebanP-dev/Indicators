@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Features.ActorTypes.CreateActorType;
 
 /// <inheritdoc/>
 internal sealed class CreateActorTypeCommandHandler
-    : ICommandHandler<CreateActorTypeCommand>
+    : ICommandHandler<CreateActorTypeCommand, Created>
 {
     private readonly IActorTypeRepository _actorTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ internal sealed class CreateActorTypeCommandHandler
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Success>> Handle(CreateActorTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateActorTypeCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -33,7 +33,7 @@ internal sealed class CreateActorTypeCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
-            return Result.Success;
+            return Result.Created;
         }
         catch (DbUpdateException)
         {

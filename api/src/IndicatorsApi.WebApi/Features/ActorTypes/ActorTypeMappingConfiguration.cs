@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.ActorTypes.GetActorTypeById;
-using IndicatorsApi.Contracts.Features.ActorTypes.GetActorTypesPagination;
+﻿using IndicatorsApi.Contracts.ActorTypes;
 using IndicatorsApi.Domain.Features.ActorTypes;
 
 namespace IndicatorsApi.WebApi.Features.ActorTypes;

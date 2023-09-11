@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Contracts.Features.Sections.GetSectionById;
-using IndicatorsApi.Contracts.Features.Sections.GetSectionsPagination;
+﻿using IndicatorsApi.Contracts.Sections;
 using IndicatorsApi.Domain.Features.Sections;
 
 namespace IndicatorsApi.WebApi.Features.Sections;
