@@ -100,14 +100,19 @@
                     border: 1px solid $main-color;
                     border-radius: .5rem;
                     outline: none;
-                    background: none;
+                    background-color: $main-bg;
                     padding: 1rem;
                     margin: 1rem 0;
                     color: $main-color;
 
-                    :focus
+                    &:focus
                     {
                         outline: none;
+                    }
+
+                    &::-ms-reveal
+                    {
+                        filter: invert(100%);
                     }
                 }
 
@@ -165,30 +170,6 @@
                 flex-direction: column;
                 margin-top: 1rem;
                 margin-bottom: 1rem;
-
-                button
-                {
-                    width: 100%;
-                    background-color: $main-bg;
-                    color: $main-color;
-                    border-radius: .5rem;
-                    padding: 1rem;
-                    text-align: center;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    border: 1px solid $main-color;
-                    cursor: pointer;
-
-                    &:hover
-                    {
-                        background-color: $main-color;
-                        color: $main-bg;
-                    }
-                }
             }
         }
 

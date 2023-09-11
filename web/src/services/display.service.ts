@@ -1,24 +1,23 @@
 import axios from "axios";
 import { loadAbort } from "../utilities"
-import { AccountInfo, Display, Pagination } from "../models";
+import { Display, Pagination } from "../models";
 import { endpoints, enviroment } from "../enviroments";
-import { AppStore } from "../redux/store";
-import { useSelector } from "react-redux";
 
-export const getDisplaysPagination = (page: number, rows: number) => {
-    const accountInfo: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
+export const getDisplaysPagination = (page: number, rows: number, token: string) => {
     const controller = loadAbort();
+    const url = enviroment.api + endpoints.displays.getUsersPagination(page, rows, null);
 
     return {
-        call: axios.create({
-            baseURL: enviroment.api + endpoints.displays.getUsersPagination(page, rows, null),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${accountInfo.token}`
-            },
-            method: "GET"
-        }
+        call: axios.get<Pagination<Display> | Error>(
+            url,
+            {
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
         ),
         controller: controller
     }

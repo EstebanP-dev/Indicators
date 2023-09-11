@@ -4,7 +4,13 @@ import { Add, DataTable } from "../../../components";
 import { GridColDef } from "@mui/x-data-grid";
 import { useFetchAndLoad } from "../../../hooks";
 import { getDisplaysPagination } from "../../../services";
-import { Display, Pagination } from "../../../models";
+import { AccountInfo, Display, Pagination } from "../../../models";
+import { useDispatch, useSelector } from "react-redux";
+import { AppStore } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { PublicRoutes } from "../../../enviroments";
+import { resetAccountInfo } from "../../../redux/states/accountInfo";
+import { SnackbarUtilities } from "../../../utilities";
 
 const pageSize: number = 100;
 
@@ -25,18 +31,28 @@ const columns: GridColDef[] =
 
 const DisplayList = () => {
   const page: number = 0
+  const accountInfo: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { loading, callEndpoint } = useFetchAndLoad();
   const [pagination, setPagination ] = useState<Pagination<Display> | undefined>(undefined);
   const [error, setError ] = useState<Error | undefined>(undefined);
 
   useEffect(() => {
-    callEndpoint(getDisplaysPagination(0, pageSize))
+    callEndpoint(getDisplaysPagination(page, pageSize, accountInfo.token))
     .then((res) => {
       setPagination(res.data)
       setError(res.data)
     })
     .catch((error) => {
+      if (error?.response?.status === 401) {
+        SnackbarUtilities.info("Se ha vencido tu sesión.");
+        dispatch(resetAccountInfo())
+        navigate(PublicRoutes.LOGIN, {
+          replace: true
+        });
+      }
       console.log(JSON.stringify(error));
     });
   }, []);

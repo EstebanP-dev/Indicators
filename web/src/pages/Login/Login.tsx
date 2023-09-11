@@ -9,6 +9,7 @@ import { PrivateRoutes } from "../../enviroments";
 import { useDispatch, useSelector } from "react-redux";
 import { createAccountInfo } from "../../redux/states/accountInfo";
 import { AppStore } from "../../redux/store";
+import { Loading } from "../../components";
 
 const validateEmail = (email: string) => {
   var isValid: boolean = email !== "";
@@ -26,7 +27,7 @@ const Login = () => {
   const accountInfoStored: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { callEndpoint } = useFetchAndLoad();
+  const { loading, callEndpoint } = useFetchAndLoad();
   const [accountInfo, setAccountInfo ] = useState<AccountInfo | undefined>(undefined);
   const [error, setError ] = useState<Error | undefined>(undefined);
   const [username, setUsername] = useState('');
@@ -69,47 +70,54 @@ const Login = () => {
   }, [])
 
   return (
-    <div className="login">
-      <div className="sideImage">
-        <div className="signature">
-          <h1>Juan Esteban Navia Perez</h1>
-          <p>Ingenieria de Datos y Software</p>
+    <>
+      <div className="login">
+        <div className="sideImage">
+          <div className="signature">
+            <h1>Juan Esteban Navia Perez</h1>
+            <p>Ingenieria de Datos y Software</p>
+          </div>
+          <img src="medellin.jpg" alt="Medellin picture" />
         </div>
-        <img src="medellin.jpg" alt="Medellin picture" />
-      </div>
-      <div className="information">
-        <h1>USBMED</h1>
-        <div className="form">
-          <div className="title">
-            <h3>Inicio de Sesión</h3>
-            <p>¡Bienvenido! Ingresa tus credenciales para acceder.</p>
-          </div>
-          <div className="fields">
-            <input
-              type="email"
-              placeholder="Correo electrónico"
-              onChange={(e) => setUsername(e.target.value)} />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              onChange={(p) => setPassword(p.target.value)} />
-          </div>
-          <div className="credentials">
-            <div className="check">
-              <input type="checkbox" />
-              <p>Remember me</p>
+        <div className="information">
+          <h1>USBMED</h1>
+          <div className="form">
+            <div className="title">
+              <h3>Inicio de Sesión</h3>
+              <p>¡Bienvenido! Ingresa tus credenciales para acceder.</p>
             </div>
-            <p className="forgotPassword">Olvidé mi Contraseña</p>
+            <div className="fields">
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                onChange={(e) => setUsername(e.target.value)} />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                onChange={(p) => setPassword(p.target.value)} />
+            </div>
+            <div className="credentials">
+              <div className="check">
+                <input type="checkbox" />
+                <p>Remember me</p>
+              </div>
+              <p className="forgotPassword">Olvidé mi Contraseña</p>
+            </div>
+            <div className="submit" onClick={login}>
+              <button>Iniciar Sesión</button>
+            </div>
           </div>
-          <div className="submit" onClick={login}>
-            <button>Iniciar Sesión</button>
+          <div className="informationFooter">
+            <p>Si no tienes una cuenta, comunicate con un administrador.</p>
           </div>
-        </div>
-        <div className="informationFooter">
-          <p>Si no tienes una cuenta, comunicate con un administrador.</p>
         </div>
       </div>
-    </div>
+      {
+        loading
+        ? <Loading canCancel={false} cancelTitle={undefined} message="Cargando"/>
+        : <></>
+      }
+    </>
   )
 }
 

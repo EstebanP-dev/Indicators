@@ -25,14 +25,17 @@ export const accountInfoSlice = createSlice({
         : AccountInfoEmptyState,
     reducers: {
         createAccountInfo: (_, action) => {
-            persistAccountInfoInLocalStorage(action.payload)
+            persistAccountInfoInLocalStorage(action.payload);
             return action.payload;
         },
         modifyAccountInfo: (state, action) => {
-            persistAccountInfoInLocalStorage(action.payload)
+            persistAccountInfoInLocalStorage(action.payload);
             return ({ ...state, ...action.payload });
         },
-        resetAccountInfo: () => AccountInfoEmptyState
+        resetAccountInfo: () => {
+            clearAccountInfoFromLocalStorage();
+            return AccountInfoEmptyState;
+        }
     }
 });
 
