@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Application.Features.Displays.CreateDisplay;
+﻿using IndicatorsApi.Application.Abstraction.Enums;
+using IndicatorsApi.Application.Features.Displays.CreateDisplay;
 using IndicatorsApi.Application.Features.Displays.DeleteDisplay;
 using IndicatorsApi.Application.Features.Displays.GetDisplayById;
 using IndicatorsApi.Application.Features.Displays.GetDisplaysPagination;
@@ -33,9 +34,14 @@ public sealed class DisplayModule
             .WithName(nameof(CreateDisplay));
 
         app
-            .MapPut("/", UpdateDisplay)
+            .MapPut("/{id}", PutDisplay)
             .WithTags("Displays")
-            .WithName(nameof(UpdateDisplay));
+            .WithName(nameof(PutDisplay));
+
+        app
+            .MapPatch("/{id}", PatchDisplay)
+            .WithTags("Displays")
+            .WithName(nameof(PatchDisplay));
 
         app
             .MapDelete("/{id}", DeleteDisplay)
@@ -67,7 +73,7 @@ public sealed class DisplayModule
         return Result(value: result);
     }
 
-    private static async Task<IResult> UpdateDisplay(
+    private static async Task<IResult> PutDisplay(
         int id,
         [FromBody] UpdateDisplayRequest request,
         ISender sender,
@@ -78,7 +84,22 @@ public sealed class DisplayModule
             return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
         }
 
-        UpdateDisplayCommand query = request.Adapt<UpdateDisplayCommand>();
+        UpdateDisplayCommand query = new(id, request.Name, UpdateOperations.PUT);
+
+        ErrorOr<Updated> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
+    }
+
+    private static async Task<IResult> PatchDisplay(
+        int id,
+        [FromBody] UpdateDisplayRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        UpdateDisplayCommand query = new(id, request.Name, UpdateOperations.PATCH);
 
         ErrorOr<Updated> result = await sender
             .Send(request: query, cancellationToken: cancellationToken)

@@ -15,10 +15,10 @@ export const endpoints =
     },
     displays:
     {
-        getUsersPagination: (page: number, rows: number, exclude: string | null) =>
+        pagination: (page: number, rows: number, exclude: string | null) =>
             `/displays?page=${page}&rows=${rows}${exclude === null
                 ? ''
                 : '&exclude=' + exclude}`,
-        getUserById: (id: number) => `/displays/${id}`,
+        id: (id: number) => `/displays/${id}`,
     }
 }

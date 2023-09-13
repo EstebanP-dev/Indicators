@@ -1,6 +1,7 @@
-import { DataGrid, GridCallbackDetails, GridColDef, GridPaginationModel, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss"
-import { Link } from "react-router-dom";
+import DataActions from "./DataActions";
+import { useState } from "react";
 
 type Props =
 {
@@ -9,15 +10,13 @@ type Props =
     page: number,
     pageSize: number,
     totalPages: number,
-    slug: string
+    slug: string,
 }
 
 const DataTable = (props: Props) =>
 {
-    const handleDelete = (id: number) =>
-    {
-        console.log(id + " has been deleted")
-    }
+    const [rowId, setRowId] = useState<any>(null);
+    const [before, setBefore] = useState<any>(null);
 
     const actionColumn: GridColDef =
     {
@@ -27,14 +26,7 @@ const DataTable = (props: Props) =>
         renderCell: (params) =>
         {
             return (
-                <div className="action">
-                    <Link to={`/${props.slug}/${params.row.id}`}>
-                        <img src="view.svg" alt="edit icon" />
-                    </Link>
-                    <div className="delete" onClick={() => handleDelete(params.row.id)}>
-                        <img src="delete.svg" alt="delete icon" />
-                    </div>
-                </div>
+                <DataActions {...{params, ...props, rowId, setRowId, before, setBefore}}/>
             )
         }
     }
@@ -76,6 +68,8 @@ const DataTable = (props: Props) =>
                 }
             }
         }
+        onCellEditStart={(params) => setBefore(params.row)}
+        onCellEditStop={(params) => setRowId(params.id)}
         rowCount={props.pageSize * props.totalPages}
         pageSizeOptions={[props.pageSize]}
         paginationMode="server"

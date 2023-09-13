@@ -5,7 +5,3 @@ export const AuthMessages = {
     ALREADY_LOG_IN: "Ya has iniciado sesión.",
 
 }
-
-export const ExceptionMessages = {
-    UNKNOWN: "Algo ha salido mal, intentalo más tarde."
-}

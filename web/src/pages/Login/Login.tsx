@@ -1,13 +1,14 @@
 import "./login.scss"
 import { SnackbarUtilities, loadAbort } from "../../utilities";
 import { useEffect, useState } from "react";
-import { AccountInfo, AuthMessages, ExceptionMessages, Response } from "../../models";
+import { AccountInfo, Response } from "../../models";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes, endpoints, enviroment } from "../../enviroments";
 import { useDispatch } from "react-redux";
 import { createAccountInfo } from "../../redux/states/accountInfo";
 import { Loading } from "../../components";
 import { useAxiosApi } from "../../hooks";
+import { AuthMessages, ExceptionMessages } from "../../messaging";
 
 const validateEmail = (email: string) => {
   var isValid: boolean = email !== "";

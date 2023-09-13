@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import "./displaylist.scss"
-import { Add, DataTable, Loading } from "../../../components";
+import { Add, DataTable } from "../../../components";
 import { GridColDef } from "@mui/x-data-grid";
-import { Display, Pagination, ErrorOr, AuthMessages, ExceptionMessages, Response } from "../../../models";
+import { Display, Pagination, ErrorOr, Response } from "../../../models";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PublicRoutes, endpoints, enviroment } from "../../../enviroments";
 import { resetAccountInfo } from "../../../redux/states/accountInfo";
 import { SnackbarUtilities, loadAbort } from "../../../utilities";
 import { useAxiosApi } from "../../../hooks";
+import { AuthMessages, ExceptionMessages } from "../../../messaging";
+import { hideLoading, showLoading } from "../../../redux/states/loadingData";
 
 const pageSize: number = 100;
 
@@ -23,7 +25,8 @@ const columns: GridColDef[] =
     field: "name",
     headerName: "Nomber",
     width: 1000,
-    type: "string"
+    type: "string",
+    editable: true
   },
 ];
 
@@ -35,14 +38,17 @@ const DisplayList = () => {
   const [open, setOpen] = useState(false);
   const [pagination, setPagination ] = useState<Pagination<Display> | undefined>(undefined);
   const [error, setError ] = useState<ErrorOr | undefined>(undefined);
-  const { loading, callEndpoint, getService } = useAxiosApi(abortController);
+  const { callEndpoint, getService } = useAxiosApi(abortController);
 
   useEffect(() => {
     const loadPagination = async () => {
+      dispatch(showLoading());
       try {
         let result: Response<Pagination<Display>> = await callEndpoint(getService<Pagination<Display>>(
-          enviroment.api + endpoints.displays.getUsersPagination(page, pageSize, null)
+          enviroment.api + endpoints.displays.pagination(page, pageSize, null)
         ));
+
+        dispatch(hideLoading());
   
         if (result.status === 401)
         {
@@ -64,7 +70,9 @@ const DisplayList = () => {
         }
       }
       catch (err: any) {
+        dispatch(hideLoading());
         console.log(err);
+        SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
   
         throw err;
       }
@@ -83,36 +91,25 @@ const DisplayList = () => {
   return (
     <>
       {
-        loading
-        ? ( 
-          // <Loading canCancel={false} cancelTitle={undefined} message="Cargando" />
-          <span>Cargando...</span>
-        )
-        : (
+        pagination === undefined ? (
+          <div><h3>{error?.title}</h3></div>
+        ) : (
           <>
-            {
-              pagination === undefined ? (
-                <div><h3>{error?.title}</h3></div>
-              ) : (
-                <>
-                  <div className="list" >
-                      <div className="info">
-                          <h1>Representaciones Visuales</h1>
-                          <button onClick={() => setOpen(true)}>Nueva Representación Visual</button>
-                      </div>
-                      <DataTable
-                        columns={columns}
-                        rows = {pagination?.response}
-                        page = {pagination?.currentPage}
-                        slug = "displays"
-                        pageSize = {pagination?.pageSize}
-                        totalPages = {pagination?.totalPages}
-                      />
-                      {open && <Add setOpen={setOpen} slug="displays" columns={columns}/>}
-                  </div>
-                </>
-              )
-            }
+            <div className="list" >
+                <div className="info">
+                    <h1>Representaciones Visuales</h1>
+                    <button onClick={() => setOpen(true)}>Nueva Representación Visual</button>
+                </div>
+                <DataTable
+                  columns={columns}
+                  rows = {pagination?.response}
+                  page = {pagination?.currentPage}
+                  slug = "displays"
+                  pageSize = {pagination?.pageSize}
+                  totalPages = {pagination?.totalPages}
+                />
+                {open && <Add setOpen={setOpen} slug="displays" columns={columns}/>}
+            </div>
           </>
         )
       }

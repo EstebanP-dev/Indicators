@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Application.Features.Displays.UpdateSection;
+﻿using IndicatorsApi.Application.Abstraction.Enums;
+using IndicatorsApi.Application.Features.Displays.UpdateSection;
 using IndicatorsApi.Domain.Errors;
 using IndicatorsApi.Domain.Features.Displays;
 using IndicatorsApi.Domain.Repositories;
@@ -29,8 +30,13 @@ internal sealed class UpdateDisplayCommandHandler
     {
         try
         {
+            if (request.Id == null)
+            {
+                return DomainErrors.NotFound<Display>();
+            }
+
             Display? display = await _displayRepository
-                    .GetByIdAsync(id: DisplayId.ToDisplayId(value: request.Id), cancellationToken: cancellationToken)
+                    .GetByIdAsync(id: DisplayId.ToDisplayId(value: request.Id.Value), cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             if (display is null)
@@ -38,7 +44,17 @@ internal sealed class UpdateDisplayCommandHandler
                 return DomainErrors.NotFound<Display>();
             }
 
-            display.Name = request.Name;
+            switch (request.Operations)
+            {
+                case UpdateOperations.PUT:
+                    display = request.Adapt<Display>();
+                    break;
+                case UpdateOperations.PATCH:
+                    display.Name = request.Name ?? display.Name;
+                    break;
+                default:
+                    throw new InvalidCastException();
+            }
 
             _displayRepository.Update(entity: display);
 

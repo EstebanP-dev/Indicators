@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { AppStore } from "../redux/store";
-import { loadAbort } from "../utilities";
+import { ExceptionMessages } from "../messaging";
 
 const useAxiosApi = (abortController: AbortController) => {
     const accountInfoStored: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
@@ -24,7 +24,11 @@ const useAxiosApi = (abortController: AbortController) => {
     }
     
     const MapError = <T>(err: any): Response<T> => {
-        const data: ErrorOr = JSON.parse(JSON.stringify(err?.response?.data ?? '{}'));
+        console.log(err);
+        const data: ErrorOr = JSON.parse(JSON.stringify(err?.response?.data ?? {
+            status: err?.response?.status,
+            title: ExceptionMessages.UNKNOWN
+        }));
         return new Response<T>(err?.response?.status ?? 500, undefined, data);
     }
 
