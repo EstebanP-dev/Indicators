@@ -74,7 +74,7 @@ function App() {
   ]);
 
   return (
-    <SnackbarProvider>
+    <SnackbarProvider autoHideDuration={5000}>
       <SnackbarUtilsConfigurator />
       <Suspense fallback={<div>Loading...</div>}>
         <Provider store={store}>

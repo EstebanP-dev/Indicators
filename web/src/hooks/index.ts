@@ -1,1 +1,2 @@
-export { default as useFetchAndLoad } from './useFetchAndLoad.hook';
+export { default as useAxiosApi } from './useAxiosApi';
+export { default as useFetchAndLoad } from './useFetchAndLoad';

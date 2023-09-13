@@ -13,8 +13,9 @@ public class ApplicationServiceInstaller
             .AddMediatR(options =>
                 options.RegisterServicesFromAssembly(Application.ApplicationAssembly.Assembly));
 
-        services.AddValidatorsFromAssembly(
-            Application.ApplicationAssembly.Assembly,
-            includeInternalTypes: true);
+        services
+            .AddValidatorsFromAssembly(
+                Application.ApplicationAssembly.Assembly,
+                includeInternalTypes: true);
     }
 }

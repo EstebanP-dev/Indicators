@@ -1,5 +1,9 @@
 export const endpoints =
 {
+    api:
+    {
+        pingPong: "/ping"
+    },
     auth:
     {
         login: "/auth/login"

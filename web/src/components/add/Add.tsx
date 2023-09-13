@@ -14,7 +14,6 @@ const Add = (props: Props) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         SnackbarUtilities.info("Create")
     }
 

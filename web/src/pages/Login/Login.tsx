@@ -1,15 +1,13 @@
 import "./login.scss"
-import { SnackbarUtilities } from "../../utilities";
+import { SnackbarUtilities, loadAbort } from "../../utilities";
 import { useEffect, useState } from "react";
-import { AccountInfo, AuthMessages, ErrorOr, ExceptionMessages } from "../../models";
-import { useFetchAndLoad } from "../../hooks";
-import { loginService } from "../../services";
+import { AccountInfo, AuthMessages, ExceptionMessages, Response } from "../../models";
 import { useNavigate } from "react-router-dom";
-import { PrivateRoutes } from "../../enviroments";
-import { useDispatch, useSelector } from "react-redux";
+import { PrivateRoutes, endpoints, enviroment } from "../../enviroments";
+import { useDispatch } from "react-redux";
 import { createAccountInfo } from "../../redux/states/accountInfo";
-import { AppStore } from "../../redux/store";
 import { Loading } from "../../components";
+import { useAxiosApi } from "../../hooks";
 
 const validateEmail = (email: string) => {
   var isValid: boolean = email !== "";
@@ -24,51 +22,59 @@ const validatePassword = (password: string) => {
 }
 
 const Login = () => {
-  const accountInfoStored: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, callEndpoint } = useFetchAndLoad();
-  const [accountInfo, setAccountInfo ] = useState<AccountInfo | undefined>(undefined);
-  const [error, setError ] = useState<ErrorOr | undefined>(undefined);
+  const abortController: AbortController = loadAbort();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { loading, callEndpoint, cancelEndpoint, postService, getService } = useAxiosApi(abortController);
 
   const login = async () => {
     try {
-      if(validateEmail(username) && validatePassword(password)) {
-        const result = await callEndpoint(loginService(username, password));
-        setAccountInfo(result.data);
+      if (validateEmail(username) && validatePassword(password)){
+        const result: Response<AccountInfo> = await callEndpoint(
+          postService<AccountInfo>(
+            enviroment.api + endpoints.auth.login,
+            {
+              username: username,
+              password: password
+            }
+          )
+        );
   
-        if (accountInfo !== undefined) {
+        if (result.data !== undefined) {
           SnackbarUtilities.success(AuthMessages.LOG_IN);
-          dispatch(createAccountInfo(accountInfo));
+          dispatch(createAccountInfo(result.data));
           navigate(PrivateRoutes.HOME);
         }
+        else if (result.error !== undefined) {
+          SnackbarUtilities.error(result.error.title);
+        }
         else{
-          console.log(accountInfo, error, result);
+          console.log(result.error);
           SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
         }
       }
-      else {
-        SnackbarUtilities.warning(AuthMessages.EMPTY_FIELDS);
-      }
-    } catch (exception: any) {
-      setError(JSON.parse(JSON.stringify(exception?.response?.data)));
-
-      if (error === undefined) {
-        SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
-      }else {
-        SnackbarUtilities.error(error.title);
-      }
-      
+    }
+    catch (exception: any) {
+      SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
       console.log(`ERROR ${JSON.stringify(exception)}`);
     }
   }
 
   useEffect(() => {
-    if (accountInfoStored.token !== ''){
-      SnackbarUtilities.warning(AuthMessages.ALREADY_LOG_IN);
-      navigate(PrivateRoutes.HOME)
+    callEndpoint(getService<string>(
+      enviroment.api + endpoints.api.pingPong
+    ))
+    .then((result) => {
+      if (result.status === 200 && result.data !== undefined) {
+        SnackbarUtilities.info(AuthMessages.ALREADY_LOG_IN);
+        navigate(PrivateRoutes.HOME);
+      }
+    });
+
+    return () => {
+      cancelEndpoint();
     }
   }, [])
 

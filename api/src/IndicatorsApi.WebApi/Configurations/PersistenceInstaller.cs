@@ -10,7 +10,8 @@ internal sealed class PersistenceInstaller
     /// <inheritdoc/>
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services
+            .AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("Database")));
     }
 }

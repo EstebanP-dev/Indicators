@@ -21,6 +21,6 @@ export const SnackbarUtilities = {
     this.toast(msg, 'error');
   },
   toast(msg: string, variant: VariantType = 'default') {
-    useSnackbarRef.enqueueSnackbar(msg, { variant });
+    useSnackbarRef.enqueueSnackbar(msg, { variant, autoHideDuration: 3000 });
   }
 };

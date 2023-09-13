@@ -11,7 +11,8 @@ internal sealed class UserMappingConfiguration
     /// <inheritdoc/>
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<User, UserByIdResponse>()
+        config
+            .NewConfig<User, UserByIdResponse>()
             .Map(dest => dest.Email, src => src.Id.Value)
             .Map(dest => dest.Roles, src => src.Roles)
             .ConstructUsing(src => new UserByIdResponse(src.Id.Value, src.Roles.Adapt<IEnumerable<RolePaginationResponse>>()));

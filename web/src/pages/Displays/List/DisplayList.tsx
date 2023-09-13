@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import "./displaylist.scss"
-import { Add, DataTable } from "../../../components";
+import { Add, DataTable, Loading } from "../../../components";
 import { GridColDef } from "@mui/x-data-grid";
-import { useFetchAndLoad } from "../../../hooks";
-import { getDisplaysPagination } from "../../../services";
-import { AccountInfo, Display, Pagination, ErrorOr, AuthMessages, ExceptionMessages } from "../../../models";
-import { useDispatch, useSelector } from "react-redux";
-import { AppStore } from "../../../redux/store";
+import { Display, Pagination, ErrorOr, AuthMessages, ExceptionMessages, Response } from "../../../models";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../../../enviroments";
+import { PublicRoutes, endpoints, enviroment } from "../../../enviroments";
 import { resetAccountInfo } from "../../../redux/states/accountInfo";
-import { SnackbarUtilities } from "../../../utilities";
+import { SnackbarUtilities, loadAbort } from "../../../utilities";
+import { useAxiosApi } from "../../../hooks";
 
 const pageSize: number = 100;
 
@@ -30,45 +28,67 @@ const columns: GridColDef[] =
 ];
 
 const DisplayList = () => {
-  const page: number = 0
-  const accountInfo: AccountInfo = useSelector((store: AppStore) => store.accountInfo);
+  const page: number = 0;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const abortController: AbortController = loadAbort();
   const [open, setOpen] = useState(false);
-  const { loading, callEndpoint } = useFetchAndLoad();
   const [pagination, setPagination ] = useState<Pagination<Display> | undefined>(undefined);
   const [error, setError ] = useState<ErrorOr | undefined>(undefined);
+  const { loading, callEndpoint, getService } = useAxiosApi(abortController);
 
   useEffect(() => {
-    callEndpoint(getDisplaysPagination(page, pageSize, accountInfo.token))
-    .then((res) => {
-      setPagination(res.data)
-    })
-    .catch((exception) => {
-      setError(JSON.parse(JSON.stringify(exception?.response?.data)));
-      
-      if (error !== undefined) {
-        SnackbarUtilities.error(error.title);
+    const loadPagination = async () => {
+      try {
+        let result: Response<Pagination<Display>> = await callEndpoint(getService<Pagination<Display>>(
+          enviroment.api + endpoints.displays.getUsersPagination(page, pageSize, null)
+        ));
+  
+        if (result.status === 401)
+        {
+          SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
+          dispatch(resetAccountInfo());
+          navigate(PublicRoutes.LOGIN, {
+            replace: true
+          });
+        }
+        else if (result.error !== undefined) {
+          setError(result.error);
+        }
+        else if (result.data !== undefined) {
+          setPagination(result.data);
+        }
+        else {
+          console.log(JSON.stringify(result));
+          SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
+        }
       }
-      else if (exception?.response?.status === 401) {
-        SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
-        dispatch(resetAccountInfo())
-        navigate(PublicRoutes.LOGIN, {
-          replace: true
-        });
-      }else {
-        SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
+      catch (err: any) {
+        console.log(err);
+  
+        throw err;
       }
-      console.log(JSON.stringify(error));
+    }
+
+    loadPagination()
+    .catch((_) => {
+      setError(JSON.parse(JSON.stringify({
+        status: 500,
+        title: ExceptionMessages.UNKNOWN
+      })));
+
     });
   }, []);
 
   return (
     <>
       {
-        loading ? (
-          <div><h3>LOADING...</h3></div>
-        ) : (
+        loading
+        ? ( 
+          // <Loading canCancel={false} cancelTitle={undefined} message="Cargando" />
+          <span>Cargando...</span>
+        )
+        : (
           <>
             {
               pagination === undefined ? (
@@ -96,7 +116,7 @@ const DisplayList = () => {
           </>
         )
       }
-    </>  
+    </>
   );
 }
 

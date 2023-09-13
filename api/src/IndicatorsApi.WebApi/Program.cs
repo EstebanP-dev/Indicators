@@ -37,6 +37,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapGet("/ping", () =>
+{
+    return Results.Ok("pong");
+})
+.WithTags("API")
+.WithName("Ping Pong");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
