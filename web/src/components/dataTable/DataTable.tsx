@@ -2,6 +2,8 @@ import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss"
 import DataActions from "./DataActions";
 import { useState } from "react";
+import { Box, useTheme } from "@mui/material";
+import { FlexBetween } from "..";
 
 type Props =
 {
@@ -16,6 +18,7 @@ type Props =
 
 const DataTable = (props: Props) =>
 {
+    const theme = useTheme();
     const [rowId, setRowId] = useState<any>(null);
     const [before, setBefore] = useState<any>(null);
 
@@ -23,7 +26,7 @@ const DataTable = (props: Props) =>
     {
         field: "action",
         headerName: "Acciones",
-        width: 200,
+        flex: .5,
         renderCell: (params) =>
         {
             return (
@@ -34,7 +37,6 @@ const DataTable = (props: Props) =>
 
   return (
     <DataGrid
-        className="dataGrid"
         rows={props.rows}
         columns={[...props.columns, actionColumn]}
         initialState=
@@ -79,6 +81,37 @@ const DataTable = (props: Props) =>
         disableColumnFilter
         disableDensitySelector
         disableColumnSelector
+        disableVirtualization
+        disableColumnMenu
+        disableEval
+        sx={{
+            "& .MuiDataGrid-root": {
+                border: "none"
+            },
+            "& .MuiDataGrid-cell": {
+                borderBottom: "none"
+            },
+            "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.secondary.light,
+                borderBottom: "none"
+            },
+            "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme.palette.background.paper,
+            },
+            "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.secondary.light,
+                borderTop: "none"
+            },
+            "& .MuiDataGrid-toolbarContainer ": {
+                flexDirection: "row-reverse",
+                color: `${theme.palette.secondary.main} !i`
+            },
+            "& .MuiButton-text": {
+                color: `${theme.palette.secondary.main} !i`
+            }
+        }}
         />
   )
 }

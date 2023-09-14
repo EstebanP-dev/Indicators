@@ -107,7 +107,7 @@ const useAxiosApi = (abortController: AbortController) => {
 
     useEffect(() => {
         return () => {
-            //cancelEndpoint();
+            cancelEndpoint();
         };
     }, []);
 

@@ -1,1 +1,1 @@
-export { default as DisplayList } from './List/DisplayList';
+export { default as DisplayList } from '../Displays';

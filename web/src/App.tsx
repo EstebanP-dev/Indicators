@@ -1,63 +1,60 @@
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
-import "./styles/global.scss"
-import { SnackbarProvider } from "notistack";
-import { SnackbarUtilsConfigurator } from "./utilities";
-import { Suspense, lazy } from "react";
-import { Provider } from "react-redux";
-import store from "./redux/store";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./styles/global.scss";
+import { lazy, useMemo } from "react";
 import { ProtectedRoute } from "./components";
 import { Home, Login, Roles, Users } from "./pages";
 import { PrivateRoutes, PublicRoutes } from "./enviroments";
-import Layout from "./pages/Layout/Layout";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { useSelector } from "react-redux";
+import { themeSettings } from "./themes";
+import { AppStore } from "./redux/store";
+import { Layout } from "./scenes";
 
-const DisplayList = lazy(() => import("./pages/Displays/List/DisplayList"));
+const DisplayList = lazy(() => import("./pages/Displays"));
 
 const App = () => {
+  const mode: string = useSelector((store: AppStore) => store.appTheme.mode);
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
   const router = createBrowserRouter([
     {
       path: "/",
-      element:<ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>,
+      element: (
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           path: PrivateRoutes.HOME,
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "/users",
-          element: <Users />
+          element: <Users />,
         },
         {
           path: "/roles",
-          element: <Roles/>
+          element: <Roles />,
         },
         {
           path: "/displays",
-          element: <DisplayList />
-        }
-      ]
+          element: <DisplayList />,
+        },
+      ],
     },
     {
       path: PublicRoutes.LOGIN,
-      element: <Login />
-    }
+      element: <Login />,
+    },
   ]);
 
   return (
-    <SnackbarProvider autoHideDuration={5000}>
-      <SnackbarUtilsConfigurator />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
-      </Suspense>
-    </SnackbarProvider>
-  )
-}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
+};
 
 export default App;
-
