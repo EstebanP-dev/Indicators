@@ -38,6 +38,7 @@ const DisplayList = () => {
   const [open, setOpen] = useState(false);
   const [pagination, setPagination ] = useState<Pagination<Display> | undefined>(undefined);
   const [error, setError ] = useState<ErrorOr | undefined>(undefined);
+  const [refresh, setRefresh] = useState(false);
   const { callEndpoint, getService } = useAxiosApi(abortController);
 
   useEffect(() => {
@@ -86,7 +87,7 @@ const DisplayList = () => {
       })));
 
     });
-  }, []);
+  }, [open, refresh]);
 
   return (
     <>
@@ -107,6 +108,7 @@ const DisplayList = () => {
                   slug = "displays"
                   pageSize = {pagination?.pageSize}
                   totalPages = {pagination?.totalPages}
+                  setRefresh={setRefresh}
                 />
                 {open && <Add setOpen={setOpen} slug="displays" columns={columns}/>}
             </div>

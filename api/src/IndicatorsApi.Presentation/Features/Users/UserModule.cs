@@ -28,7 +28,8 @@ public sealed class UserModule
         app
             .MapPost("/", CreateUser)
             .WithTags("Users")
-            .WithName(nameof(CreateUser));
+            .WithName(nameof(CreateUser))
+            .AllowAnonymous();
 
         app
             .MapGet("/", GetUsers)

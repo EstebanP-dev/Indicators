@@ -9,7 +9,7 @@ import { resetAccountInfo } from "../../redux/states/accountInfo";
 import { AuthMessages, DataGridMessages, ExceptionMessages } from "../../messaging";
 import { useEffect, useState } from "react";
 
-const DataActions = ({ params, slug, rowId, setRowId, before, setBefore }: any) => {
+const DataActions = ({ params, slug, rowId, setRowId, before, setBefore, setRefresh }: any) => {
     const loading: boolean = useSelector((store: AppStore) => store.loadingData);;
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,33 +21,32 @@ const DataActions = ({ params, slug, rowId, setRowId, before, setBefore }: any) 
     {
         dispatch(showLoading());
         try {
-            if (canEditTheRow()) {
-                let result = await callEndpoint(deleteService(
-                    enviroment.api + `/${slug}/${params.row.id}`
-                ));
+            let result = await callEndpoint(deleteService(
+                enviroment.api + `/${slug}/${params.row.id}`
+            ));
 
-                dispatch(hideLoading());
+            dispatch(hideLoading());
 
-                if (result.status === 401) {
-                    SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
-                    dispatch(resetAccountInfo());
-                    navigate(PublicRoutes.LOGIN, {
-                        replace: true
-                    });
-                }
-                else if (result.error !== undefined) {
-                    SnackbarUtilities.error(result.error.title);
-                }
-                else if (result.data !== undefined) {
-                    setRowId(null);
-                    setBefore(null);
-                    SnackbarUtilities.success(DataGridMessages.DELETE_SUCCESS);
-                    setSuccess(true);
-                }
-                else {
-                    SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
-                    console.log(result);
-                }
+            if (result.status === 401) {
+                SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
+                dispatch(resetAccountInfo());
+                navigate(PublicRoutes.LOGIN, {
+                    replace: true
+                });
+            }
+            else if (!!result.error) {
+                SnackbarUtilities.error(result.error.title);
+            }
+            else if (result.data !== undefined) {
+                setRowId(null);
+                setBefore(null);
+                SnackbarUtilities.success(DataGridMessages.DELETE_SUCCESS);
+                setSuccess(true);
+                setRefresh(true);
+            }
+            else {
+                SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
+                console.log(result);
             }
         }
         catch (err) {
@@ -81,13 +80,13 @@ const DataActions = ({ params, slug, rowId, setRowId, before, setBefore }: any) 
                         replace: true
                     });
                 }
-                else if (result.error !== undefined) {
+                else if (!!result.error) {
                     SnackbarUtilities.error(result.error.title);
                 }
                 else if (result.data !== undefined) {
                     setRowId(null);
                     setBefore(null);
-                    SnackbarUtilities.success(DataGridMessages.DELETE_SUCCESS);
+                    SnackbarUtilities.success(DataGridMessages.UPDATE_SUCCESS);
                     setSuccess(true);
                 }
                 else {

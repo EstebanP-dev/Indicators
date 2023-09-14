@@ -116,6 +116,7 @@ internal abstract class Repository<TEntity, TEntityId>
     private static Task<TEntity?> SingleAsync(ApplicationDbContext context, TEntityId id, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
+            .AsNoTracking()
             .FirstOrDefaultAsync(
                 predicate: entity => entity.Id == id,
                 cancellationToken: cancellationToken);

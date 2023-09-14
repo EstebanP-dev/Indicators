@@ -81,8 +81,9 @@ internal sealed class CreateUserCommandHandler
 
             return Result.Created;
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex)
         {
+            Console.WriteLine(ex);
             return DomainErrors.CreationOrUpdatingFailed;
         }
         catch (OperationCanceledException)

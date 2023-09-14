@@ -11,6 +11,7 @@ type Props =
     pageSize: number,
     totalPages: number,
     slug: string,
+    setRefresh: React.Dispatch<boolean>,
 }
 
 const DataTable = (props: Props) =>
