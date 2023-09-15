@@ -1,3 +1,4 @@
+export { default as Body } from './Body';
 export { default as CoverPage } from './CoverPage';
 export { default as FlexBetween } from './FlexBetween';
 export { default as Header } from './Header';

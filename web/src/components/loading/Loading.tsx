@@ -1,28 +1,12 @@
 import {
   Box,
   Button,
-  CircularProgress,
-  ThemeProvider,
+  CircularProgress, 
   Typography,
-  createTheme,
   useTheme,
 } from "@mui/material";
 import "./loading.scss";
 import { CoverPage } from "..";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#2a3447",
-      light: "#384259",
-      dark: "#222b3c",
-      contrastText: "#ffffff",
-    },
-    secondary: {
-      main: "#ffffff",
-    },
-  },
-});
 
 type Props = {
   message: string | undefined;
@@ -36,7 +20,7 @@ const Loading = (props: Props) => {
   return (
     <CoverPage
       sx={{
-        backgroundColor: "#21252947",
+        backgroundColor: "#21252947 !i",
         position: "absolute",
         top: 0,
         left: 0,
@@ -94,25 +78,6 @@ const Loading = (props: Props) => {
       </Box>
     </CoverPage>
   );
-
-  //   return (
-  //     <div className="loading">
-  //         <div className="container">
-  //             <div className="information">
-  //                 <ThemeProvider theme={theme}>
-  //                     <CircularProgress color='secondary' />
-  //                 </ThemeProvider>
-  //                 <p>{props.message ?? "Loading"}</p>
-  //             </div>
-  //             {
-  //                 props.canCancel
-  //                 ? <button>{props.cancelTitle ?? "Cancel"}</button>
-  //                 : <></>
-  //             }
-
-  //         </div>
-  //     </div>
-  //   )
 };
 
 export default Loading;

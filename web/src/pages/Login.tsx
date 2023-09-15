@@ -1,14 +1,18 @@
-import "./login.scss";
-import { SnackbarUtilities, loadAbort } from "../../utilities";
+import { SnackbarUtilities, loadAbort } from "../utilities";
 import { useEffect, useState } from "react";
-import { AccountInfo, Response } from "../../models";
+import { AccountInfo, Response } from "../models";
 import { useNavigate } from "react-router-dom";
-import { PrivateRoutes, endpoints, enviroment } from "../../enviroments";
+import {
+  PrivateRoutes,
+  PublicRoutes,
+  endpoints,
+  enviroment,
+} from "../enviroments";
 import { useDispatch } from "react-redux";
-import { createAccountInfo } from "../../redux/states/accountInfo";
+import { createAccountInfo } from "../redux/states/accountInfo";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useAxiosApi } from "../../hooks";
-import { AuthMessages, ExceptionMessages } from "../../messaging";
+import { useAxiosApi } from "../hooks";
+import { AuthMessages, ExceptionMessages } from "../messaging";
 import {
   Avatar,
   Box,
@@ -22,7 +26,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Loading } from "../../components";
+import { Loading } from "../components";
 
 const validateEmail = (email: string) => {
   var isValid: boolean = email !== "";
@@ -38,28 +42,37 @@ const validatePassword = (password: string) => {
 
 const Login = () => {
   const theme = useTheme();
+  const abortController = loadAbort();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const abortController: AbortController = loadAbort();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { loading, callEndpoint, postService, getService } =
-    useAxiosApi(abortController);
+  const [loading, setLoading] = useState(false);
+  const { callEndpoint, postService, getService } = useAxiosApi(
+    abortController,
+    dispatch,
+    navigate
+  );
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       if (validateEmail(username) && validatePassword(password)) {
-        const result: Response<AccountInfo> = await callEndpoint(
-          postService<AccountInfo>(enviroment.api + endpoints.auth.login, {
+        const result: Response<AccountInfo> = await postService<AccountInfo>(
+          enviroment.api + endpoints.auth.login,
+          {
             username: username,
             password: password,
-          })
+          }
         );
+        setLoading(false);
 
         if (result.data !== undefined) {
           SnackbarUtilities.success(AuthMessages.LOG_IN);
           dispatch(createAccountInfo(result.data));
-          navigate(PrivateRoutes.HOME);
+          navigate(PrivateRoutes.HOME, {
+            replace: true,
+          });
         } else if (result.error !== undefined) {
           SnackbarUtilities.error(result.error.title);
         } else {
@@ -70,22 +83,40 @@ const Login = () => {
         SnackbarUtilities.warning(AuthMessages.EMPTY_FIELDS);
       }
     } catch (exception: any) {
+      setLoading(false);
       SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
       console.log(`ERROR ${JSON.stringify(exception)}`);
     }
   };
 
+  // const validateLogin = async () => {
+  //   setLoading(true);
+  //   try {
+  //     let result = await getServiceTest<string>(endpoints.api.pingPong);
+  //     setLoading(false);
+
+  //     if (result.status === HttpStatusCode.Ok) {
+  //       SnackbarUtilities.info(AuthMessages.ALREADY_LOG_IN);
+  //       navigate(PrivateRoutes.HOME);
+  //     }
+  //   } catch (err) {
+  //     setLoading(false);
+  //     SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
+  //   }
+  // };
+
   useEffect(() => {
-    callEndpoint(
-      getService<string>(enviroment.api + endpoints.api.pingPong)
-    ).then((result) => {
-      if (result.status === 200 && result.data !== undefined) {
+    callEndpoint<string>(
+      getService(endpoints.api.pingPong),
+      undefined,
+      undefined,
+      () => {
         SnackbarUtilities.info(AuthMessages.ALREADY_LOG_IN);
-        navigate(PrivateRoutes.HOME);
+        navigate(PrivateRoutes.HOME, {
+          replace: true,
+        });
       }
-    }).catch((err) => {
-      console.log(err);
-    });
+    );
   }, []);
 
   function Copyright(props: any) {
@@ -182,9 +213,9 @@ const Login = () => {
                   sx={{
                     "& input": {
                       "::-ms-reveal": {
-                        filter: "invert(100%)"
-                      }
-                    }
+                        filter: "invert(100%)",
+                      },
+                    },
                   }}
                 />
                 <FormControlLabel

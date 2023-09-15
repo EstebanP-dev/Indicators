@@ -5,7 +5,7 @@ import { endpoints, enviroment } from "../enviroments";
 
 export const getDisplaysPaginationService = (page: number, rows: number, token: string) => {
     const controller = loadAbort();
-    const url = enviroment.api + endpoints.displays.getUsersPagination(page, rows, null);
+    const url = enviroment.api + endpoints.api.pagination("displays", page, rows, null);
 
     return {
         call: axios.get<Pagination<Display>>(

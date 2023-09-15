@@ -1,7 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { menu } from "../data";
-import { AppStore } from "../redux/store";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AccountInfo } from "../models";
 import React, { useEffect, useState } from "react";
 import {

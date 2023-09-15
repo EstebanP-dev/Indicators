@@ -2,23 +2,16 @@ export const endpoints =
 {
     api:
     {
-        pingPong: "/ping"
+        pingPong: "/ping",
+        pagination: (slug: string, page: number, rows: number, exclude: string | null) =>
+            `/${slug}?page=${page}&rows=${rows}${exclude === null
+                ? ''
+                : '&exclude=' + exclude}`,
+        id: (slug: string, id: number) => `/${slug}/${id}`,
+        slug: (slug: string) => `/${slug}`
     },
     auth:
     {
         login: "/auth/login"
     },
-    users:
-    {
-        getUsersPagination: (page: number, rows: number) => `/users?page=${page}&rows=${rows}`,
-        getUserById: '/users/%s',
-    },
-    displays:
-    {
-        pagination: (page: number, rows: number, exclude: string | null) =>
-            `/displays?page=${page}&rows=${rows}${exclude === null
-                ? ''
-                : '&exclude=' + exclude}`,
-        id: (id: number) => `/displays/${id}`,
-    }
 }
