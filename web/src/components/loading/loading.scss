@@ -55,6 +55,7 @@
             text-transform: uppercase;
             border: 1px solid $main-color;
             cursor: pointer;
+            min-width: min-content;
 
             &:hover
             {

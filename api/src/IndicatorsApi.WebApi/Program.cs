@@ -37,10 +37,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/ping", () =>
+app.MapGet("v1/api/ping", () =>
 {
     return Results.Ok("pong");
 })
+.RequireAuthorization()
 .WithTags("API")
 .WithName("Ping Pong");
 
