@@ -3,13 +3,11 @@ import { Body, DataTable } from "../components";
 import { GridColDef } from "@mui/x-data-grid";
 import { Display, Pagination, ErrorOr } from "../models";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { endpoints } from "../enviroments";
-import { useAxiosApi } from "../hooks";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Config, endpoints } from "../enviroments";
+import { useAxiosApi, usePagination, useQuery } from "../hooks";
 import { Alert, Box } from "@mui/material";
 import { loadAbort } from "../utilities";
-
-const pageSize: number = 100;
 
 const columns: GridColDef[] = [
   {
@@ -39,28 +37,61 @@ const Displays = () => {
   const [refresh, setRefresh] = useState(false);
   const { callEndpoint, getService } = useAxiosApi(
     abortController,
-    dispatch,
-    navigate
+    navigate,
+    dispatch
   );
-  const [page, setPage] = useState(0);
-  const [rows, setRows] = useState(100);
+  const { pushQuery, setUpPagination } = usePagination();
+  let query = useQuery(useLocation);
 
-  useEffect(() => {
-    window.history.pushState(
-      null,
-      "",
-      `?page=${page}&size=${rows}`
-    )
-    callEndpoint<Pagination<Display>>(
+  const [page, setPage] = useState<number>(Config.PAGINATION.DEFAULT_PAGE);
+  const [rows, setRows] = useState<number>(Config.PAGINATION.DEFAULT_ROWS);
+  const [totalPages, setTotalPages] = useState<number>(Config.PAGINATION.DEFAULT_TOTALPAGES);
+
+  const fetchDisplays = async () => {
+    await callEndpoint<Pagination<Display>>(
       getService(
         endpoints.api.pagination(SLUG.toLowerCase(), page, rows, null)
       ),
       setPagination,
       setError,
       undefined,
-      undefined
+      (result) => {
+        setTotalPages(result.totalPages ?? Config.PAGINATION.DEFAULT_TOTALPAGES);
+      }
     );
-  }, [refresh, page, rows]);
+  };
+
+  useEffect(() => {
+    console.log("PAGINATION", page, rows);
+    fetchDisplays();
+    // let pageQueryValue = query.get("page");
+    // let rowsQueryValue = query.get("rows");
+
+    // if (pageQueryValue && rowsQueryValue) {
+    //   let pageValue = parseInt(pageQueryValue!);
+    //   let rowsValue = parseInt(rowsQueryValue!);
+
+    //   setUpPagination(
+    //     pageValue,
+    //     rowsValue,
+    //     page,
+    //     rows,
+    //     totalPages,
+    //     setPage,
+    //     setRows
+    //   );
+    // }
+
+    pushQuery(page, rows);
+  }, [page, rows]);
+
+  useEffect(() => {
+    fetchDisplays();
+    console.log("Called!");
+    return () => {
+      abortController.abort();
+    };
+  }, [refresh]);
 
   return (
     <Body
@@ -78,11 +109,15 @@ const Displays = () => {
           <DataTable
             columns={columns}
             rows={pagination?.response}
-            page={pagination?.currentPage}
+            page={page}
             slug={SLUG.toLowerCase()}
-            pageSize={pagination?.pageSize}
-            totalPages={pagination?.totalPages}
+            pageSize={rows}
+            totalRows={pagination?.totalRows}
+            totalPages={totalPages}
+            rowsValues={Config.PAGINATION.ROWS_VALUES}
             setRefresh={setRefresh}
+            setPage={setPage}
+            setPageSize={setRows}
           />
         )}
       </Box>

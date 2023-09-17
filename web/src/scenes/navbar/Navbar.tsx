@@ -4,7 +4,6 @@ import {
   AppBar,
   Box,
   Button,
-  Icon,
   IconButton,
   InputBase,
   Menu,

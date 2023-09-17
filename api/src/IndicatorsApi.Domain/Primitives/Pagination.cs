@@ -10,17 +10,27 @@ public class Pagination<TResponse>
     /// <summary>
     /// Initializes a new instance of the <see cref="Pagination{TResponse}"/> class.
     /// </summary>
+    /// <param name="totalRows">Total rows.</param>
     /// <param name="totalPages">Total pages.</param>
     /// <param name="currentPage">Current page.</param>
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="response">Result.</param>
-    public Pagination(int totalPages, int currentPage, int pageSize, IEnumerable<TResponse> response)
+    public Pagination(int totalRows, int totalPages, int currentPage, int pageSize, IEnumerable<TResponse> response)
     {
+        TotalRows = totalRows;
         TotalPages = totalPages;
         CurrentPage = currentPage;
         PageSize = pageSize;
         Response = response ?? Enumerable.Empty<TResponse>();
     }
+
+    /// <summary>
+    /// Gets total rows.
+    /// </summary>
+    /// <value>
+    /// Total rows.
+    /// </value>
+    public int TotalRows { get; init; }
 
     /// <summary>
     /// Gets total pages.

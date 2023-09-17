@@ -1,4 +1,4 @@
-import { PaletteMode, Theme, ThemeOptions } from "@mui/material";
+import { PaletteMode } from "@mui/material";
 
 // color design tokens export
 export const tokensDark = {
@@ -55,7 +55,6 @@ export const tokensDark = {
         mode: mode as PaletteMode,
         ...(mode === "dark"
           ? {
-              // palette values for dark mode
               primary: {
                 ...tokensDark.primary,
               },
@@ -71,7 +70,6 @@ export const tokensDark = {
               },
             }
           : {
-              // palette values for light mode
               primary: {
                 main: tokensDark.grey[200],
                 light: tokensDark.grey[300],

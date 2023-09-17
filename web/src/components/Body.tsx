@@ -1,28 +1,42 @@
-import { Box } from "@mui/material"
-import { Add, Header } from "."
-import { GridColDef } from "@mui/x-data-grid"
+import { Box } from "@mui/material";
+import { Add, Header, Loading } from ".";
+import { GridColDef } from "@mui/x-data-grid";
 import { ReactNode, useState } from "react";
+import { AppStore } from "../redux/store";
+import { useSelector } from "react-redux";
 
 type Props = {
-    children: ReactNode,
-    title: string,
-    slug: string,
-    showAdd: boolean,
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-    subtitle?: string,
-    columns?: GridColDef[],
-}
+  children: ReactNode;
+  title: string;
+  slug: string;
+  showAdd: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  subtitle?: string;
+  columns?: GridColDef[];
+};
 
 const Body = (props: Props) => {
-    const [open, setOpen] = useState(false);
+  const loadingData: boolean = useSelector(
+    (store: AppStore) => store.loadingData
+  );
+  const [open, setOpen] = useState(false);
 
-  return (
+  return loadingData ? (
+    <Loading canCancel={false} cancelTitle={undefined} message="Cargando" />
+  ) : (
     <Box m="1.5rem 2.5rem">
-        <Header title={props.title} subtitle={props.subtitle} setOpen={setOpen} />
-        {props.children}
-        {open && props.columns && <Add setRefresh={props.setRefresh} setOpen={setOpen} slug={props.slug} columns={props.columns}/>}
+      <Header title={props.title} subtitle={props.subtitle} setOpen={setOpen} />
+      {props.children}
+      {open && props.columns && (
+        <Add
+          setRefresh={props.setRefresh}
+          setOpen={setOpen}
+          slug={props.slug}
+          columns={props.columns}
+        />
+      )}
     </Box>
-  )
-}
+  );
+};
 
-export default Body
+export default Body;

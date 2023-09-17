@@ -2,8 +2,8 @@ import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss"
 import DataActions from "./DataActions";
 import { useState } from "react";
-import { Box, useTheme } from "@mui/material";
-import { FlexBetween } from "..";
+import { useTheme } from "@mui/material";
+import { usePagination } from "../../hooks";
 
 type Props =
 {
@@ -11,9 +11,14 @@ type Props =
     rows: object[],
     page: number,
     pageSize: number,
+    totalRows: number,
     totalPages: number,
+    rowsValues: number[],
     slug: string,
-    setRefresh: React.Dispatch<boolean>,
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>,
+    setPage: React.Dispatch<React.SetStateAction<number>>,
+    setPageSize: React.Dispatch<React.SetStateAction<number>>,
+    
 }
 
 const DataTable = (props: Props) =>
@@ -21,6 +26,7 @@ const DataTable = (props: Props) =>
     const theme = useTheme();
     const [rowId, setRowId] = useState<any>(null);
     const [before, setBefore] = useState<any>(null);
+    const { setUpPagination } = usePagination();
 
     const actionColumn: GridColDef =
     {
@@ -46,35 +52,30 @@ const DataTable = (props: Props) =>
                 {
                     paginationModel:
                     {
-                        page: props.page + 1,
+                        page: props.page,
                         pageSize: props.pageSize,
                     }
                 },
-            }
-        }
-        slots=
-        {
-            {
-                toolbar: GridToolbar
-            }
-        }
-        slotProps=
-        {
-            {
-                toolbar:
-                {
-                    showQuickFilter: true,
-                    quickFilterProps:
-                    {
-                        debounceMs: 500
-                    }
+                sorting: {
+                    sortModel: [{field:"id",sort:'asc'}],
                 }
             }
         }
         onCellEditStart={(params) => setBefore(params.row)}
         onCellEditStop={(params) => setRowId(params.id)}
-        rowCount={props.pageSize * props.totalPages}
-        pageSizeOptions={[props.pageSize]}
+        rowCount={props.totalRows}
+        pageSizeOptions={props.rowsValues}
+        onPaginationModelChange={(model, _) => {
+            setUpPagination(
+                model.page,
+                model.pageSize,
+                props.page,
+                props.pageSize,
+                props.totalPages,
+                props.setPage,
+                props.setPageSize
+            );
+        }}
         paginationMode="server"
         checkboxSelection
         disableRowSelectionOnClick

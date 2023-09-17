@@ -4,15 +4,15 @@ import { useEffect } from "react";
 import { AuthMessages, ExceptionMessages } from "../messaging";
 import { SnackbarUtilities } from "../utilities";
 import { NavigateFunction } from "react-router-dom";
-import { resetAccountInfo } from "../redux/states/accountInfo";
-import { hideLoading, showLoading } from "../redux/states/loadingData";
 import { PublicRoutes } from "../enviroments";
 import { Dispatch } from "@reduxjs/toolkit";
+import { resetAccountInfo } from "../redux/states/accountInfo";
+import { hideLoading, showLoading } from "../redux/states/loadingData";
 
 const useAxiosApi = (
   abortController: AbortController,
-  dispatch: Dispatch,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  dispatch: Dispatch
 ) => {
   const MapData = <T>(result: any): Response<T> => {
     const data: T = JSON.parse(JSON.stringify(result.data));
@@ -97,20 +97,22 @@ const useAxiosApi = (
     setData?: React.Dispatch<React.SetStateAction<T | undefined>>,
     setError?: React.Dispatch<React.SetStateAction<ErrorOr | undefined>>,
     setSuccess?: React.Dispatch<React.SetStateAction<boolean>>,
-    onSuccess?: () => void
+    onSuccess?: (result: T) => void
   ) => {
     dispatch(showLoading());
     axiosCall
       .then((result) => {
+        console.log(result)
         if (result.status === HttpStatusCode.Unauthorized) {
           SnackbarUtilities.info(AuthMessages.EXPIRE_SESION);
-          dispatch(hideLoading());
-          dispatch(resetAccountInfo());
+          dispatch(resetAccountInfo()); 
           navigate(PublicRoutes.LOGIN, {
             replace: true,
           });
-          return Promise.reject;
-        } else if (!!result.data || result.status === HttpStatusCode.NoContent) {
+        } else if (
+          !!result.data ||
+          result.status === HttpStatusCode.NoContent
+        ) {
           if (!!setData) {
             setData(result.data);
           }
@@ -118,16 +120,14 @@ const useAxiosApi = (
             setSuccess(true);
           }
           if (!!onSuccess) {
-            onSuccess();
+            onSuccess(result.data!);
           }
-          dispatch(hideLoading());
+          console.log("Call")
         } else if (!!result.error && result.error.title !== "") {
           if (!!setError) {
             setError(result.error);
           }
           SnackbarUtilities.error(result.error.title);
-          dispatch(hideLoading());
-          return Promise.reject;
         } else {
           if (!!setError) {
             setError({
@@ -137,11 +137,10 @@ const useAxiosApi = (
           }
           console.log("UNEXPECTED RESULT:", result);
           SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
-          dispatch(hideLoading());
-          return Promise.reject;
         }
       })
       .catch((err) => {
+        dispatch(showLoading());
         if (!!setError) {
           setError({
             status: 500,
@@ -150,12 +149,12 @@ const useAxiosApi = (
         }
         console.log("UNKNOWN ERROR:", err);
         SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
-        dispatch(hideLoading());
         return Promise.reject;
       })
       .finally(() => {
         dispatch(hideLoading());
         cancelEndpoint();
+        return Promise.resolve();
       });
   };
 

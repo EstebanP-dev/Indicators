@@ -62,6 +62,7 @@ internal abstract class Repository<TEntity, TEntityId>
             .ConfigureAwait(false);
 
         Pagination<TEntity> pagination = new(
+            totalRows,
             totalPages: totalPages,
             currentPage: page,
             pageSize: rows,
