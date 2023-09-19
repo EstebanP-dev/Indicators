@@ -3,5 +3,8 @@ export const PublicRoutes = {
 }
 
 export const PrivateRoutes = {
-    HOME: '/'
+    HOME: '/',
+    DISPLAYS: '/displays',
+    ACTORTYPES: '/actortypes',
+    INDICATORTYPES: '/indicatortypes',
 }

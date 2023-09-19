@@ -33,7 +33,7 @@ public sealed class IndicatorTypeModule
             .WithName(nameof(CreateIndicatorType));
 
         app
-            .MapPut("/", UpdateIndicatorType)
+            .MapPut("/{id}", UpdateIndicatorType)
             .WithTags("IndicatorTypes")
             .WithName(nameof(UpdateIndicatorType));
 

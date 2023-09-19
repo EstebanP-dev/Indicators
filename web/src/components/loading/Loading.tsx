@@ -5,7 +5,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import "./loading.scss";
 import { CoverPage } from "..";
 
 type Props = {

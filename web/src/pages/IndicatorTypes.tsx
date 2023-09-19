@@ -24,9 +24,9 @@ const columns: GridColDef[] = [
   },
 ];
 
-const SLUG = "Displays";
+const SLUG = "IndicatorTypes";
 
-const Displays = () => {
+const IndicatorTypes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const abortController = loadAbort();
@@ -75,8 +75,7 @@ const Displays = () => {
 
   return (
     <Body
-      title="Representaciones Visuales"
-      subtitle="Tipos de visualización de datos."
+      title="Tipos de Indicadores"
       slug={SLUG.toLowerCase()}
       showAdd={true}
       setRefresh={setRefresh}
@@ -105,4 +104,4 @@ const Displays = () => {
   );
 };
 
-export default Displays;
+export default IndicatorTypes;

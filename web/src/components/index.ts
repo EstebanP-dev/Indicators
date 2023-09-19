@@ -3,7 +3,7 @@ export { default as CoverPage } from './CoverPage';
 export { default as FlexBetween } from './FlexBetween';
 export { default as Header } from './Header';
 export { default as ProtectedRoute } from './ProtectedRoute';
-export { default as Add } from './add/Add';
+export { default as Add } from './Add';
 export { default as DataActions } from './dataTable/DataActions';
 export { default as DataTable } from './dataTable/DataTable';
 export { default as Loading } from './loading/Loading';

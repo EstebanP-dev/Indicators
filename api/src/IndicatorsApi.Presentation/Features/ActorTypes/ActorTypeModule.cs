@@ -33,7 +33,7 @@ public sealed class ActorTypeModule
             .WithName(nameof(CreateActorType));
 
         app
-            .MapPut("/", UpdateActorType)
+            .MapPut("/{id}", UpdateActorType)
             .WithTags("ActorTypes")
             .WithName(nameof(UpdateActorType));
 

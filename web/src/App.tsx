@@ -12,6 +12,8 @@ import { Layout } from "./scenes";
 
 const Login = lazy(() => import('./pages/Login'));
 const Displays = lazy(() => import('./pages/Displays'));
+const ActorTypes = lazy(() => import('./pages/ActorTypes'));
+const IndicatorTypes = lazy(() => import('./pages/IndicatorTypes'));
 
 const App = () => {
   const mode: string = useSelector((store: AppStore) => store.appTheme.mode);
@@ -39,8 +41,16 @@ const App = () => {
           element: <Roles />,
         },
         {
-          path: "/displays",
+          path: PrivateRoutes.DISPLAYS,
           element: <Displays />,
+        },
+        {
+          path: PrivateRoutes.ACTORTYPES,
+          element: <ActorTypes />,
+        },
+        {
+          path: PrivateRoutes.INDICATORTYPES,
+          element: <IndicatorTypes />,
         },
       ],
     },

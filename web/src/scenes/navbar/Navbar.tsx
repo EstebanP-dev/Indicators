@@ -24,6 +24,9 @@ import {
 import { setMode } from "../../redux/states/appTheme";
 import { AccountInfo } from "../../models";
 import { useState } from "react";
+import { resetAccountInfo } from "../../redux/states/accountInfo";
+import { useNavigate } from "react-router-dom";
+import { PublicRoutes } from "../../enviroments";
 
 type Props = {
   accountInfo: AccountInfo;
@@ -33,12 +36,19 @@ type Props = {
 
 export const Navbar = (props: Props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
 
   const handleClick = (event: any) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleClose = () => {
+    dispatch(resetAccountInfo());
+    navigate(PublicRoutes.LOGIN, {
+      replace: true
+    });
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar

@@ -4,8 +4,12 @@ const CoverPage = styled(Box)({
     display: "flex",
     flexFlow: "column",
     height: "100vh",
-    position: "inherit",
-    width: "100vw"
+    position: "absolute",
+    width: "100vw",
+    top: 0,
+    left: 0,
+    alignItems: "center",
+    justifyContent: "center",
 });
 
 export default CoverPage;

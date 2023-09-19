@@ -4,7 +4,6 @@ import { AccountInfo, Response } from "../models";
 import { useNavigate } from "react-router-dom";
 import {
   PrivateRoutes,
-  PublicRoutes,
   endpoints,
   enviroment,
 } from "../enviroments";
@@ -88,22 +87,6 @@ const Login = () => {
       console.log(`ERROR ${JSON.stringify(exception)}`);
     }
   };
-
-  // const validateLogin = async () => {
-  //   setLoading(true);
-  //   try {
-  //     let result = await getServiceTest<string>(endpoints.api.pingPong);
-  //     setLoading(false);
-
-  //     if (result.status === HttpStatusCode.Ok) {
-  //       SnackbarUtilities.info(AuthMessages.ALREADY_LOG_IN);
-  //       navigate(PrivateRoutes.HOME);
-  //     }
-  //   } catch (err) {
-  //     setLoading(false);
-  //     SnackbarUtilities.error(ExceptionMessages.UNKNOWN);
-  //   }
-  // };
 
   useEffect(() => {
     callEndpoint<string>(

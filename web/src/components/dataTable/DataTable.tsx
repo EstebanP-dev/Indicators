@@ -1,5 +1,4 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import "./dataTable.scss"
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DataActions from "./DataActions";
 import { useState } from "react";
 import { useTheme } from "@mui/material";
