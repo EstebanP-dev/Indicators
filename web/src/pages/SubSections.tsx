@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Body, DataTable } from "../components";
 import { GridColDef } from "@mui/x-data-grid";
-import { Display, Pagination, ErrorOr } from "../models";
+import { SubSection, Pagination, ErrorOr } from "../models";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Config, endpoints } from "../enviroments";
@@ -30,7 +30,7 @@ const SubSections = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const abortController = loadAbort();
-  const [pagination, setPagination] = useState<Pagination<Display> | undefined>(
+  const [pagination, setPagination] = useState<Pagination<SubSection> | undefined>(
     undefined
   );
   const [error, setError] = useState<ErrorOr | undefined>(undefined);
@@ -47,7 +47,7 @@ const SubSections = () => {
   const [totalPages, setTotalPages] = useState<number>(Config.PAGINATION.DEFAULT_TOTALPAGES);
 
   const fetchData = async () => {
-    await callEndpoint<Pagination<Display>>(
+    await callEndpoint<Pagination<SubSection>>(
       getService(
         endpoints.api.pagination(SLUG.toLowerCase(), page, rows, null)
       ),

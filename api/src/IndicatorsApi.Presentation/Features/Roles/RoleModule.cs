@@ -33,7 +33,7 @@ public sealed class RoleModule
             .WithName(nameof(CreateRole));
 
         app
-            .MapPut("/", UpdateRole)
+            .MapPut("/{id}", UpdateRole)
             .WithTags("Roles")
             .WithName(nameof(UpdateRole));
 

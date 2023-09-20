@@ -4,6 +4,7 @@ export const PublicRoutes = {
 
 export const PrivateRoutes = {
     HOME: '/',
+    ROLES: '/roles',
     DISPLAYS: '/displays',
     ACTORTYPES: '/actortypes',
     INDICATORTYPES: '/indicatortypes',

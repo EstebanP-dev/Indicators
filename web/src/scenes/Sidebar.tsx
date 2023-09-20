@@ -83,7 +83,7 @@ const navItems = [
   {
     text: "Roles",
     icon: <HomeOutlined />,
-    slug: "routes",
+    slug: "roles",
   },
 ];
 

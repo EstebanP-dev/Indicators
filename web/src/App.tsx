@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import "./styles/global.scss";
 import { lazy, useMemo } from "react";
 import { ProtectedRoute } from "./components";
-import { Home, Roles, Users } from "./pages";
+import { Home } from "./pages";
 import { PrivateRoutes, PublicRoutes } from "./enviroments";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ const IndicatorTypes = lazy(() => import('./pages/IndicatorTypes'));
 const Sections = lazy(() => import('./pages/Sections'));
 const SubSections = lazy(() => import('./pages/SubSections'));
 const Meanings = lazy(() => import('./pages/Meanings'));
+const Roles = lazy(() => import('./pages/Roles'));
 
 const App = () => {
   const mode: string = useSelector((store: AppStore) => store.appTheme.mode);
@@ -37,10 +38,10 @@ const App = () => {
         },
         {
           path: "/users",
-          element: <Users />,
+          element: <div>Users</div>,
         },
         {
-          path: "/roles",
+          path: PrivateRoutes.ROLES,
           element: <Roles />,
         },
         {

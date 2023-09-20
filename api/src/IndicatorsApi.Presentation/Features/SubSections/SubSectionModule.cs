@@ -33,7 +33,7 @@ public sealed class SubSectionModule
             .WithName(nameof(CreateSubSection));
 
         app
-            .MapPut("/", UpdateSubSection)
+            .MapPut("/{id}", UpdateSubSection)
             .WithTags("SubSections")
             .WithName(nameof(UpdateSubSection));
 

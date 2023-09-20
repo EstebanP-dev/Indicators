@@ -33,7 +33,7 @@ public sealed class SectionModule
             .WithName(nameof(CreateSection));
 
         app
-            .MapPut("/", UpdateSection)
+            .MapPut("/{id}", UpdateSection)
             .WithTags("Sections")
             .WithName(nameof(UpdateSection));
 

@@ -33,7 +33,7 @@ public sealed class MeaningModule
             .WithName(nameof(CreateMeaning));
 
         app
-            .MapPut("/", UpdateMeaning)
+            .MapPut("/{id}", UpdateMeaning)
             .WithTags("Meanings")
             .WithName(nameof(UpdateMeaning));
 
