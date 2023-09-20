@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import "./styles/global.scss";
 import { lazy, useMemo } from "react";
 import { ProtectedRoute } from "./components";
@@ -14,6 +14,9 @@ const Login = lazy(() => import('./pages/Login'));
 const Displays = lazy(() => import('./pages/Displays'));
 const ActorTypes = lazy(() => import('./pages/ActorTypes'));
 const IndicatorTypes = lazy(() => import('./pages/IndicatorTypes'));
+const Sections = lazy(() => import('./pages/Sections'));
+const SubSections = lazy(() => import('./pages/SubSections'));
+const Meanings = lazy(() => import('./pages/Meanings'));
 
 const App = () => {
   const mode: string = useSelector((store: AppStore) => store.appTheme.mode);
@@ -52,12 +55,28 @@ const App = () => {
           path: PrivateRoutes.INDICATORTYPES,
           element: <IndicatorTypes />,
         },
+        {
+          path: PrivateRoutes.SECTIONS,
+          element: <Sections />,
+        },
+        {
+          path: PrivateRoutes.SUBSECTIONS,
+          element: <SubSections />,
+        },
+        {
+          path: PrivateRoutes.MEANINGS,
+          element: <Meanings />,
+        },
       ],
     },
     {
       path: PublicRoutes.LOGIN,
       element: <Login />,
     },
+    {
+      path: "*",
+      element: <Navigate to={{pathname: PrivateRoutes.HOME}} />
+    }
   ]);
 
   return (

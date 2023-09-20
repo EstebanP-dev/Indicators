@@ -7,4 +7,7 @@ export const PrivateRoutes = {
     DISPLAYS: '/displays',
     ACTORTYPES: '/actortypes',
     INDICATORTYPES: '/indicatortypes',
+    SECTIONS: '/sections',
+    SUBSECTIONS: '/subsections',
+    MEANINGS: '/meanings',
 }
