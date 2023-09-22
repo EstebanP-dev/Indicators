@@ -5,6 +5,7 @@ export * from './display.model';
 export * from './error.model';
 export * from './indicatorType.model';
 export * from './meaning.model';
+export * from './measurementUnit.model';
 export * from './pagination.model';
 export * from './response.model';
 export * from './role.model';

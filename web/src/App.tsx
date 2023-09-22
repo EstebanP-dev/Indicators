@@ -18,6 +18,7 @@ const Sections = lazy(() => import('./pages/Sections'));
 const SubSections = lazy(() => import('./pages/SubSections'));
 const Meanings = lazy(() => import('./pages/Meanings'));
 const Roles = lazy(() => import('./pages/Roles'));
+const MeasurementUnits = lazy(() => import('./pages/MeasurementUnits'));
 
 const App = () => {
   const mode: string = useSelector((store: AppStore) => store.appTheme.mode);
@@ -65,8 +66,8 @@ const App = () => {
           element: <SubSections />,
         },
         {
-          path: PrivateRoutes.MEANINGS,
-          element: <Meanings />,
+          path: PrivateRoutes.MEASUREMENTUNITS,
+          element: <MeasurementUnits />,
         },
       ],
     },

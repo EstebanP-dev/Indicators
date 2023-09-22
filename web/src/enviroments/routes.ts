@@ -11,4 +11,5 @@ export const PrivateRoutes = {
     SECTIONS: '/sections',
     SUBSECTIONS: '/subsections',
     MEANINGS: '/meanings',
+    MEASUREMENTUNITS: '/measurementunits',
 }

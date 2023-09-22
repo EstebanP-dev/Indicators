@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Body, DataTable } from "../components";
 import { GridColDef } from "@mui/x-data-grid";
-import { Meaning, Pagination, ErrorOr } from "../models";
+import { Pagination, ErrorOr, MeasurementUnit } from "../models";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Config, endpoints } from "../enviroments";
@@ -16,21 +16,21 @@ const columns: GridColDef[] = [
     flex: 0.5,
   },
   {
-    field: "name",
-    headerName: "Nombre",
+    field: "description",
+    headerName: "Descripción",
     flex: 3,
     type: "string",
     editable: true,
   },
 ];
 
-const SLUG = "Meanings";
+const SLUG = "MeasurementUnits";
 
-const Meanings = () => {
+const MeasurementUnits = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const abortController = loadAbort();
-  const [pagination, setPagination] = useState<Pagination<Meaning> | undefined>(
+  const [pagination, setPagination] = useState<Pagination<MeasurementUnit> | undefined>(
     undefined
   );
   const [error, setError] = useState<ErrorOr | undefined>(undefined);
@@ -47,7 +47,7 @@ const Meanings = () => {
   const [totalPages, setTotalPages] = useState<number>(Config.PAGINATION.DEFAULT_TOTALPAGES);
 
   const fetchData = async () => {
-    await callEndpoint<Pagination<Meaning>>(
+    await callEndpoint<Pagination<MeasurementUnit>>(
       getService(
         endpoints.api.pagination(SLUG.toLowerCase(), page, rows, null)
       ),
@@ -75,7 +75,7 @@ const Meanings = () => {
 
   return (
     <Body
-      title="Sentidos"
+      title="Unidades de Medición"
       slug={SLUG.toLowerCase()}
       showAdd={true}
       setRefresh={setRefresh}
@@ -104,4 +104,4 @@ const Meanings = () => {
   );
 };
 
-export default Meanings;
+export default MeasurementUnits;

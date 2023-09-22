@@ -51,6 +51,11 @@ const navItems = [
     slug: "indicatortypes",
   },
   {
+    text: "Unidad de Medición",
+    icon: <HomeOutlined />,
+    slug: "measurementunits",
+  },
+  {
     text: "Texto",
     icon: null,
     slug: "",
