@@ -11,6 +11,8 @@ import { AppStore } from "./redux/store";
 import { Layout } from "./scenes";
 
 const Login = lazy(() => import('./pages/Login'));
+const Users = lazy(() => import('./pages/Users/Users'));
+const User = lazy(() => import('./pages/Users/User'));
 const Displays = lazy(() => import('./pages/Displays'));
 const ActorTypes = lazy(() => import('./pages/ActorTypes'));
 const IndicatorTypes = lazy(() => import('./pages/IndicatorTypes'));
@@ -38,8 +40,12 @@ const App = () => {
           element: <Home />,
         },
         {
-          path: "/users",
-          element: <div>Users</div>,
+          path: PrivateRoutes.USERS,
+          element: <Users />,
+        },
+        {
+          path:  PrivateRoutes.USER,
+          element: <User />
         },
         {
           path: PrivateRoutes.ROLES,
@@ -64,6 +70,10 @@ const App = () => {
         {
           path: PrivateRoutes.SUBSECTIONS,
           element: <SubSections />,
+        },
+        {
+          path: PrivateRoutes.MEANINGS,
+          element: <Meanings />,
         },
         {
           path: PrivateRoutes.MEASUREMENTUNITS,

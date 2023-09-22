@@ -19,6 +19,7 @@ const DataActions = ({
   before,
   setBefore,
   setRefresh,
+  editOnList = false,
 }: any) => {
   const loading: boolean = useSelector((store: AppStore) => store.loadingData);
   const abortController = loadAbort();

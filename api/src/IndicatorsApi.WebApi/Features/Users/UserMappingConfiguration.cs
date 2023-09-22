@@ -18,6 +18,7 @@ internal sealed class UserMappingConfiguration
             .ConstructUsing(src => new UserByIdResponse(src.Id.Value, src.Roles.Adapt<IEnumerable<RolePaginationResponse>>()));
 
         config.NewConfig<User, UserPaginationResponse>()
-            .Map(dest => dest.Email, src => src.Id.Value);
+            .Map(dest => dest.Email, src => src.Id.Value)
+            .Map(dest => dest.IsVerified, src => src.Salt != null);
     }
 }

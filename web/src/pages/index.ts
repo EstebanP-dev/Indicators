@@ -8,3 +8,5 @@ export { default as MeasurementUnits } from './MeasurementUnits';
 export { default as Roles } from './Roles';
 export { default as Sections } from './Sections';
 export { default as SubSections } from './SubSections';
+export { default as User } from './Users/User';
+export { default as Users } from './Users/Users';

@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowIdGetter } from "@mui/x-data-grid";
 import DataActions from "./DataActions";
 import { useState } from "react";
 import { useTheme } from "@mui/material";
@@ -17,7 +17,8 @@ type Props =
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>,
     setPage: React.Dispatch<React.SetStateAction<number>>,
     setPageSize: React.Dispatch<React.SetStateAction<number>>,
-    
+    editOnList?: boolean,
+    getRowId?: GridRowIdGetter<any> | undefined,
 }
 
 const DataTable = (props: Props) =>
@@ -44,6 +45,7 @@ const DataTable = (props: Props) =>
     <DataGrid
         rows={props.rows}
         columns={[...props.columns, actionColumn]}
+        getRowId={props.getRowId}
         initialState=
         {
             {
