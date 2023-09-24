@@ -2,8 +2,9 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 
 type Props = {
   title: string;
-  subtitle?: string;
+  showAdd: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  subtitle?: string;
 };
 
 const Header = (props: Props) => {
@@ -31,7 +32,7 @@ const Header = (props: Props) => {
           {props.subtitle}
         </Typography>
       </Box>
-      <Box display="flex" alignItems="center" justifyContent="center">
+      <Box display={props.showAdd ? "flex" : "none"} alignItems="center" justifyContent="center">
         <Button color="secondary" variant="outlined" onClick={() => props.setOpen(true)} sx={{
           padding: ".6rem"
         }}>

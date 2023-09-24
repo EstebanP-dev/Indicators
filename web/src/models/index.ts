@@ -11,4 +11,4 @@ export * from './response.model';
 export * from './role.model';
 export * from './section.model';
 export * from './subsection.model';
-export * from './user.model';
+export * from './users';

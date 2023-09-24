@@ -46,6 +46,14 @@ public interface IRepository<TEntity, TEntityId>
     Task<IEnumerable<TEntity>> GetBulkIdsAsync(TEntityId[] ids, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets all entities.
+    /// </summary>
+    /// <param name="ids">Exclude entity ids.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
+    /// <returns>Either list of entities or error instance.</returns>
+    Task<IEnumerable<TEntity>> GetAllAsync(TEntityId[] ids, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets the pagination entities.
     /// </summary>
     /// <param name="page">Page number.</param>

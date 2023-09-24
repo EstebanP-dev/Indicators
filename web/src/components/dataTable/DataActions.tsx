@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { SnackbarUtilities, loadAbort } from "../../utilities";
+import { SnackbarUtilities, loadAbort, urlUtility } from "../../utilities";
 import { AppStore } from "../../redux/store";
 import { useAxiosApi } from "../../hooks";
 import { endpoints } from "../../enviroments";
@@ -9,7 +9,7 @@ import {
 } from "../../messaging";
 import { useEffect, useState } from "react";
 import { Box, IconButton } from "@mui/material";
-import { Save, Delete } from "@mui/icons-material";
+import { Save, Delete, Visibility } from "@mui/icons-material";
 
 const DataActions = ({
   params,
@@ -19,7 +19,7 @@ const DataActions = ({
   before,
   setBefore,
   setRefresh,
-  editOnList = false,
+  editOutList = false,
 }: any) => {
   const loading: boolean = useSelector((store: AppStore) => store.loadingData);
   const abortController = loadAbort();
@@ -31,6 +31,7 @@ const DataActions = ({
     dispatch,
     navigate
   );
+  const { urlEnconde } = urlUtility;
 
   const handleDelete = async () => {
     callEndpoint<any>(
@@ -66,6 +67,16 @@ const DataActions = ({
     }
   };
 
+  const handleLink = () => {
+    let id: string = urlEnconde(params.row.id);
+
+    console.log(id);
+
+    navigate(
+      `/${slug}/${id}`
+    )
+  }
+
   function canEditTheRow(): boolean {
     return (
       params.id === rowId &&
@@ -81,13 +92,24 @@ const DataActions = ({
 
   return (
     <Box display="flex" flexDirection="row" gap=".5rem">
-      <IconButton
-        color="success"
-        disabled={!canEditTheRow()}
-        onClick={handleUpdate}
-      >
-        <Save />
-      </IconButton>
+      {
+        editOutList ? (
+          <IconButton
+            color="success"
+            onClick={handleLink}
+          >
+            <Visibility />
+          </IconButton>
+        ) : (
+          <IconButton
+            color="success"
+            disabled={!canEditTheRow()}
+            onClick={handleUpdate}
+          >
+            <Save />
+          </IconButton>
+        )
+      }
       <IconButton color="error" onClick={handleDelete}>
         <Delete />
       </IconButton>

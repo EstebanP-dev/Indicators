@@ -10,9 +10,11 @@ type Props = {
   title: string;
   slug: string;
   showAdd: boolean;
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   subtitle?: string;
   columns?: GridColDef[];
+  selectionDataUrl?: string;
+  addAdapterFuction?: (data: any) => any;
 };
 
 const Body = (props: Props) => {
@@ -25,7 +27,12 @@ const Body = (props: Props) => {
     <Loading canCancel={false} cancelTitle={undefined} message="Cargando" />
   ) : (
     <Box m="1.5rem 2.5rem">
-      <Header title={props.title} subtitle={props.subtitle} setOpen={setOpen} />
+      <Header
+        title={props.title}
+        subtitle={props.subtitle}
+        setOpen={setOpen}
+        showAdd={props.showAdd}
+      />
       {props.children}
       {open && props.columns && (
         <Add
@@ -33,6 +40,10 @@ const Body = (props: Props) => {
           setOpen={setOpen}
           slug={props.slug}
           columns={props.columns}
+          selectionDataUrl={props.selectionDataUrl}
+          adapterFuction={(data) =>
+            props.addAdapterFuction && props.addAdapterFuction(data)
+          }
         />
       )}
     </Box>

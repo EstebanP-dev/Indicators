@@ -1,6 +1,6 @@
-import { User } from ".";
+import { UserInfo } from ".";
 
 export interface AccountInfo {
     token: string;
-    user: User;
+    user: UserInfo;
 }

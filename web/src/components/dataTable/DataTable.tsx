@@ -17,7 +17,7 @@ type Props =
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>,
     setPage: React.Dispatch<React.SetStateAction<number>>,
     setPageSize: React.Dispatch<React.SetStateAction<number>>,
-    editOnList?: boolean,
+    editOutList?: boolean,
     getRowId?: GridRowIdGetter<any> | undefined,
 }
 

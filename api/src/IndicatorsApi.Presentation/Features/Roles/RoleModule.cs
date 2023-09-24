@@ -1,6 +1,7 @@
 ﻿using IndicatorsApi.Application.Features.Roles.CreateRole;
 using IndicatorsApi.Application.Features.Roles.DeleteRole;
 using IndicatorsApi.Application.Features.Roles.GetRoleById;
+using IndicatorsApi.Application.Features.Roles.GetRoles;
 using IndicatorsApi.Application.Features.Roles.GetRolesPagination;
 using IndicatorsApi.Application.Features.Roles.UpdateSection;
 using IndicatorsApi.Contracts.Roles;
@@ -43,7 +44,12 @@ public sealed class RoleModule
             .WithName(nameof(DeleteRole));
 
         app
-            .MapGet("/", GetRoles)
+            .MapGet("/", GetRolesPagination)
+            .WithTags("Roles")
+            .WithName(nameof(GetRolesPagination));
+
+        app
+            .MapGet("/all", GetRoles)
             .WithTags("Roles")
             .WithName(nameof(GetRoles));
 
@@ -101,7 +107,7 @@ public sealed class RoleModule
         return Result(value: result);
     }
 
-    private static async Task<IResult> GetRoles(
+    private static async Task<IResult> GetRolesPagination(
         [AsParameters] PaginationQueryParameters parameters,
         ISender sender,
         CancellationToken cancellationToken)
@@ -115,6 +121,22 @@ public sealed class RoleModule
             .ConfigureAwait(false);
 
         return Result<Pagination<Role>, Pagination<RolePaginationResponse>>(value: result);
+    }
+
+    private static async Task<IResult> GetRoles(
+        [FromQuery] string? exclude,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        int[] ids = GetIntsFromExcludeParameter(exclude: exclude);
+
+        GetRolesQuery query = new(Excludes: ids);
+
+        ErrorOr<IEnumerable<Role>> result = await sender
+            .Send(request: query, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return Result<IEnumerable<Role>, IEnumerable<RolePaginationResponse>>(value: result);
     }
 
     private static async Task<IResult> GetRole(int id, ISender sender, CancellationToken cancellationToken)

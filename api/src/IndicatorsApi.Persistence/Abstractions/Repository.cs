@@ -82,6 +82,16 @@ internal abstract class Repository<TEntity, TEntityId>
     }
 
     /// <inheritdoc/>
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync(TEntityId[] ids, CancellationToken cancellationToken = default)
+    {
+        return await AllAsync(
+                context: DbContext,
+                ids: ids,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
     public virtual void Add(TEntity entity) =>
         DbContext
             .Set<TEntity>()
@@ -126,6 +136,13 @@ internal abstract class Repository<TEntity, TEntityId>
         context
             .Set<TEntity>()
             .Where(entity => ids.Any(id => id == entity.Id))
+            .AsQueryable()
+            .ToListAsync(cancellationToken);
+
+    private static Task<List<TEntity>> AllAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
+        context
+            .Set<TEntity>()
+            .Where(entity => !ids.Any(id => id == entity.Id))
             .AsQueryable()
             .ToListAsync(cancellationToken);
 }

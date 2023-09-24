@@ -203,47 +203,46 @@ const Sidebar = (props: Props) => {
                 );
               })}
             </List>
-          </Box>
-
-          <Box position="absolute" bottom="2rem">
-            <Divider />
-            <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
-              <Box
-                component="img"
-                alt="profile"
-                src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                height="40px"
-                width="40px"
-                borderRadius="50%"
-                sx={{
-                  objectFit: "cover",
-                }}
-              />
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.9rem"
-                  color="secondary"
-                >
-                  {props.accountInfo.user.email.split('@')[0].toUpperCase()}
-                </Typography>
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.8rem"
-                  color="secondary"
-                >
-                  {
-                    props.accountInfo.user.roles[0].name
-                  }
-                </Typography>
-              </Box>
-              <SettingsOutlined
-                sx={{
-                  color: theme.palette.primary.contrastText,
-                  fontSize: "25px"
-                }}
-              />
-            </FlexBetween>
+            <Box bottom="2rem">
+              <Divider />
+              <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
+                <Box
+                  component="img"
+                  alt="profile"
+                  src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  height="40px"
+                  width="40px"
+                  borderRadius="50%"
+                  sx={{
+                    objectFit: "cover",
+                  }}
+                />
+                <Box textAlign="left">
+                  <Typography
+                    fontWeight="bold"
+                    fontSize="0.9rem"
+                    color="secondary"
+                  >
+                    {props.accountInfo.user.email.split('@')[0].toUpperCase()}
+                  </Typography>
+                  <Typography
+                    fontWeight="bold"
+                    fontSize="0.8rem"
+                    color="secondary"
+                  >
+                    {
+                      props.accountInfo.user.roles[0].name
+                    }
+                  </Typography>
+                </Box>
+                <SettingsOutlined
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    fontSize: "25px"
+                  }}
+                />
+              </FlexBetween>
+            </Box>
           </Box>
         </Drawer>
       )}
