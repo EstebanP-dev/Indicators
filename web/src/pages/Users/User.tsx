@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { loadAbort, urlUtility } from "../../utilities";
+import { SnackbarUtilities, loadAbort, urlUtility } from "../../utilities";
 import { useAxiosApi } from "../../hooks";
 import { useDispatch } from "react-redux";
 import { Role, UserById } from "../../models";
-import {
-  Autocomplete,
-  Box,
-  Chip,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { Body } from "../../components";
+import { Box, TextField, Typography, useTheme } from "@mui/material";
+import { Body, MultipleSelector } from "../../components";
 
 const SLUG = "Users";
 
@@ -21,12 +14,12 @@ const User = () => {
   const abortController: AbortController = loadAbort();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { callEndpoint, getService } = useAxiosApi(
+  const { callEndpoint, getService, putService } = useAxiosApi(
     abortController,
     navigate,
     dispatch
   );
-  const [roles, setRoles] = useState<Role[]>([]);
+  const [roles, setRoles] = useState<Role[] | undefined>([]);
   const [data, setData] = useState<UserById | undefined>(undefined);
   const [newData, setNewData] = useState<UserById | undefined>(undefined);
   const { email } = useParams();
@@ -44,7 +37,7 @@ const User = () => {
       }
     );
 
-    callEndpoint<Role>(
+    callEndpoint<Role[]>(
       getService("roles/all"),
       setRoles,
       undefined,
@@ -53,15 +46,55 @@ const User = () => {
     );
   };
 
-  const handleSubmit = () => {
-    console.log("pressed");
+  const handleSave = () => {
+    if (canBeEdited()) {
+      callEndpoint(
+        putService(
+          `${SLUG.toLowerCase()}/${urlDecode(email ?? "")}`,
+          newData!
+        ),
+        undefined,
+        undefined,
+        undefined,
+        (_) => {
+          SnackbarUtilities.success("Usuario actualizado.");
+          navigate(-1);
+        }
+      )
+    }
   };
+
+  const canBeEdited = (): boolean => {
+    let dataRoles: Role[] = data?.roles ?? [];
+    let newRoles: Role[] = newData?.roles ?? [];
+
+    let changeEmail = (newData?.email ?? "") !== (data?.email ?? "");
+    let validLength = newRoles.length > 0 && dataRoles.length > 0;
+    let changeLength = newRoles.length !== dataRoles.length;
+    let findANewRole = newRoles.map((role: Role) => {
+      let findRole = dataRoles.find((value) => value.id === role.id);
+      return findRole !== undefined;
+    });
+    return (
+      changeEmail ||
+      (validLength && (changeLength || findANewRole.includes(false)))
+    );
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
-    <Body title="Detalle de Usuario" slug="users" showAdd={false}>
+    <Body
+      title="Detalle de Usuario"
+      slug="users"
+      showAdd={false}
+      isEditing={true}
+      disableSave={!canBeEdited()}
+      disableDelete={true}
+      onSaveButton={handleSave}
+    >
       <>
         <Box display="flex" flexDirection="row" gap="1rem" m="2rem 0">
           <Box
@@ -131,7 +164,6 @@ const User = () => {
           width="100%"
           height="100%"
           gap="1rem"
-          onSubmit={handleSubmit}
           mt="1"
         >
           <Box display="flex" flexDirection="column">
@@ -139,7 +171,7 @@ const User = () => {
               label="Correo electrónico"
               name="Correo electrónico"
               color="secondary"
-              value={newData?.email}
+              defaultValue={newData?.email}
               onChange={(e) => {
                 setNewData({
                   email: e.target.value,
@@ -149,38 +181,11 @@ const User = () => {
             />
           </Box>
           <Box display="flex" flexDirection="column">
-            {!!roles ? (
-              <Autocomplete
-                multiple
+            {!!roles && !!newData && !!newData.roles ? (
+              <MultipleSelector
                 value={newData?.roles}
                 options={roles}
-                getOptionLabel={(option) => option.name}
-                defaultValue={newData?.roles}
-                renderTags={(values, props) =>
-                  values.map((value, index) => (
-                    <Chip
-                      variant="outlined"
-                      label={value.name}
-                      {...props({ index })}
-                    />
-                  ))
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Roles"
-                    color="secondary"
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        display: "flex",
-                        minWidth: "200px",
-                        maxWidth: "500px",
-                        flexWrap: "wrap",
-                      },
-                    }}
-                  />
-                )}
+                defaultValue={data?.roles}
                 onChange={(_, newValue) => {
                   setNewData({
                     email: newData?.email ?? "",
