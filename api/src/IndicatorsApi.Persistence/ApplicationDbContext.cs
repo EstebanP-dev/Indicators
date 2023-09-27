@@ -46,7 +46,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 #pragma warning disable CA1062 // Validate arguments of public methods
-        modelBuilder.ApplyConfigurationsFromAssembly(PersistenceAssembly.Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 #pragma warning restore CA1062 // Validate arguments of public methods
     }
 }

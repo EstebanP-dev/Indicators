@@ -1,5 +1,4 @@
 ﻿using IndicatorsApi.Application.Features.Auth.Login;
-using IndicatorsApi.Application.Features.Users.Login;
 using IndicatorsApi.Contracts.Auth;
 using IndicatorsApi.Domain.Features.Users;
 

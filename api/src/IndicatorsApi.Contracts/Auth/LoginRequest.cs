@@ -1,4 +1,4 @@
-﻿namespace IndicatorsApi.Application.Features.Users.Login;
+﻿namespace IndicatorsApi.Contracts.Auth;
 
 /// <summary>
 /// Sets the user credentials.

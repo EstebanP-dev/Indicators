@@ -11,11 +11,11 @@ public class ApplicationServiceInstaller
     {
         services
             .AddMediatR(options =>
-                options.RegisterServicesFromAssembly(Application.ApplicationAssembly.Assembly));
+                options.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly));
 
         services
             .AddValidatorsFromAssembly(
-                Application.ApplicationAssembly.Assembly,
+                Application.AssemblyReference.Assembly,
                 includeInternalTypes: true);
     }
 }
