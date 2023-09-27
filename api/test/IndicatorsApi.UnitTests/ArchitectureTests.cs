@@ -23,7 +23,7 @@ public class ArchitectureTests
     public void Domain_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Domain.AssemblyReference).Assembly;
+        Assembly assembly = Domain.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             ContractsNamespace,
@@ -54,7 +54,7 @@ public class ArchitectureTests
     public void Contracts_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Contracts.AssemblyReference).Assembly;
+        Assembly assembly = Contracts.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             DomainNamespace,
@@ -85,7 +85,7 @@ public class ArchitectureTests
     public void Application_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Application.AssemblyReference).Assembly;
+        Assembly assembly = Application.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             InfrastructureNamespace,
@@ -114,7 +114,7 @@ public class ArchitectureTests
     public void Infrastructure_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Infrastructure.AssemblyReference).Assembly;
+        Assembly assembly = Infrastructure.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             PersistenceNamespace,
@@ -142,7 +142,7 @@ public class ArchitectureTests
     public void Persistence_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Persistence.AssemblyReference).Assembly;
+        Assembly assembly = Persistence.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             InfrastructureNamespace,
@@ -170,7 +170,7 @@ public class ArchitectureTests
     public void Presentation_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(Presentation.AssemblyReference).Assembly;
+        Assembly assembly = Presentation.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             PersistenceNamespace,
@@ -198,7 +198,7 @@ public class ArchitectureTests
     public void WebApi_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = typeof(WebApi.AssemblyReference).Assembly;
+        Assembly assembly = WebApi.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             PersistenceNamespace,

@@ -5,7 +5,7 @@ import { endpoints } from "../enviroments";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loadAbort } from "../utilities";
-import { CoverPage } from ".";
+import { CoverPage, MultipleSelector } from ".";
 import {
   Box,
   Button,
@@ -81,22 +81,6 @@ const Add = (props: Props) => {
     );
   };
 
-  const handleMultipleSelectionChange = (
-    event: SelectChangeEvent<typeof multipleValue>,
-    column: GridColDef
-  ) => {
-    const {
-      target: { value },
-    } = event;
-
-    setMultipleValue(typeof value === "string" ? value.split(",") : value);
-
-    setData({
-      ...data,
-      [column.field]: value,
-    });
-  };
-
   useEffect(() => {
     if (!!props.selectionDataUrl) {
       fetchSelectionData();
@@ -155,33 +139,18 @@ const Add = (props: Props) => {
                 key={column.field}
               >
                 {column.type === "multipleSelect" ? (
-                  <>
-                    <InputLabel
-                      id="multiple-label-id"
-                      key={"label" + column.field}
-                    >
-                      {column.headerName}
-                    </InputLabel>
-                    <Select
-                      multiple
-                      required
-                      key={"multipleSelect" + column.field}
-                      id={"multiple-select-id" + column.field}
-                      name={column.headerName}
-                      labelId="multiple-label-id"
-                      variant="outlined"
-                      color="secondary"
-                      value={multipleValue}
-                      onChange={(e) => handleMultipleSelectionChange(e, column)}
-                      MenuProps={MenuProps}
-                    >
-                      {selectionData.map((selection) => (
-                        <MenuItem key={selection.id} value={selection.id}>
-                          {selection.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </>
+                  <MultipleSelector
+                    value={data?.[column.field]}
+                    options={selectionData}
+                    defaultValue={[]}
+                    onChange={(_: any, newValue: any) => {
+                      setData({
+                        ...data,
+                        [column.field]: newValue.map((value: any) => value.id),
+                      });
+                      console.log("Data", data)
+                    }}
+                  />
                 ) : (
                   <TextField
                     margin="normal"

@@ -67,17 +67,20 @@ const User = () => {
   const canBeEdited = (): boolean => {
     let dataRoles: Role[] = data?.roles ?? [];
     let newRoles: Role[] = newData?.roles ?? [];
+    let dataEmail = (data?.email ?? "");
+    let newDataEmail = (newData?.email ?? "");
 
-    let changeEmail = (newData?.email ?? "") !== (data?.email ?? "");
+    let emptyEmails = dataEmail !== "" && newDataEmail !== "";
+    let changeEmail = dataEmail !== newDataEmail;
     let validLength = newRoles.length > 0 && dataRoles.length > 0;
     let changeLength = newRoles.length !== dataRoles.length;
     let findANewRole = newRoles.map((role: Role) => {
       let findRole = dataRoles.find((value) => value.id === role.id);
       return findRole !== undefined;
     });
-    return (
-      changeEmail ||
-      (validLength && (changeLength || findANewRole.includes(false)))
+    return (emptyEmails &&
+      (changeEmail ||
+      (validLength && (changeLength || findANewRole.includes(false))))
     );
   };
 
@@ -171,7 +174,7 @@ const User = () => {
               label="Correo electrónico"
               name="Correo electrónico"
               color="secondary"
-              defaultValue={newData?.email}
+              defaultValue={data?.email}
               onChange={(e) => {
                 setNewData({
                   email: e.target.value,
