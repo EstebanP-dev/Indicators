@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-namespace IndicatorsApi.Presentation.Abstraction;
+﻿namespace IndicatorsApi.Presentation.Abstraction;
 
 /// <inheritdoc/>
 public abstract class BaseModule
