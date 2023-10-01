@@ -112,14 +112,15 @@ internal abstract class Repository<TEntity, TEntityId>
     private static Task<int> CountAsync(ApplicationDbContext context, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
+            .AsNoTracking()
             .AsSingleQuery()
             .CountAsync(cancellationToken);
 
     private static Task<List<TEntity>> PaginationAsync(ApplicationDbContext context, int page, int rows, TEntityId[] ids, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
+            .AsNoTracking()
             .Where(entity => !ids.Any(id => id == entity.Id))
-            .AsQueryable()
             .Skip(page * rows)
             .Take(rows)
             .ToListAsync(cancellationToken);
@@ -135,14 +136,14 @@ internal abstract class Repository<TEntity, TEntityId>
     private static Task<List<TEntity>> BulkAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
+            .AsNoTracking()
             .Where(entity => ids.Any(id => id == entity.Id))
-            .AsQueryable()
             .ToListAsync(cancellationToken);
 
     private static Task<List<TEntity>> AllAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
+            .AsNoTracking()
             .Where(entity => !ids.Any(id => id == entity.Id))
-            .AsQueryable()
             .ToListAsync(cancellationToken);
 }

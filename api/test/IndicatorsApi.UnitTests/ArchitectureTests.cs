@@ -7,14 +7,14 @@ namespace IndicatorsApi.UnitTests;
 /// </summary>
 public class ArchitectureTests
 {
-    private const string BaseNamespace = "IndicatorsApi.";
-    private const string DomainNamespace = "Domain";
-    private const string ContractsNamespace = "Application";
-    private const string ApplicationNamespace = "Application";
-    private const string InfrastructureNamespace = "Infrastructure";
-    private const string PersistenceNamespace = "Persistence";
-    private const string PresentationNamespace = "Presentation";
-    private const string WebApiNamespace = "WebApi";
+    private const string BaseNamespace = "IndicatorsApi";
+    private const string DomainNamespace = BaseNamespace + "." + "Domain";
+    private const string ContractsNamespace = BaseNamespace + "." + "Application";
+    private const string ApplicationNamespace = BaseNamespace + "." + "Application";
+    private const string InfrastructureNamespace = BaseNamespace + "." + "Infrastructure";
+    private const string PersistenceNamespace = BaseNamespace + "." + "Persistence";
+    private const string PresentationNamespace = BaseNamespace + "." + "Presentation";
+    private const string WebApiNamespace = BaseNamespace + "." + "WebApi";
 
     /// <summary>
     /// Test: If the domain layer not have dependencies on other solution projects.
@@ -32,9 +32,7 @@ public class ArchitectureTests
             PersistenceNamespace,
             PresentationNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
@@ -63,9 +61,7 @@ public class ArchitectureTests
             PersistenceNamespace,
             PresentationNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
@@ -92,15 +88,35 @@ public class ArchitectureTests
             PersistenceNamespace,
             PresentationNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
             .InAssembly(assembly)
             .ShouldNot()
             .HaveDependencyOnAny(otherProjects)
+            .GetResult();
+
+        // Assert
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Test: If the handlers have dependency on Domain.
+    /// </summary>
+    [Fact]
+    public void Handlers_Should_Have_DependencyOnDomain()
+    {
+        // Arrange
+        Assembly assembly = Application.AssemblyReference.Assembly;
+
+        // Act
+        TestResult result = Types
+            .InAssembly(assembly)
+            .That()
+            .HaveNameEndingWith(end: "Handler", comparer: StringComparison.InvariantCulture)
+            .Should()
+            .HaveDependencyOn(DomainNamespace)
             .GetResult();
 
         // Assert
@@ -120,9 +136,7 @@ public class ArchitectureTests
             PersistenceNamespace,
             PresentationNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
@@ -148,9 +162,7 @@ public class ArchitectureTests
             InfrastructureNamespace,
             PresentationNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
@@ -176,15 +188,37 @@ public class ArchitectureTests
             PersistenceNamespace,
             InfrastructureNamespace,
             WebApiNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
             .InAssembly(assembly)
             .ShouldNot()
             .HaveDependencyOnAny(otherProjects)
+            .GetResult();
+
+        // Assert
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Test: If the modules have depedency on MediatR.
+    /// </summary>
+    [Fact]
+    public void Modules_Should_Have_DependencyOnMediatR()
+    {
+        // Arrange
+        Assembly assembly = Presentation.AssemblyReference.Assembly;
+
+        // Act
+        TestResult result = Types
+            .InAssembly(assembly)
+            .That()
+            .AreNotAbstract()
+            .And()
+            .HaveNameEndingWith(end: "Module", comparer: StringComparison.InvariantCulture)
+            .Should()
+            .HaveDependencyOn("MediatR")
             .GetResult();
 
         // Assert
@@ -203,9 +237,7 @@ public class ArchitectureTests
         {
             PersistenceNamespace,
             InfrastructureNamespace,
-        }
-        .Select(project => BaseNamespace + project)
-        .ToArray();
+        };
 
         // Act
         TestResult result = Types
