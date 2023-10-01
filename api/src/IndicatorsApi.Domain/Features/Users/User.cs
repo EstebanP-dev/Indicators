@@ -41,10 +41,10 @@ public class User
 #pragma warning restore CA1819 // Properties should not return arrays
 
     /// <summary>
-    /// Gets the <see cref="User"/>'s <see cref="IReadOnlyList{T}"/> roles.
+    /// Gets the <see cref="User"/>'s <see cref="ICollection{T}"/> roles.
     /// </summary>
     /// <value>
-    /// The <see cref="User"/>'s <see cref="IReadOnlyList{T}"/> roles.
+    /// The <see cref="User"/>'s <see cref="ICollection{T}"/> roles.
     /// </value>
     public virtual ICollection<Role> Roles { get; } = new List<Role>();
 

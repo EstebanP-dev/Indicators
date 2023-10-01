@@ -1,7 +1,5 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Users;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IndicatorsApi.Persistence.Features.Users;
 

@@ -1,8 +1,4 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Roles;
-using IndicatorsApi.Domain.Features.Sections;
-using IndicatorsApi.Domain.Primitives;
-using IndicatorsApi.Domain.Utils;
+﻿using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Sections;

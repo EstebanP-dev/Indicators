@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Application.Abstraction.Data;
+using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Sources;
@@ -35,6 +36,9 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     /// <inheritdoc/>
     public DbSet<Source> Sources { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
 
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

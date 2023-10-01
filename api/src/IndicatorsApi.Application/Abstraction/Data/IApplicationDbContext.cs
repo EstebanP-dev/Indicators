@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Features.Roles;
+﻿using IndicatorsApi.Domain.Features.MeasurementUnits;
+using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.SubSections;
@@ -51,4 +52,12 @@ public interface IApplicationDbContext
     /// The section table.
     /// </value>
     DbSet<Source> Sources { get; set; }
+
+    /// <summary>
+    /// Gets or sets the measurement unit table.
+    /// </summary>
+    /// <value>
+    /// The measurement unit table.
+    /// </value>
+    DbSet<MeasurementUnit> MeasurementUnits { get; set; }
 }
