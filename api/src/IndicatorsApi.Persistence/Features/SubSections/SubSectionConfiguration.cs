@@ -14,10 +14,8 @@ internal sealed class SubSectionConfiguration
         builder.HasKey(subsection => subsection.Id);
 
         builder.Property(subsection => subsection.Id)
-            .HasConversion(
-                subsectionId => subsectionId.Value,
-                value => SubSectionId.ToSubSectionId(value))
             .HasColumnName("id")
+            .HasMaxLength(2)
             .IsRequired();
 
         builder.HasIndex(subsection => subsection.Id)

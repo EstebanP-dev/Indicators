@@ -5,6 +5,7 @@ global using System.Text;
 global using System.Threading.Tasks;
 global using Carter;
 global using ErrorOr;
+global using IndicatorsApi.Domain.Models;
 global using IndicatorsApi.Presentation.Abstraction;
 global using Mapster;
 global using MediatR;

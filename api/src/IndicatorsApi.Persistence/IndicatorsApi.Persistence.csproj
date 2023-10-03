@@ -9,9 +9,4 @@
   <ItemGroup>
     <ProjectReference Include="..\IndicatorsApi.Application\IndicatorsApi.Application.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Features\Articles\ArticleConfiguration.cs" />
-    <Compile Remove="Features\Articles\ArticleRepository.cs" />
-  </ItemGroup>
 </Project>

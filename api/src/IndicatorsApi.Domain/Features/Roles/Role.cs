@@ -26,13 +26,5 @@ public class Role
     /// <value>
     /// The <see cref="Role"/>'s name.
     /// </value>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets a collection of users.
-    /// </summary>
-    /// <value>
-    /// A collection of users.
-    /// </value>
-    public ICollection<User> Users { get; } = new List<User>();
+    required public string Name { get; set; }
 }

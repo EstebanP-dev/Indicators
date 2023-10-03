@@ -5,7 +5,7 @@ namespace IndicatorsApi.Persistence.Features.Sections;
 
 /// <inheritdoc/>
 internal sealed class SectionRepository
-    : Repository<Section, SectionId>, ISectionRepository
+    : Repository<Section, string>, ISectionRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SectionRepository"/> class.

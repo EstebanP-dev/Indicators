@@ -6,6 +6,6 @@ namespace IndicatorsApi.Domain.Features.SubSections;
 /// Section repository methods.
 /// </summary>
 public interface ISubSectionRepository
-    : IRepository<SubSection, SubSectionId>
+    : IRepository<SubSection, string>
 {
 }

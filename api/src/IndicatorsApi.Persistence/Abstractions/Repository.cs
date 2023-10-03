@@ -1,4 +1,7 @@
-﻿using IndicatorsApi.Domain;
+﻿using System.Linq;
+using System.Linq.Expressions;
+using IndicatorsApi.Domain;
+using IndicatorsApi.Domain.Models;
 using IndicatorsApi.Domain.Primitives;
 using IndicatorsApi.Domain.Repositories;
 using IndicatorsApi.Domain.Utils;
@@ -72,6 +75,39 @@ internal abstract class Repository<TEntity, TEntityId>
     }
 
     /// <inheritdoc/>
+    public virtual async Task<Pagination<TResponse>> GetPaginationAsync<TResponse>(
+        PaginationParameters<TEntityId> parameters,
+        Expression<Func<TEntity, TResponse>> selector,
+        CancellationToken cancellationToken = default)
+        where TResponse : class
+    {
+        int totalRows = await CountAsync(
+                context: DbContext,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        int totalPages = PaginationUtils.ConvertTotalPages(
+                totalRows: totalRows,
+                pageSize: parameters.Rows);
+
+        List<TResponse> entities = await PaginationAsync<TResponse>(
+                context: DbContext,
+                parameters: parameters,
+                selector: selector,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        Pagination<TResponse> pagination = new(
+            totalRows,
+            totalPages: totalPages,
+            currentPage: parameters.Page,
+            pageSize: parameters.Rows,
+            response: entities);
+
+        return pagination;
+    }
+
+    /// <inheritdoc/>
     public virtual async Task<IEnumerable<TEntity>> GetBulkIdsAsync(TEntityId[] ids, CancellationToken cancellationToken = default)
     {
         return await BulkAsync(
@@ -116,13 +152,34 @@ internal abstract class Repository<TEntity, TEntityId>
             .AsSingleQuery()
             .CountAsync(cancellationToken);
 
-    private static Task<List<TEntity>> PaginationAsync(ApplicationDbContext context, int page, int rows, TEntityId[] ids, CancellationToken cancellationToken = default) =>
-        context
+    private static Task<List<TEntity>> PaginationAsync(
+            ApplicationDbContext context,
+            int page,
+            int rows,
+            TEntityId[] ids,
+            CancellationToken cancellationToken = default) => context
             .Set<TEntity>()
             .AsNoTracking()
             .Where(entity => !ids.Any(id => id == entity.Id))
             .Skip(page * rows)
             .Take(rows)
+            .ToListAsync(cancellationToken);
+
+    private static Task<List<TResponse>> PaginationAsync<TResponse>(
+            ApplicationDbContext context,
+            PaginationParameters<TEntityId> parameters,
+            Expression<Func<TEntity, TResponse>> selector,
+            CancellationToken cancellationToken = default)
+        where TResponse : class
+        => context
+            .Set<TEntity>()
+            .AsNoTracking()
+            .Where(
+                entity => !(parameters.Excludes ?? Array.Empty<TEntityId>())
+                    .Any(id => id == entity.Id))
+            .Select(selector: selector)
+            .Skip(parameters.Page * parameters.Rows)
+            .Take(parameters.Rows)
             .ToListAsync(cancellationToken);
 
     private static Task<TEntity?> SingleAsync(ApplicationDbContext context, TEntityId id, CancellationToken cancellationToken = default) =>

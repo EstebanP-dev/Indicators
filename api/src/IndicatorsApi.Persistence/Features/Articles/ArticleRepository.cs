@@ -5,7 +5,7 @@ namespace IndicatorsApi.Persistence.Features.Articles;
 
 /// <inheritdoc/>
 internal sealed class ArticleRepository
-    : Repository<Article, ArticleId>, IArticleRepository
+    : Repository<Article, string>, IArticleRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ArticleRepository"/> class.
@@ -17,7 +17,7 @@ internal sealed class ArticleRepository
     }
 
     /// <inheritdoc/>
-    public override async Task<Article?> GetByIdAsync(ArticleId id, CancellationToken cancellationToken = default)
+    public override async Task<Article?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await DbContext.Articles
             .AsNoTracking()

@@ -14,10 +14,8 @@ internal sealed class SectionConfiguration
         builder.HasKey(section => section.Id);
 
         builder.Property(section => section.Id)
-            .HasConversion(
-                sectionId => sectionId.Value,
-                value => SectionId.ToSectionId(value))
             .HasColumnName("id")
+            .HasMaxLength(2)
             .IsRequired();
 
         builder.HasIndex(section => section.Id)

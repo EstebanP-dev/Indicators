@@ -27,7 +27,7 @@ internal sealed class DeleteSubSectionCommandHandler
         try
         {
             SubSection? subSection = await _subSectionRepository
-                .GetByIdAsync(id: SubSectionId.ToSubSectionId(value: request.Id), cancellationToken: cancellationToken)
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (subSection is null)

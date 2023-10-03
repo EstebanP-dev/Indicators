@@ -9,7 +9,7 @@ namespace IndicatorsApi.Persistence.Features.SubSections;
 
 /// <inheritdoc/>
 internal sealed class SubSectionRepository
-    : Repository<SubSection, SubSectionId>, ISubSectionRepository
+    : Repository<SubSection, string>, ISubSectionRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SubSectionRepository"/> class.

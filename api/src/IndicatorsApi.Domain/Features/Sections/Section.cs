@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Features.Articles;
+using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.Sections;
 
@@ -6,13 +7,13 @@ namespace IndicatorsApi.Domain.Features.Sections;
 /// Section model from the database table.
 /// </summary>
 public sealed class Section
-    : Entity<SectionId>
+    : Entity<string>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Section"/> class.
     /// </summary>
     /// <param name="id">Section id.</param>
-    public Section(SectionId id)
+    public Section(string id)
         : base(id)
     {
     }

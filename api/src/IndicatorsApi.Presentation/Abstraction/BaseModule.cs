@@ -52,7 +52,7 @@ public abstract class BaseModule
     /// <typeparam name="TValue">From value type.</typeparam>
     /// <param name="value">Value instance.</param>
     /// <returns>Returns an instance of <see cref="IResult"/>.</returns>
-    protected static IResult Result<TValue>(ErrorOr<TValue> value)
+    protected static IResult NoContentResult<TValue>(ErrorOr<TValue> value)
     {
         return value
             .Match(
@@ -64,14 +64,29 @@ public abstract class BaseModule
     /// Map the result.
     /// </summary>
     /// <typeparam name="TValue">From value type.</typeparam>
-    /// <typeparam name="TReturn">To value type.</typeparam>
+    /// <typeparam name="TResponse">To value type.</typeparam>
     /// <param name="value">Value instance.</param>
     /// <returns>Returns an instance of <see cref="IResult"/>.</returns>
-    protected static IResult Result<TValue, TReturn>(ErrorOr<TValue> value)
+    protected static IResult Result<TValue, TResponse>(ErrorOr<TValue> value)
+        where TValue : class
     {
         return value
             .Match(
-                onValue: value => Results.Ok(value!.Adapt<TReturn>()),
+                onValue: value => Results.Ok(value!.Adapt<TResponse>()),
+                onError: Problem);
+    }
+
+    /// <summary>
+    /// Map the result.
+    /// </summary>
+    /// <typeparam name="TValue">From value type.</typeparam>
+    /// <param name="value">Value instance.</param>
+    /// <returns>Returns an instance of <see cref="IResult"/>.</returns>
+    protected static IResult Result<TValue>(ErrorOr<TValue> value)
+    {
+        return value
+            .Match(
+                onValue: value => Results.Ok(value!),
                 onError: Problem);
     }
 

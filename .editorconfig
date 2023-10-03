@@ -21,6 +21,7 @@ csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_indent_labels = one_less_than_current
 dotnet_diagnostic.CA1812.severity = silent
+dotnet_diagnostic.SA1011.severity = silent
 
 [*Tests.cs]
 dotnet_diagnostic.CA1707.severity = none

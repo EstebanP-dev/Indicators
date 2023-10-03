@@ -27,7 +27,7 @@ internal sealed class DeleteSectionCommandHandler
         try
         {
             Section? section = await _sectionRepository
-                .GetByIdAsync(id: SectionId.ToSectionId(value: request.Id), cancellationToken: cancellationToken)
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (section is null)

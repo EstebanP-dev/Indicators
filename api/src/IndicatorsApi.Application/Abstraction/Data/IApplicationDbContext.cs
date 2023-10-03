@@ -1,10 +1,10 @@
-﻿using IndicatorsApi.Domain.Features.MeasurementUnits;
+﻿using IndicatorsApi.Domain.Features.Articles;
+using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.SubSections;
 using IndicatorsApi.Domain.Features.Users;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Application.Abstraction.Data;
 
@@ -60,4 +60,12 @@ public interface IApplicationDbContext
     /// The measurement unit table.
     /// </value>
     DbSet<MeasurementUnit> MeasurementUnits { get; set; }
+
+    /// <summary>
+    /// Gets or sets the measurement unit table.
+    /// </summary>
+    /// <value>
+    /// The measurement unit table.
+    /// </value>
+    DbSet<Article> Articles { get; set; }
 }

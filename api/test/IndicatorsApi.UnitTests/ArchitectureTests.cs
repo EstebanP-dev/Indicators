@@ -81,7 +81,7 @@ public class ArchitectureTests
     public void Application_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
-        Assembly assembly = Application.AssemblyReference.Assembly;
+        Assembly assembly = Domain.AssemblyReference.Assembly;
         string[] otherProjects = new[]
         {
             InfrastructureNamespace,
@@ -108,7 +108,7 @@ public class ArchitectureTests
     public void Handlers_Should_Have_DependencyOnDomain()
     {
         // Arrange
-        Assembly assembly = Application.AssemblyReference.Assembly;
+        Assembly assembly = Domain.AssemblyReference.Assembly;
 
         // Act
         TestResult result = Types

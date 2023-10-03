@@ -36,7 +36,7 @@ internal sealed class UserConfiguration
 
         builder
             .HasMany(user => user.Roles)
-            .WithMany(role => role.Users)
+            .WithMany()
             .UsingEntity<UserRole>(
                 "rol_usuario",
                 roleBuilder => roleBuilder

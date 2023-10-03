@@ -22,7 +22,7 @@ internal sealed class GetSectionByIdQueryHandler
     public async Task<ErrorOr<Section>> Handle(GetSectionByIdQuery request, CancellationToken cancellationToken)
     {
         Section? section = await _sectionRepository
-                .GetByIdAsync(SectionId.ToSectionId(request.Id), cancellationToken)
+                .GetByIdAsync(request.Id, cancellationToken)
                 .ConfigureAwait(false);
 
         if (section == null)

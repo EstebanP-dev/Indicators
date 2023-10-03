@@ -1,4 +1,6 @@
-﻿using IndicatorsApi.Domain.Primitives;
+﻿using System.Linq.Expressions;
+using IndicatorsApi.Domain.Models;
+using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Repositories;
 
@@ -62,4 +64,15 @@ public interface IRepository<TEntity, TEntityId>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
     /// <returns>Returns either pagination entities or error instance.</returns>
     Task<Pagination<TEntity>> GetPaginationAsync(int page, int rows, TEntityId[] ids, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the pagination entities.
+    /// </summary>
+    /// <typeparam name="TResponse">Response model type.</typeparam>
+    /// <param name="parameters">Pagination parameters.</param>
+    /// <param name="selector">Selection function.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
+    /// <returns>Returns either a list of response model or error instance.</returns>
+    Task<Pagination<TResponse>> GetPaginationAsync<TResponse>(PaginationParameters<TEntityId> parameters, Expression<Func<TEntity, TResponse>> selector, CancellationToken cancellationToken = default)
+        where TResponse : class;
 }

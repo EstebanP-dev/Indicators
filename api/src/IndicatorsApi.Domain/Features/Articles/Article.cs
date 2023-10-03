@@ -8,7 +8,7 @@ namespace IndicatorsApi.Domain.Features.Articles;
 /// Article model from the database table.
 /// </summary>
 public sealed class Article
-    : Entity<ArticleId>
+    : Entity<string>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Article"/> class.
@@ -16,15 +16,11 @@ public sealed class Article
     /// <param name="id">Article id.</param>
     /// <param name="name">Article name.</param>
     /// <param name="description">Article description.</param>
-    /// <param name="sectionId">Article sectionId.</param>
-    /// <param name="subsectionId">Article subsectionId.</param>
-    public Article(string id, string name, string description, string sectionId, string subsectionId)
-        : base(ArticleId.ToArticleId(id))
+    public Article(string id, string name, string description)
+        : base(id)
     {
         Name = name;
         Description = description;
-        SectionId = SectionId.ToSectionId(sectionId);
-        SubSectionId = SubSectionId.ToSubSectionId(subsectionId);
     }
 
     /// <summary>
@@ -33,7 +29,7 @@ public sealed class Article
     /// <value>
     /// The <see cref="Article"/>'s name.
     /// </value>
-    public string Name { get; set; }
+    required public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Article"/>'s description.
@@ -41,7 +37,7 @@ public sealed class Article
     /// <value>
     /// The <see cref="Article"/>'s description.
     /// </value>
-    public string Description { get; set; }
+    required public string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Article"/>'s <see cref="SectionId"/>.
@@ -49,7 +45,7 @@ public sealed class Article
     /// <value>
     /// The <see cref="Article"/>'s <see cref="SectionId"/>.
     /// </value>
-    public SectionId SectionId { get; set; }
+    required public string SectionId { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Article"/>'s <see cref="SubSectionId"/>.
@@ -57,7 +53,7 @@ public sealed class Article
     /// <value>
     /// The <see cref="Article"/>'s <see cref="SubSectionId"/>.
     /// </value>
-    public SubSectionId SubSectionId { get; set; }
+    required public string SubSectionId { get; set; }
 
     /// <summary>
     /// Gets the <see cref="Article"/>'s <see cref="Section"/>.

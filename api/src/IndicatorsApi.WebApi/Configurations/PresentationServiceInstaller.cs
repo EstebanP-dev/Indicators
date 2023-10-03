@@ -1,4 +1,5 @@
 ﻿using Carter;
+using IndicatorsApi.Presentation.Abstraction;
 using IndicatorsApi.WebApi.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;

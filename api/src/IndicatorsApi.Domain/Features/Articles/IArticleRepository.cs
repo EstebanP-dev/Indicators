@@ -4,6 +4,6 @@
 /// Article repository methods.
 /// </summary>
 public interface IArticleRepository
-    : IRepository<Article, ArticleId>
+    : IRepository<Article, string>
 {
 }

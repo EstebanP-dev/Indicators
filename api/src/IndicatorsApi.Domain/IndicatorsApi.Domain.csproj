@@ -13,9 +13,4 @@
 	<ItemGroup>
 	  <PackageReference Include="ErrorOr" Version="1.2.1" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Compile Remove="Features\Articles\Article.cs" />
-	  <Compile Remove="Features\Articles\ArticleId.cs" />
-	  <Compile Remove="Features\Articles\IArticleRepository.cs" />
-	</ItemGroup>
 </Project>

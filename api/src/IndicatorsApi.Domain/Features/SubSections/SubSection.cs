@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Domain.Features.Articles;
+using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.SubSections;
 
@@ -6,14 +7,14 @@ namespace IndicatorsApi.Domain.Features.SubSections;
 /// SubSection model from the database table.
 /// </summary>
 public sealed class SubSection
-    : Entity<SubSectionId>
+    : Entity<string>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SubSection"/> class.
     /// </summary>
     /// <param name="id">Section id.</param>
     /// <param name="name">Section name.</param>
-    public SubSection(SubSectionId id, string name)
+    public SubSection(string id, string name)
         : base(id)
     {
         Name = name;
@@ -25,5 +26,5 @@ public sealed class SubSection
     /// <value>
     /// The <see cref="SubSection"/>'s name.
     /// </value>
-    public string Name { get; set; }
+    required public string Name { get; set; }
 }

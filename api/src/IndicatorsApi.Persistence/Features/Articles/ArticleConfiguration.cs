@@ -16,9 +16,6 @@ internal sealed class ArticleConfiguration
         builder.HasKey(articule => articule.Id);
 
         builder.Property(article => article.Id)
-            .HasConversion(
-                articleId => articleId.Value,
-                value => ArticleId.ToArticleId(value))
             .HasColumnName("id")
             .HasMaxLength(20)
             .ValueGeneratedOnAdd()
@@ -35,28 +32,22 @@ internal sealed class ArticleConfiguration
             .IsRequired();
 
         builder.Property(article => article.SectionId)
-            .HasConversion(
-                sectionId => sectionId.Value,
-                value => SectionId.ToSectionId(value))
             .HasColumnName("fkidseccion")
             .HasMaxLength(2)
             .IsRequired();
 
         builder.Property(article => article.SubSectionId)
-            .HasConversion(
-                subsectionId => subsectionId.Value,
-                value => SubSectionId.ToSubSectionId(value))
             .HasColumnName("fkidsubseccion")
             .HasMaxLength(2)
             .IsRequired();
 
         builder.HasOne(article => article.Section)
-            .WithMany(section => section.Articles)
+            .WithMany()
             .HasForeignKey(article => article.SectionId)
             .HasConstraintName("articulo_ibfk_1");
 
         builder.HasOne(article => article.SubSection)
-            .WithMany(subsection => subsection.Articles)
+            .WithMany()
             .HasForeignKey(article => article.SubSectionId)
             .HasConstraintName("articulo_ibfk_2");
     }

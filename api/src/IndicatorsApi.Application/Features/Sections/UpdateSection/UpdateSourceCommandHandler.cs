@@ -27,7 +27,7 @@ internal sealed class UpdateSectionCommandHandler
         try
         {
             Section? source = await _sourceRepository
-                    .GetByIdAsync(id: SectionId.ToSectionId(value: request.Id), cancellationToken: cancellationToken)
+                    .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             if (source is null)
