@@ -6,6 +6,6 @@ namespace IndicatorsApi.Domain.Features.MeasurementUnits;
 /// MeasurementUnit repository methods.
 /// </summary>
 public interface IMeasurementUnitRepository
-    : IRepository<MeasurementUnit, MeasurementUnitId>
+    : IRepository<MeasurementUnit, int>
 {
 }

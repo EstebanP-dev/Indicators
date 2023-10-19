@@ -27,7 +27,7 @@ internal sealed class DeleteMeasurementUnitCommandHandler
         try
         {
             MeasurementUnit? meaning = await _repository
-                .GetByIdAsync(id: MeasurementUnitId.ToMeasurementUnitId(value: request.Id), cancellationToken: cancellationToken)
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (meaning is null)

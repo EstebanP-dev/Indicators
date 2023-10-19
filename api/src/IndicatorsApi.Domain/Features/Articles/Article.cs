@@ -14,13 +14,17 @@ public sealed class Article
     /// Initializes a new instance of the <see cref="Article"/> class.
     /// </summary>
     /// <param name="id">Article id.</param>
-    /// <param name="name">Article name.</param>
-    /// <param name="description">Article description.</param>
-    public Article(string id, string name, string description)
+    public Article(string id)
         : base(id)
     {
-        Name = name;
-        Description = description;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Article"/> class.
+    /// </summary>
+    public Article()
+        : base()
+    {
     }
 
     /// <summary>

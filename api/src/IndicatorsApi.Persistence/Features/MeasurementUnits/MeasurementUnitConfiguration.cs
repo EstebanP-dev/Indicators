@@ -14,9 +14,6 @@ internal sealed class MeasurementUnitConfiguration
         builder.HasKey(section => section.Id);
 
         builder.Property(section => section.Id)
-            .HasConversion(
-                sectionId => sectionId.Value,
-                value => MeasurementUnitId.ToMeasurementUnitId(value))
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();

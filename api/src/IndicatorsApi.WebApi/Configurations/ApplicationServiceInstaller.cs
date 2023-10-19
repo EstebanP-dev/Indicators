@@ -1,4 +1,6 @@
-﻿namespace IndicatorsApi.WebApi.Configurations;
+﻿using IndicatorsApi.Application.Validations;
+
+namespace IndicatorsApi.WebApi.Configurations;
 
 /// <summary>
 /// Application configuration.
@@ -11,7 +13,11 @@ public class ApplicationServiceInstaller
     {
         services
             .AddMediatR(options =>
-                options.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly));
+            {
+                options.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
+
+                options.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
 
         services
             .AddValidatorsFromAssembly(

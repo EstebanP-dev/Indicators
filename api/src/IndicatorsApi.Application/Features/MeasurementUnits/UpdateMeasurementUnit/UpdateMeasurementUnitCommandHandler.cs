@@ -30,7 +30,7 @@ internal sealed class UpdateMeasurementUnitCommandHandler
         try
         {
             MeasurementUnit? source = await _repository
-                    .GetByIdAsync(id: MeasurementUnitId.ToMeasurementUnitId(value: request.Id), cancellationToken: cancellationToken)
+                    .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             if (source is null)

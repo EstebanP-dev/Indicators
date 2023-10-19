@@ -21,12 +21,20 @@ public class User
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="User"/> class.
+    /// </summary>
+    public User()
+        : base()
+    {
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="User"/>'s password.
     /// </summary>
     /// <value>
     /// The <see cref="User"/>'s password.
     /// </value>
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="User"/>'s salt.

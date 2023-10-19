@@ -5,7 +5,7 @@ namespace IndicatorsApi.Persistence.Features.MeasurementUnits;
 
 /// <inheritdoc/>
 internal sealed class MeasurementUnitRepository
-    : Repository<MeasurementUnit, MeasurementUnitId>, IMeasurementUnitRepository
+    : Repository<MeasurementUnit, int>, IMeasurementUnitRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MeasurementUnitRepository"/> class.

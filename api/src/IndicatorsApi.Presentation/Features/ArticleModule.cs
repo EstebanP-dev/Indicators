@@ -20,9 +20,28 @@ public sealed class ArticleModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         app
+            .MapPost("/", Create)
+            .WithName(nameof(Create))
+            .WithTags("Articles");
+
+        app
             .MapGet("/", GetPagination)
             .WithName(nameof(GetPagination))
             .WithTags("Articles");
+    }
+
+    private static async Task<IResult> Create(
+        [FromBody] CreateArticleRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        CreateArticleCommand command = request.Adapt<CreateArticleCommand>();
+
+        ErrorOr<Created> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
     }
 
     private static async Task<IResult> GetPagination(

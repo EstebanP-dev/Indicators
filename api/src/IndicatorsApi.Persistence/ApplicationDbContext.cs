@@ -1,5 +1,6 @@
 ﻿using IndicatorsApi.Application.Abstraction.Data;
 using IndicatorsApi.Domain.Features.Articles;
+using IndicatorsApi.Domain.Features.Frecuencies;
 using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
@@ -43,6 +44,9 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     /// <inheritdoc/>
     public DbSet<Article> Articles { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<Frecuency> Frecuencies { get; set; }
 
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

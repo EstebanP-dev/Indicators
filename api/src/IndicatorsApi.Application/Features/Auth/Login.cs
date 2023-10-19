@@ -59,7 +59,7 @@ internal sealed class LoginCommandHandler
         bool isValid = _passwordChecker
             .VerifyPassword(
                 password: request.Password,
-                hash: user.Password,
+                hash: user.Password!,
                 salt: user.Salt[0]);
 
         if (!isValid)

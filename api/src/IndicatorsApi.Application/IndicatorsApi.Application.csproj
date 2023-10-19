@@ -26,7 +26,4 @@
 	<ItemGroup>
 	  <None Remove="Features\Articles\" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Features\Articles\" />
-	</ItemGroup>
 </Project>

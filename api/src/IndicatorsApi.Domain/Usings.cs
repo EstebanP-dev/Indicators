@@ -6,4 +6,5 @@ global using System.Runtime.Serialization;
 global using System.Threading.Tasks;
 global using ErrorOr;
 global using IndicatorsApi.Domain.Exceptions;
+global using IndicatorsApi.Domain.Primitives;
 global using IndicatorsApi.Domain.Repositories;

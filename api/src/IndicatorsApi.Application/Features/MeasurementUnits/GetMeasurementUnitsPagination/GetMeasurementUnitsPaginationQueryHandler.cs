@@ -24,10 +24,7 @@ internal sealed class GetMeasurementUnitsPaginationQueryHandler
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,
-                    ids: (request.Excludes ?? Array.Empty<int>())
-                        .Select(
-                            id => MeasurementUnitId.ToMeasurementUnitId(id))
-                        .ToArray(),
+                    ids: request.Excludes ?? Array.Empty<int>(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

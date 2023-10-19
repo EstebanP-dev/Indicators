@@ -38,57 +38,47 @@ internal sealed class CreateUserCommandHandler
     /// <inheritdoc/>
     public async Task<ErrorOr<Created>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            User? user = await _userRepository
+        User? user = await _userRepository
                 .GetByIdAsync(id: UserId.ToUserId(value: request.Email), cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (user is not null)
-            {
-                return DomainErrors.AlreadyExists<User>();
-            }
+        if (user is not null)
+        {
+            return DomainErrors.AlreadyExists<User>();
+        }
 
-            IEnumerable<Role> roles = await _roleRepository
-                .GetBulkIdsAsync(
-                    ids: request.Roles
-                        .Select(id => RoleId.ToRoleId(value: id))
-                        .ToArray(),
-                    cancellationToken: cancellationToken)
+        IEnumerable<Role> roles = await _roleRepository
+            .GetBulkIdsAsync(
+                ids: request.Roles
+                    .Select(id => RoleId.ToRoleId(value: id))
+                    .ToArray(),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (roles.Any(role => !request.Roles.Contains(role.Id.Value)))
+        {
+            return DomainErrors.BulkNotFound;
+        }
+
+        string passwordHash = _passwordHasher.HashPasword(password: request.Password, salt: out byte[] salt);
+
+        user = new()
+        {
+            Id = request.Email,
+            Password = passwordHash,
+            Salt = new[] { salt },
+        };
+
+        foreach (Role role in roles)
+        {
+            user.Add(role: role);
+        }
+
+        _userRepository.Add(entity: user);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (roles.Any(role => !request.Roles.Contains(role.Id.Value)))
-            {
-                return DomainErrors.BulkNotFound;
-            }
-
-            string passwordHash = _passwordHasher.HashPasword(password: request.Password, salt: out byte[] salt);
-
-            user = new(id: UserId.ToUserId(value: request.Email), password: passwordHash)
-            {
-                Salt = new[] { salt },
-            };
-
-            foreach (Role role in roles)
-            {
-                user.Add(role: role);
-            }
-
-            _userRepository.Add(entity: user);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return Result.Created;
-        }
-        catch (DbUpdateException ex)
-        {
-            Console.WriteLine(ex);
-            return DomainErrors.CreationOrUpdatingFailed;
-        }
-        catch (OperationCanceledException)
-        {
-            return DomainErrors.CancelledOperation;
-        }
+        return Result.Created;
     }
 }

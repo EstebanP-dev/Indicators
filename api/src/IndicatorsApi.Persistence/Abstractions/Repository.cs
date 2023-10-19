@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-using IndicatorsApi.Domain;
+﻿using System.Linq.Expressions;
 using IndicatorsApi.Domain.Models;
 using IndicatorsApi.Domain.Primitives;
 using IndicatorsApi.Domain.Repositories;
@@ -16,7 +14,6 @@ namespace IndicatorsApi.Persistence.Abstractions;
 internal abstract class Repository<TEntity, TEntityId>
     : IRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
-    where TEntityId : class
 {
     /// <summary>
     /// Instance of <see cref="ApplicationDbContext"/>.
@@ -32,6 +29,18 @@ internal abstract class Repository<TEntity, TEntityId>
     protected Repository(ApplicationDbContext context)
     {
         DbContext = context;
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken)
+    {
+        TEntity? entity = await SingleAsync(
+                context: DbContext,
+                id: id,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return entity != null;
     }
 
     /// <inheritdoc/>
@@ -160,7 +169,7 @@ internal abstract class Repository<TEntity, TEntityId>
             CancellationToken cancellationToken = default) => context
             .Set<TEntity>()
             .AsNoTracking()
-            .Where(entity => !ids.Any(id => id == entity.Id))
+            .Where(entity => !ids.Contains(entity.Id))
             .Skip(page * rows)
             .Take(rows)
             .ToListAsync(cancellationToken);
@@ -176,7 +185,7 @@ internal abstract class Repository<TEntity, TEntityId>
             .AsNoTracking()
             .Where(
                 entity => !(parameters.Excludes ?? Array.Empty<TEntityId>())
-                    .Any(id => id == entity.Id))
+                    .Contains(entity.Id))
             .Select(selector: selector)
             .Skip(parameters.Page * parameters.Rows)
             .Take(parameters.Rows)
@@ -187,20 +196,20 @@ internal abstract class Repository<TEntity, TEntityId>
             .Set<TEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                predicate: entity => entity.Id == id,
+                predicate: entity => id!.Equals(entity.Id),
                 cancellationToken: cancellationToken);
 
     private static Task<List<TEntity>> BulkAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
             .AsNoTracking()
-            .Where(entity => ids.Any(id => id == entity.Id))
+            .Where(entity => ids.Any(id => id!.Equals(entity.Id)))
             .ToListAsync(cancellationToken);
 
     private static Task<List<TEntity>> AllAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
         context
             .Set<TEntity>()
             .AsNoTracking()
-            .Where(entity => !ids.Any(id => id == entity.Id))
+            .Where(entity => !ids.Any(id => id!.Equals(entity.Id)))
             .ToListAsync(cancellationToken);
 }

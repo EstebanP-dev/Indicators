@@ -1,4 +1,5 @@
 ﻿using IndicatorsApi.Domain.Features.Articles;
+using IndicatorsApi.Domain.Features.Frecuencies;
 using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
@@ -62,10 +63,18 @@ public interface IApplicationDbContext
     DbSet<MeasurementUnit> MeasurementUnits { get; set; }
 
     /// <summary>
-    /// Gets or sets the measurement unit table.
+    /// Gets or sets the articles table.
     /// </summary>
     /// <value>
-    /// The measurement unit table.
+    /// The articles table.
     /// </value>
     DbSet<Article> Articles { get; set; }
+
+    /// <summary>
+    /// Gets or sets the frecuency table.
+    /// </summary>
+    /// <value>
+    /// The frecuency table.
+    /// </value>
+    DbSet<Frecuency> Frecuencies { get; set; }
 }

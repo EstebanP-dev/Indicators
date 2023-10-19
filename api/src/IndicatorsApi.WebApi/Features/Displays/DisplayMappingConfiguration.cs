@@ -22,6 +22,6 @@ internal sealed class DisplayMappingConfiguration
         config.NewConfig<UpdateDisplayCommand, Display>()
             .Map(dest => dest.Id, src => src.Id)
             .Map(dest => dest.Name, src => src.Name ?? string.Empty)
-            .ConstructUsing(src => new Display(src.Id ?? -1, src.Name ?? string.Empty));
+            .ConstructUsing(src => new Display { Id = src.Id ?? -1, Name = src.Name ?? string.Empty });
     }
 }

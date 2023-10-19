@@ -2,10 +2,12 @@
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Text;
-global using System.Threading.Tasks;
 global using Carter;
 global using ErrorOr;
+global using IndicatorsApi.Domain.Errors;
+global using IndicatorsApi.Domain.Features.Indicators;
 global using IndicatorsApi.Domain.Models;
+global using IndicatorsApi.Domain.Primitives;
 global using IndicatorsApi.Presentation.Abstraction;
 global using Mapster;
 global using MediatR;

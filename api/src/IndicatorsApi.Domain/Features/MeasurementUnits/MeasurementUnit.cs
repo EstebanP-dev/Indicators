@@ -7,14 +7,14 @@ namespace IndicatorsApi.Domain.Features.MeasurementUnits;
 /// MeasurementUnit model from the database table.
 /// </summary>
 public sealed class MeasurementUnit
-    : Entity<MeasurementUnitId>
+    : Entity<int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MeasurementUnit"/> class.
     /// </summary>
     /// <param name="id">MeasurementUnit id.</param>
     /// <param name="description">MeasurementUnit description.</param>
-    public MeasurementUnit(MeasurementUnitId id, string description)
+    public MeasurementUnit(int id, string description)
         : base(id)
     {
         Description = description;

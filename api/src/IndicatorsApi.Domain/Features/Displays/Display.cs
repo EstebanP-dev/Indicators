@@ -20,10 +20,18 @@ public sealed class Display
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Display"/> class.
+    /// </summary>
+    public Display()
+        : base()
+    {
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="Display"/>'s name.
     /// </summary>
     /// <value>
     /// The <see cref="Display"/>'s name.
     /// </value>
-    public string Name { get; set; }
+    required public string Name { get; set; }
 }

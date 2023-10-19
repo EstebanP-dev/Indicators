@@ -11,7 +11,7 @@ public abstract class ValueObject : IValueObject<ValueObject>
     /// <param name="left">Left value.</param>
     /// <param name="right">Right value.</param>
     /// <returns>Returns if the values are the same.</returns>
-    public static bool operator ==(ValueObject left, ValueObject right)
+    public static bool operator ==(ValueObject? left, ValueObject? right)
     {
         if (left is null && right is null)
         {
@@ -32,7 +32,7 @@ public abstract class ValueObject : IValueObject<ValueObject>
     /// <param name="left">Left value.</param>
     /// <param name="right">Right value.</param>
     /// <returns>Returns if the values are the diferents.</returns>
-    public static bool operator !=(ValueObject left, ValueObject right) => !(left == right);
+    public static bool operator !=(ValueObject? left, ValueObject? right) => !(left == right);
 
     /// <inheritdoc/>
     public bool Equals(ValueObject? other) => other is not null && GetAtomicValues().SequenceEqual(other.GetAtomicValues());

@@ -76,12 +76,20 @@ public static class DomainErrors
         description: $"The value '{left}' does not coincide with '{right}'.");
 
     /// <summary>
-    /// Gets the creation or updation failed error.
+    /// Gets the creating or updating failed error.
     /// </summary>
     /// <value>
-    /// The creation or updation failed error.
+    /// The creating or updating failed error.
     /// </value>
     public static Error CreationOrUpdatingFailed => Error.Failure(
         code: "General.CreationOrUpdatingFailed",
         description: "Something was wrong. Try again later.");
+
+    /// <summary>
+    /// Gets the not null or empty property failed error.
+    /// </summary>
+    /// <param name="propertyName">Property name.</param>
+    /// <returns>Returns a not null or empty property error.</returns>
+    public static Error NotNullOrEmptyProperty(string propertyName) => Error.Conflict(
+        description: $"{propertyName} cannot be empty.");
 }

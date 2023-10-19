@@ -23,7 +23,7 @@ internal sealed class GetMeasurementUnitByIdQueryHandler
     {
         MeasurementUnit? source = await _repository
             .GetByIdAsync(
-                id: MeasurementUnitId.ToMeasurementUnitId(request.Id),
+                id: request.Id,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

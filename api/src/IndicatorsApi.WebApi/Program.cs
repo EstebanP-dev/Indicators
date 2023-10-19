@@ -1,5 +1,6 @@
 ﻿using Carter;
 using IndicatorsApi.WebApi.Configurations;
+using IndicatorsApi.WebApi.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -52,5 +53,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 app.Run();

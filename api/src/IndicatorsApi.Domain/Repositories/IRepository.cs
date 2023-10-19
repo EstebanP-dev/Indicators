@@ -11,7 +11,6 @@ namespace IndicatorsApi.Domain.Repositories;
 /// <typeparam name="TEntityId">Entity id class.</typeparam>
 public interface IRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
-    where TEntityId : class
 {
     /// <summary>
     /// Add entity on the database.
@@ -30,6 +29,14 @@ public interface IRepository<TEntity, TEntityId>
     /// </summary>
     /// <param name="entity">Instance of entity.</param>
     void Delete(TEntity entity);
+
+    /// <summary>
+    /// Varify if the entity exists.
+    /// </summary>
+    /// <param name="id">Entity id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
+    /// <returns>If the entity exists.</returns>
+    Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the entity by id.

@@ -7,6 +7,7 @@ global using IndicatorsApi.Application.Abstraction.Messaging;
 global using IndicatorsApi.Domain.Errors;
 global using IndicatorsApi.Domain.Models;
 global using IndicatorsApi.Domain.Primitives;
+global using IndicatorsApi.Domain.Repositories;
 global using Mapster;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
