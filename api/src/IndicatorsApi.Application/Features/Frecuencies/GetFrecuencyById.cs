@@ -1,39 +1,39 @@
 ﻿using System.Globalization;
-using IndicatorsApi.Contracts.Frecuencies;
+using IndicatorsApi.Contracts.Frequencies;
 using IndicatorsApi.Contracts.Sections;
 using IndicatorsApi.Contracts.SubSections;
-using IndicatorsApi.Domain.Features.Frecuencies;
+using IndicatorsApi.Domain.Features.Frequencies;
 
-namespace IndicatorsApi.Application.Features.Frecuencies;
+namespace IndicatorsApi.Application.Features.Frequencies;
 
 /// <summary>
 /// Get By Id Query.
 /// </summary>
-/// <param name="Id">Frecuency id.</param>
+/// <param name="Id">Frequency id.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-public sealed record class GetFrecuencyByIdQuery(int Id)
+public sealed record class GetFrequencyByIdQuery(int Id)
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter
-    : IQuery<FrecuencyByIdResponse>;
+    : IQuery<FrequencyByIdResponse>;
 
 /// <inheritdoc/>
-internal sealed class GetFrecuencyByIdQueryHandler
-    : IQueryHandler<GetFrecuencyByIdQuery, FrecuencyByIdResponse>
+internal sealed class GetFrequencyByIdQueryHandler
+    : IQueryHandler<GetFrequencyByIdQuery, FrequencyByIdResponse>
 {
-    private readonly IFrecuencyRepository _repository;
+    private readonly IFrequencyRepository _repository;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetFrecuencyByIdQueryHandler"/> class.
+    /// Initializes a new instance of the <see cref="GetFrequencyByIdQueryHandler"/> class.
     /// </summary>
-    /// <param name="repository">Instance of <see cref="IFrecuencyRepository"/>.</param>
-    public GetFrecuencyByIdQueryHandler(IFrecuencyRepository repository)
+    /// <param name="repository">Instance of <see cref="IFrequencyRepository"/>.</param>
+    public GetFrequencyByIdQueryHandler(IFrequencyRepository repository)
     {
         _repository = repository;
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<FrecuencyByIdResponse>> Handle(GetFrecuencyByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<FrequencyByIdResponse>> Handle(GetFrequencyByIdQuery request, CancellationToken cancellationToken)
     {
-        Frecuency? article = await _repository
+        Frequency? article = await _repository
             .GetByIdAsync(
                 id: request.Id,
                 cancellationToken: cancellationToken)
@@ -41,9 +41,9 @@ internal sealed class GetFrecuencyByIdQueryHandler
 
         if (article == null)
         {
-            return DomainErrors.NotFound<Frecuency>();
+            return DomainErrors.NotFound<Frequency>();
         }
 
-        return article.Adapt<FrecuencyByIdResponse>();
+        return article.Adapt<FrequencyByIdResponse>();
     }
 }

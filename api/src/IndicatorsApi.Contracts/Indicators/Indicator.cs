@@ -12,7 +12,7 @@
 /// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
 /// <param name="Goal">Indicator goal.</param>
 /// <param name="MeaningId">Indicator meaning id.</param>
-/// <param name="FrecuencyId">Indicator frecuency id.</param>
+/// <param name="FrequencyId">Indicator frecuency id.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 public sealed record class CreateIndicatorRequest(
     string Code,
@@ -24,7 +24,7 @@ public sealed record class CreateIndicatorRequest(
     int MeasurementUnitId,
     string Goal,
     int MeaningId,
-    int FrecuencyId);
+    int FrequencyId);
 
 /// <summary>
 /// Gets by id response.
@@ -39,7 +39,7 @@ public sealed record class CreateIndicatorRequest(
 /// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
 /// <param name="Goal">Indicator goal.</param>
 /// <param name="MeaningId">Indicator meaning id.</param>
-/// <param name="FrecuencyId">Indicator frecuency id.</param>
+/// <param name="FrequencyId">Indicator frecuency id.</param>
 public sealed record class IndicatorByIdResponse(
     int Id,
     string Code,
@@ -51,7 +51,7 @@ public sealed record class IndicatorByIdResponse(
     int MeasurementUnitId,
     string Goal,
     int MeaningId,
-    int FrecuencyId);
+    int FrequencyId);
 
 /// <summary>
 /// Gets pagination response.
@@ -77,7 +77,7 @@ public sealed record class IndicatorPaginationResponse(
 /// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
 /// <param name="Goal">Indicator goal.</param>
 /// <param name="MeaningId">Indicator meaning id.</param>
-/// <param name="FrecuencyId">Indicator frecuency id.</param>
+/// <param name="FrequencyId">Indicator frecuency id.</param>
 public sealed record class UpdateIndicatorRequest(
     int Id,
     string Code,
@@ -89,5 +89,5 @@ public sealed record class UpdateIndicatorRequest(
     int MeasurementUnitId,
     string Goal,
     int MeaningId,
-    int FrecuencyId);
+    int FrequencyId);
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter

@@ -1,4 +1,4 @@
-﻿using IndicatorsApi.Domain.Features.Frecuencies;
+﻿using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.Meanings;
 using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Primitives;
@@ -106,7 +106,7 @@ public sealed class Indicator
     /// <value>
     /// The <see cref="Indicator"/>'s frecuency id.
     /// </value>
-    required public int FrecuencyId { get; set; }
+    required public int FrequencyId { get; set; }
 
     /// <summary>
     /// Gets the <see cref="Indicator"/>'s <see cref="IndicatorType"/> instance.
@@ -133,10 +133,10 @@ public sealed class Indicator
     public Meaning? Meaning { get; }
 
     /// <summary>
-    /// Gets the <see cref="Indicator"/>'s <see cref="Frecuency"/> instance.
+    /// Gets the <see cref="Indicator"/>'s <see cref="Frequency"/> instance.
     /// </summary>
     /// <value>
-    /// The <see cref="Indicator"/>'s <see cref="Frecuency"/> instance.
+    /// The <see cref="Indicator"/>'s <see cref="Frequency"/> instance.
     /// </value>
-    public Frecuency? Frecuency { get; }
+    public Frequency? Frequency { get; }
 }

@@ -1,23 +1,23 @@
-﻿using IndicatorsApi.Domain.Features.Frecuencies;
+﻿using IndicatorsApi.Domain.Features.Frequencies;
 
-namespace IndicatorsApi.Application.Features.Frecuencies;
+namespace IndicatorsApi.Application.Features.Frequencies;
 
 /// <summary>
 /// Create command.
 /// </summary>
-/// <param name="Description">Frecuency description.</param>
+/// <param name="Description">Frequency description.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-public sealed record class CreateFrecuencyCommand(string Description)
+public sealed record class CreateFrequencyCommand(string Description)
     : ICreateCommand;
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter
 
 /// <inheritdoc/>
-internal sealed class CreateFrecuencyValidator : AbstractValidator<CreateFrecuencyCommand>
+internal sealed class CreateFrequencyValidator : AbstractValidator<CreateFrequencyCommand>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateFrecuencyValidator"/> class.
+    /// Initializes a new instance of the <see cref="CreateFrequencyValidator"/> class.
     /// </summary>
-    public CreateFrecuencyValidator()
+    public CreateFrequencyValidator()
     {
         RuleFor(x => x.Description)
             .NotNull()
@@ -29,27 +29,27 @@ internal sealed class CreateFrecuencyValidator : AbstractValidator<CreateFrecuen
 }
 
 /// <inheritdoc/>
-internal sealed class CreateFrecuencyCommandHandler
-    : ICommandHandler<CreateFrecuencyCommand, Created>
+internal sealed class CreateFrequencyCommandHandler
+    : ICommandHandler<CreateFrequencyCommand, Created>
 {
-    private readonly IFrecuencyRepository _repository;
+    private readonly IFrequencyRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateFrecuencyCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="CreateFrequencyCommandHandler"/> class.
     /// </summary>
-    /// <param name="repository">Instance of <see cref="IFrecuencyRepository"/>.</param>
+    /// <param name="repository">Instance of <see cref="IFrequencyRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
-    public CreateFrecuencyCommandHandler(IFrecuencyRepository repository, IUnitOfWork unitOfWork)
+    public CreateFrequencyCommandHandler(IFrequencyRepository repository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc/>
-    public async Task<ErrorOr<Created>> Handle(CreateFrecuencyCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateFrequencyCommand request, CancellationToken cancellationToken)
     {
-        _repository.Add(entity: new Frecuency
+        _repository.Add(entity: new Frequency
         {
             Id = -1,
             Description = request.Description,

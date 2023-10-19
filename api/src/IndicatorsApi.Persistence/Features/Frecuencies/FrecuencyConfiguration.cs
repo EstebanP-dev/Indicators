@@ -1,15 +1,15 @@
-﻿using IndicatorsApi.Domain.Features.Frecuencies;
+﻿using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.Sections;
 using IndicatorsApi.Domain.Features.SubSections;
 
-namespace IndicatorsApi.Persistence.Features.Frecuencies;
+namespace IndicatorsApi.Persistence.Features.Frequencies;
 
 /// <inheritdoc/>
-internal sealed class FrecuencyConfiguration
-    : IEntityTypeConfiguration<Frecuency>
+internal sealed class FrequencyConfiguration
+    : IEntityTypeConfiguration<Frequency>
 {
     /// <inheritdoc/>
-    public void Configure(EntityTypeBuilder<Frecuency> builder)
+    public void Configure(EntityTypeBuilder<Frequency> builder)
     {
         builder.ToTable("frecuencia");
 

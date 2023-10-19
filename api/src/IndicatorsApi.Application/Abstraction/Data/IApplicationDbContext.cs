@@ -1,5 +1,5 @@
 ﻿using IndicatorsApi.Domain.Features.Articles;
-using IndicatorsApi.Domain.Features.Frecuencies;
+using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Sections;
@@ -76,5 +76,5 @@ public interface IApplicationDbContext
     /// <value>
     /// The frecuency table.
     /// </value>
-    DbSet<Frecuency> Frecuencies { get; set; }
+    DbSet<Frequency> Frequencies { get; set; }
 }

@@ -1,18 +1,17 @@
-﻿using IndicatorsApi.Application.Features.Frecuencies;
-using IndicatorsApi.Contracts.Frecuencies;
-using IndicatorsApi.Domain.Primitives;
+﻿using IndicatorsApi.Application.Features.Frequencies;
+using IndicatorsApi.Contracts.Frequencies;
 
 namespace IndicatorsApi.Presentation.Features;
 
 /// <inheritdoc/>
-public sealed class FrecuencyModule
+public sealed class FrequencyModule
     : BaseModule
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FrecuencyModule"/> class.
+    /// Initializes a new instance of the <see cref="FrequencyModule"/> class.
     /// </summary>
-    public FrecuencyModule()
-        : base("frecuency")
+    public FrequencyModule()
+        : base("frequencies")
     {
     }
 
@@ -20,27 +19,37 @@ public sealed class FrecuencyModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         app
-            .MapPost("/", Create)
-            .WithName(nameof(Create))
-            .WithTags("Frecuencies");
+            .MapPost("/", CreateFrequency)
+            .WithName(nameof(CreateFrequency))
+            .WithTags("Frequencies");
 
         app
-            .MapGet("/", GetPagination)
-            .WithName(nameof(GetPagination))
-            .WithTags("Frecuencies");
+            .MapPut("/{id}", UpdateFrequency)
+            .WithName(nameof(UpdateFrequency))
+            .WithTags("Frequencies");
 
         app
-            .MapPost("/{id}", GetById)
-            .WithName(nameof(GetById))
-            .WithTags("Frecuencies");
+            .MapDelete("/{id}", DeleteFrequency)
+            .WithName(nameof(DeleteFrequency))
+            .WithTags("Frequencies");
+
+        app
+            .MapGet("/", GetPaginationFrequency)
+            .WithName(nameof(GetPaginationFrequency))
+            .WithTags("Frequencies");
+
+        app
+            .MapGet("/{id}", GetByIdFrequency)
+            .WithName(nameof(GetByIdFrequency))
+            .WithTags("Frequencies");
     }
 
-    private static async Task<IResult> Create(
-        [FromBody] CreateFrecuencyRequest request,
+    private static async Task<IResult> CreateFrequency(
+        [FromBody] CreateFrequencyRequest request,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        CreateFrecuencyCommand command = request.Adapt<CreateFrecuencyCommand>();
+        CreateFrequencyCommand command = request.Adapt<CreateFrequencyCommand>();
 
         ErrorOr<Created> result = await sender
             .Send(request: command, cancellationToken: cancellationToken)
@@ -49,43 +58,68 @@ public sealed class FrecuencyModule
         return Result(value: result);
     }
 
-    private static async Task<IResult> Update(
+    private static async Task<IResult> UpdateFrequency(
         int id,
-        [FromBody] UpdateFrecuencyRequest request,
+        [FromBody] UpdateFrequencyRequest request,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        UpdateFrecuencyCommand command = new()
+        if (id != request.Id)
+        {
+            return Problem(error: DomainErrors.NoCoincidence(left: id, right: request.Id));
+        }
+
+        UpdateFrequencyCommand command = request.Adapt<UpdateFrequencyCommand>();
+
+        ErrorOr<Updated> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(result);
     }
 
-    private static async Task<IResult> GetById(
+    private static async Task<IResult> DeleteFrequency(
         int id,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        GetFrecuencyByIdQuery command = new(id);
+        DeleteFrequencyCommand command = new(id);
 
-        ErrorOr<FrecuencyByIdResponse> result = await sender
+        ErrorOr<Deleted> result = await sender
+            .Send(request: command, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+
+        return Result(result);
+    }
+
+    private static async Task<IResult> GetByIdFrequency(
+        int id,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        GetFrequencyByIdQuery command = new(id);
+
+        ErrorOr<FrequencyByIdResponse> result = await sender
             .Send(request: command, cancellationToken: cancellationToken)
             .ConfigureAwait(true);
 
         return Result(value: result);
     }
 
-    private static async Task<IResult> GetPagination(
+    private static async Task<IResult> GetPaginationFrequency(
         [AsParameters] PaginationQueryRequest parameters,
         ISender sender,
         CancellationToken cancellationToken)
     {
         int[] ids = GetIntsFromExcludeParameter(exclude: parameters.Exclude);
 
-        GetFrecuencyPaginationQuery query = new(
+        GetFrequencyPaginationQuery query = new(
             new PaginationParameters<int>(
                 Page: parameters.Page,
                 Rows: parameters.Rows,
                 Excludes: ids));
 
-        ErrorOr<Pagination<FrecuencyPaginationResponse>> result = await sender
+        ErrorOr<Pagination<FrequencyPaginationResponse>> result = await sender
             .Send(request: query, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

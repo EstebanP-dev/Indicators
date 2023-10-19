@@ -1,43 +1,43 @@
-﻿namespace IndicatorsApi.Domain.Features.Frecuencies;
+﻿namespace IndicatorsApi.Domain.Features.Frequencies;
 
 /// <summary>
-/// Frecuency repository methods.
+/// Frequency repository methods.
 /// </summary>
-public interface IFrecuencyRepository
-    : IRepository<Frecuency, int>
+public interface IFrequencyRepository
+    : IRepository<Frequency, int>
 {
 }
 
 /// <summary>
-/// Frecuency model from the database table.
+/// Frequency model from the database table.
 /// </summary>
-public sealed class Frecuency
+public sealed class Frequency
     : Entity<int>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Frecuency"/> class.
+    /// Initializes a new instance of the <see cref="Frequency"/> class.
     /// </summary>
-    /// <param name="id">Frecuency id.</param>
-    /// <param name="description">Frecuency name.</param>
-    public Frecuency(int id, string description)
+    /// <param name="id">Frequency id.</param>
+    /// <param name="description">Frequency name.</param>
+    public Frequency(int id, string description)
         : base(id)
     {
         Description = description;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Frecuency"/> class.
+    /// Initializes a new instance of the <see cref="Frequency"/> class.
     /// </summary>
-    public Frecuency()
+    public Frequency()
         : base()
     {
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="Frecuency"/>'s name.
+    /// Gets or sets the <see cref="Frequency"/>'s name.
     /// </summary>
     /// <value>
-    /// The <see cref="Frecuency"/>'s name.
+    /// The <see cref="Frequency"/>'s name.
     /// </value>
     required public string Description { get; set; }
 }

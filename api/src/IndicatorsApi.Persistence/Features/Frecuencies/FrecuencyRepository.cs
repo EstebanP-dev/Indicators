@@ -1,17 +1,17 @@
-﻿using IndicatorsApi.Domain.Features.Frecuencies;
+﻿using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Persistence.Abstractions;
 
-namespace IndicatorsApi.Persistence.Features.Frecuencies;
+namespace IndicatorsApi.Persistence.Features.Frequencies;
 
 /// <inheritdoc/>
-internal sealed class FrecuencyRepository
-    : Repository<Frecuency, int>, IFrecuencyRepository
+internal sealed class FrequencyRepository
+    : Repository<Frequency, int>, IFrequencyRepository
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FrecuencyRepository"/> class.
+    /// Initializes a new instance of the <see cref="FrequencyRepository"/> class.
     /// </summary>
     /// <param name="context">Instance of <see cref="ApplicationDbContext"/>.</param>
-    public FrecuencyRepository(ApplicationDbContext context)
+    public FrequencyRepository(ApplicationDbContext context)
         : base(context)
     {
     }
