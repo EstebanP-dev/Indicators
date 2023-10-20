@@ -14,16 +14,11 @@ internal sealed class SourceConfiguration
 
         builder.HasKey(source => source.Id);
 
-        builder.Property(source => source.Id)
-            .HasConversion(
-                sourceId => sourceId.Value,
-                value => SourceId.ToSourceId(value))
+        builder
+            .Property(source => source.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();
-
-        builder.HasIndex(source => source.Id)
-            .IsUnique();
 
         builder.Property(source => source.Name)
             .HasColumnName("nombre")

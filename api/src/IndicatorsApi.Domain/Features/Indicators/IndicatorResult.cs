@@ -42,4 +42,12 @@ public sealed class IndicatorResult
     /// The <see cref="IndicatorResult"/>'s calculus date.
     /// </value>
     required public DateTime CalculusDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="IndicatorResult"/>'s indicator id.
+    /// </summary>
+    /// <value>
+    /// The <see cref="IndicatorResult"/>'s indicator id.
+    /// </value>
+    required public int IndicatorId { get; set; }
 }

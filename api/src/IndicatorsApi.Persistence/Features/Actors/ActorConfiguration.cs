@@ -16,7 +16,6 @@ internal sealed class ActorConfiguration
         builder.Property(actor => actor.Id)
             .HasColumnName("id")
             .HasMaxLength(50)
-            .ValueGeneratedOnAdd()
             .IsRequired();
 
         builder.HasIndex(actor => actor.Id)

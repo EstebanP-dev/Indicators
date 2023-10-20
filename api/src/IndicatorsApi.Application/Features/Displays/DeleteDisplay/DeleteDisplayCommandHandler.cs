@@ -1,7 +1,4 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Displays;
-using IndicatorsApi.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using IndicatorsApi.Domain.Features.Displays;
 
 namespace IndicatorsApi.Application.Features.Displays.DeleteDisplay;
 
@@ -9,48 +6,37 @@ namespace IndicatorsApi.Application.Features.Displays.DeleteDisplay;
 internal sealed class DeleteDisplayCommandHandler
     : ICommandHandler<DeleteDisplayCommand, Deleted>
 {
-    private readonly IDisplayRepository _displayRepository;
+    private readonly IDisplayRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteDisplayCommandHandler"/> class.
     /// </summary>
-    /// <param name="displayRepository">Instance of <see cref="IDisplayRepository"/>.</param>
+    /// <param name="repository">Instance of <see cref="IDisplayRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
-    public DeleteDisplayCommandHandler(IDisplayRepository displayRepository, IUnitOfWork unitOfWork)
+    public DeleteDisplayCommandHandler(IDisplayRepository repository, IUnitOfWork unitOfWork)
     {
-        _displayRepository = displayRepository;
+        _repository = repository;
         _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc/>
     public async Task<ErrorOr<Deleted>> Handle(DeleteDisplayCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            Display? display = await _displayRepository
-                .GetByIdAsync(id: DisplayId.ToDisplayId(value: request.Id), cancellationToken: cancellationToken)
+        Display? display = await _repository
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (display is null)
-            {
-                return DomainErrors.NotFound<Display>();
-            }
-
-            _displayRepository.Delete(entity: display);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return Result.Deleted;
-        }
-        catch (DbUpdateException)
+        if (display is null)
         {
-            return DomainErrors.CreationOrUpdatingFailed;
+            return DomainErrors.NotFound<Display>();
         }
-        catch (OperationCanceledException)
-        {
-            return DomainErrors.CancelledOperation;
-        }
+
+        _repository.Delete(entity: display);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+        return Result.Deleted;
     }
 }

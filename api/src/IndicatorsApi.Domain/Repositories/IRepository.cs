@@ -31,12 +31,20 @@ public interface IRepository<TEntity, TEntityId>
     void Delete(TEntity entity);
 
     /// <summary>
-    /// Varify if the entity exists.
+    /// Verify if the entity exists.
     /// </summary>
     /// <param name="id">Entity id.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
     /// <returns>If the entity exists.</returns>
     Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Verify if the entities exists.
+    /// </summary>
+    /// <param name="ids">Entity ids.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
+    /// <returns>If the entities exists.</returns>
+    Task<bool> DoEntitiesExistsAsync(TEntityId[] ids, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the entity by id.

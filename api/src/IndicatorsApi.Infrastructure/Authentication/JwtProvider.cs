@@ -34,8 +34,8 @@ internal sealed class JwtProvider
         Claim[] claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, user.Id.Value),
-            new(JwtRegisteredClaimNames.Email, user.Id.Value),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Id),
         };
 
         SecurityTokenDescriptor tokenDescriptor = new()

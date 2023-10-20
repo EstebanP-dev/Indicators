@@ -1,6 +1,6 @@
 ﻿using IndicatorsApi.Domain.Features.Indicators;
 
-namespace IndicatorsApi.Application.Features.IndicatorTypes.DeleteIndicatorType;
+namespace IndicatorsApi.Application.Features.Indicators.Delete;
 
 /// <summary>
 /// Delete command.

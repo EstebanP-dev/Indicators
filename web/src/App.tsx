@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import "./styles/global.scss";
 import { lazy, useMemo } from "react";
 import { ProtectedRoute } from "./components";
-import { Home } from "./pages";
+import { Indicators } from "./pages";
 import { PrivateRoutes, PublicRoutes } from "./enviroments";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -37,7 +37,7 @@ const App = () => {
       children: [
         {
           path: PrivateRoutes.HOME,
-          element: <Home />,
+          element: <Indicators />,
         },
         {
           path: PrivateRoutes.USERS,

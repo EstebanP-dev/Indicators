@@ -44,6 +44,18 @@ internal abstract class Repository<TEntity, TEntityId>
     }
 
     /// <inheritdoc/>
+    public async Task<bool> DoEntitiesExistsAsync(TEntityId[] ids, CancellationToken cancellationToken)
+    {
+        List<TEntity> entities = await BulkAsync(
+                context: DbContext,
+                ids: ids,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return entities.TrueForAll(x => ids.Contains(x.Id));
+    }
+
+    /// <inheritdoc/>
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
     {
         return await SingleAsync(

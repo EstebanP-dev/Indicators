@@ -11,14 +11,23 @@ internal sealed class FrequencyConfiguration
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<Frequency> builder)
     {
-        builder.ToTable("frecuencia");
+        builder
+            .ToTable("frecuencia");
 
-        builder.HasKey(articule => articule.Id);
+        builder
+            .HasKey(articule => articule.Id);
 
-        builder.Property(article => article.Id)
+        builder
+            .Property(article => article.Id)
             .HasColumnName("id")
             .HasMaxLength(20)
             .ValueGeneratedOnAdd()
+            .IsRequired();
+
+        builder
+            .Property(article => article.Description)
+            .HasColumnName("descripcion")
+            .HasMaxLength(200)
             .IsRequired();
     }
 }

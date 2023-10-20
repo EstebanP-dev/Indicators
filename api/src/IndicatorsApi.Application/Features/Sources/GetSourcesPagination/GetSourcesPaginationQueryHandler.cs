@@ -26,10 +26,7 @@ internal sealed class GetSourcesPaginationQueryHandler
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,
-                    ids: (request.Excludes ?? Array.Empty<int>())
-                        .Select(
-                            id => SourceId.ToSourceId(id))
-                        .ToArray(),
+                    ids: request.Excludes ?? Array.Empty<int>(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

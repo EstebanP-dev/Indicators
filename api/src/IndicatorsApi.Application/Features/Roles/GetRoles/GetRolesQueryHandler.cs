@@ -22,9 +22,7 @@ internal sealed class GetRolesQueryHandler
     {
         IEnumerable<Role> roles = await _repository
                 .GetAllAsync(
-                    ids: (request.Excludes ?? Array.Empty<int>())
-                        .Select(RoleId.ToRoleId)
-                        .ToArray(),
+                    ids: request.Excludes ?? Array.Empty<int>(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

@@ -7,14 +7,14 @@ namespace IndicatorsApi.Domain.Features.Roles;
 /// Role model from the database table.
 /// </summary>
 public class Role
-    : Entity<RoleId>
+    : Entity<int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Role"/> class.
     /// </summary>
     /// <param name="id">Role id.</param>
     /// <param name="name">Role name.</param>
-    public Role(RoleId id, string name)
+    public Role(int id, string name)
         : base(id)
     {
         Name = name;

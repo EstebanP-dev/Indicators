@@ -9,28 +9,28 @@ internal sealed class VariableConfiguration
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<Variable> builder)
     {
-        builder.ToTable("tipoactor");
+        builder.ToTable("variable");
 
-        builder.HasKey(actorType => actorType.Id);
+        builder.HasKey(variable => variable.Id);
 
-        builder.Property(actorType => actorType.Id)
+        builder.Property(variable => variable.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasIndex(actorType => actorType.Id)
+        builder.HasIndex(variable => variable.Id)
             .IsUnique();
 
-        builder.Property(actorType => actorType.Name)
+        builder.Property(variable => variable.Name)
             .HasColumnName("nombre")
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.Property(actorType => actorType.CreationDate)
+        builder.Property(variable => variable.CreationDate)
             .HasColumnName("fechacreacion")
             .IsRequired();
 
-        builder.Property(actorType => actorType.CreatedBy)
+        builder.Property(variable => variable.CreatedBy)
             .HasColumnName("fkemailusuario")
             .IsRequired();
     }

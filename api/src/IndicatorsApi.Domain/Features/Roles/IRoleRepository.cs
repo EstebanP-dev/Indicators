@@ -7,6 +7,6 @@ namespace IndicatorsApi.Domain.Features.Roles;
 /// Role repository methods.
 /// </summary>
 public interface IRoleRepository
-    : IRepository<Role, RoleId>
+    : IRepository<Role, int>
 {
 }

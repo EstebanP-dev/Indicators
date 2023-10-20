@@ -6,6 +6,6 @@ namespace IndicatorsApi.Domain.Features.Meanings;
 /// Meaning repository methods.
 /// </summary>
 public interface IMeaningRepository
-    : IRepository<Meaning, MeaningId>
+    : IRepository<Meaning, int>
 {
 }

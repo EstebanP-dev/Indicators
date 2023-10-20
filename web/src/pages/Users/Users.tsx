@@ -97,6 +97,7 @@ const Users = () => {
 
   return (
     <Body
+      isEditing={false}
       title="Usuarios"
       slug={SLUG.toLowerCase()}
       showAdd={true}

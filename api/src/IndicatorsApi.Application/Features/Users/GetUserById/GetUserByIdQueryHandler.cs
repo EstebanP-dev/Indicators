@@ -23,7 +23,7 @@ internal sealed class GetUserByIdQueryHandler
     {
         User? user = await _userRepository
             .GetByIdAsync(
-                id: UserId.ToUserId(value: request.Id),
+                id: request.Id,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

@@ -5,7 +5,7 @@ namespace IndicatorsApi.Persistence.Features.Displays;
 
 /// <inheritdoc/>
 internal sealed class DisplayRepository
-    : Repository<Display, DisplayId>, IDisplayRepository
+    : Repository<Display, int>, IDisplayRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DisplayRepository"/> class.

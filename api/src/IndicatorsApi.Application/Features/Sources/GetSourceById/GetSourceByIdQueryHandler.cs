@@ -23,7 +23,7 @@ internal sealed class GetSourceByIdQueryHandler
     {
         Source? source = await _sourceRepository
             .GetByIdAsync(
-                id: SourceId.ToSourceId(request.Id),
+                id: request.Id,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

@@ -27,7 +27,7 @@ internal sealed class DeleteSourceCommandHandler
         try
         {
             Source? source = await _sourceRepository
-                .GetByIdAsync(id: SourceId.ToSourceId(value: request.Id), cancellationToken: cancellationToken)
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (source is null)

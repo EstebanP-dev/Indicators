@@ -6,14 +6,14 @@ namespace IndicatorsApi.Domain.Features.Displays;
 /// Display model from the database table.
 /// </summary>
 public sealed class Display
-    : Entity<DisplayId>
+    : Entity<int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Display"/> class.
     /// </summary>
     /// <param name="id">Display id.</param>
     /// <param name="name">Display name.</param>
-    public Display(DisplayId id, string name)
+    public Display(int id, string name)
         : base(id)
     {
         Name = name;

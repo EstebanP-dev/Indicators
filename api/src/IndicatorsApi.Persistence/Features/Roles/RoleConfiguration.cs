@@ -15,9 +15,6 @@ internal sealed class RoleConfiguration
         builder.HasKey(role => role.Id);
 
         builder.Property(role => role.Id)
-            .HasConversion(
-                roleId => roleId.Value,
-                value => RoleId.ToRoleId(value))
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();

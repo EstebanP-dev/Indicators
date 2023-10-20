@@ -11,20 +11,17 @@ internal sealed class DisplayConfiguration
     {
         builder.ToTable("represenvisual");
 
-        builder.HasKey(section => section.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(section => section.Id)
-            .HasConversion(
-                sectionId => sectionId.Value,
-                value => DisplayId.ToDisplayId(value))
+        builder.Property(x => x.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasIndex(section => section.Id)
+        builder.HasIndex(x => x.Id)
             .IsUnique();
 
-        builder.Property(section => section.Name)
+        builder.Property(x => x.Name)
             .HasColumnName("nombre")
             .HasMaxLength(200)
             .IsRequired();

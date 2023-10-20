@@ -11,20 +11,17 @@ internal sealed class MeaningConfiguration
     {
         builder.ToTable("sentido");
 
-        builder.HasKey(section => section.Id);
+        builder.HasKey(meaning => meaning.Id);
 
-        builder.Property(section => section.Id)
-            .HasConversion(
-                sectionId => sectionId.Value,
-                value => MeaningId.ToMeaningId(value))
+        builder.Property(meaning => meaning.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasIndex(section => section.Id)
+        builder.HasIndex(meaning => meaning.Id)
             .IsUnique();
 
-        builder.Property(section => section.Name)
+        builder.Property(meaning => meaning.Name)
             .HasColumnName("nombre")
             .HasMaxLength(200)
             .IsRequired();

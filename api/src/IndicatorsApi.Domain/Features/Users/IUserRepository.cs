@@ -8,6 +8,6 @@ namespace IndicatorsApi.Domain.Features.Users;
 /// User repository methods.
 /// </summary>
 public interface IUserRepository
-    : IRepository<User, UserId>
+    : IRepository<User, string>
 {
 }

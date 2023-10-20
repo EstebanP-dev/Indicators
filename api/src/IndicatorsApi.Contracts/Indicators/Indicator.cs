@@ -1,5 +1,14 @@
-﻿namespace IndicatorsApi.Contracts.Indicators;
+﻿using IndicatorsApi.Contracts.Actors;
+using IndicatorsApi.Contracts.Displays;
+using IndicatorsApi.Contracts.Frequencies;
+using IndicatorsApi.Contracts.Meanings;
+using IndicatorsApi.Contracts.MeasurementUnits;
+using IndicatorsApi.Contracts.Sources;
+using IndicatorsApi.Contracts.Variables;
 
+namespace IndicatorsApi.Contracts.Indicators;
+
+#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 /// <summary>
 /// Create request.
 /// </summary>
@@ -13,8 +22,11 @@
 /// <param name="Goal">Indicator goal.</param>
 /// <param name="MeaningId">Indicator meaning id.</param>
 /// <param name="FrequencyId">Indicator frecuency id.</param>
-#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-public sealed record class CreateIndicatorRequest(
+/// <param name="Displays">Indicator displays.</param>
+/// <param name="Variables">Indicator variables.</param>
+/// <param name="Sources">Indicator sources.</param>
+/// <param name="Actors">Indicator actors.</param>
+public sealed record CreateIndicatorRequest(
     string Code,
     string Name,
     string Objective,
@@ -24,7 +36,11 @@ public sealed record class CreateIndicatorRequest(
     int MeasurementUnitId,
     string Goal,
     int MeaningId,
-    int FrequencyId);
+    int FrequencyId,
+    IEnumerable<int> Displays,
+    IEnumerable<CreateVariableIndicatorRequest> Variables,
+    IEnumerable<int> Sources,
+    IEnumerable<string> Actors);
 
 /// <summary>
 /// Gets by id response.
@@ -35,11 +51,16 @@ public sealed record class CreateIndicatorRequest(
 /// <param name="Objective">Indicator objective.</param>
 /// <param name="Scoped">Indicator scoped.</param>
 /// <param name="Formula">Indicator formula.</param>
-/// <param name="IndicatorTypeId">Indicator type id.</param>
-/// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
+/// <param name="IndicatorType">Indicator type.</param>
+/// <param name="MeasurementUnit">Indicator measurement unit.</param>
 /// <param name="Goal">Indicator goal.</param>
-/// <param name="MeaningId">Indicator meaning id.</param>
-/// <param name="FrequencyId">Indicator frecuency id.</param>
+/// <param name="Meaning">Indicator meaning.</param>
+/// <param name="Frequency">Indicator frecuency.</param>
+/// <param name="Results">Indicator results.</param>
+/// <param name="Displays">Indicator displays.</param>
+/// <param name="Variables">Indicator variables.</param>
+/// <param name="Sources">Indicator sources.</param>
+/// <param name="Actors">Indicator actors.</param>
 public sealed record class IndicatorByIdResponse(
     int Id,
     string Code,
@@ -47,11 +68,16 @@ public sealed record class IndicatorByIdResponse(
     string Objective,
     string Scoped,
     string Formula,
-    int IndicatorTypeId,
-    int MeasurementUnitId,
     string Goal,
-    int MeaningId,
-    int FrequencyId);
+    IndicatorTypePaginationResponse? IndicatorType,
+    MeasurementUnitPaginationResponse? MeasurementUnit,
+    MeaningPaginationResponse? Meaning,
+    FrequencyPaginationResponse? Frequency,
+    IEnumerable<IndicatorResultPaginationResponse> Results,
+    IEnumerable<DisplayPaginationResponse> Displays,
+    IEnumerable<VariableIndicatorPaginationResponse> Variables,
+    IEnumerable<SourceByIdResponse> Sources,
+    IEnumerable<ActorByIdResponse> Actors);
 
 /// <summary>
 /// Gets pagination response.

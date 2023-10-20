@@ -9,7 +9,7 @@ namespace IndicatorsApi.Persistence.Features.Sources;
 
 /// <inheritdoc/>
 internal sealed class SourceRepository
-    : Repository<Source, SourceId>, ISourceRepository
+    : Repository<Source, int>, ISourceRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SourceRepository"/> class.

@@ -6,11 +6,43 @@ namespace IndicatorsApi.Application.Features.Actors;
 /// <summary>
 /// Create command.
 /// </summary>
+/// <param name="Id">Actor id.</param>
 /// <param name="Name">Actor name.</param>
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-public sealed record class CreateActorCommand(string Name)
+public sealed record class CreateActorCommand(string Id, string Name)
     : ICreateCommand;
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter
+
+/// <inheritdoc/>
+internal sealed class CreateActorValidator : AbstractValidator<CreateActorCommand>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateActorValidator"/> class.
+    /// </summary>
+    /// <param name="repository">Instance of <see cref="IActorRepository"/>.</param>
+    public CreateActorValidator(IActorRepository repository)
+    {
+        Func<string, CancellationToken, Task<bool>> validateIdUnique =
+                async (id, cancellationToken) =>
+                    !(await repository
+                            .DoEntityExistsAsync(id, cancellationToken)
+                            .ConfigureAwait(false));
+
+        RuleFor(x => x.Id)
+            .NotNull()
+            .NotEmpty()
+            .MaximumLength(50);
+
+        RuleFor(x => x.Id)
+            .MustAsync(validateIdUnique)
+            .WithMessage(DomainErrors.AlreadyExists<Actor>().Description);
+
+        RuleFor(x => x.Name)
+            .NotNull()
+            .NotEmpty()
+            .MaximumLength(200);
+    }
+}
 
 /// <inheritdoc/>
 internal sealed class CreateActorCommandHandler

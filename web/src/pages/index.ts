@@ -1,6 +1,6 @@
 export { default as ActorTypes } from './ActorTypes';
 export { default as Displays } from './Displays';
-export { default as Home } from './Home/Home';
+export { default as Indicators } from './Indicators/Indicators';
 export { default as IndicatorTypes } from './IndicatorTypes';
 export { default as Login } from './Login';
 export { default as Meanings } from './Meanings';

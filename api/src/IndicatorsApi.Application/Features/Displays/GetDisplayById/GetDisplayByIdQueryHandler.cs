@@ -1,5 +1,4 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Displays;
+﻿using IndicatorsApi.Domain.Features.Displays;
 
 namespace IndicatorsApi.Application.Features.Displays.GetDisplayById;
 
@@ -7,23 +6,23 @@ namespace IndicatorsApi.Application.Features.Displays.GetDisplayById;
 internal sealed class GetDisplayByIdQueryHandler
     : IQueryHandler<GetDisplayByIdQuery, Display>
 {
-    private readonly IDisplayRepository _displayRepository;
+    private readonly IDisplayRepository _repository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetDisplayByIdQueryHandler"/> class.
     /// </summary>
-    /// <param name="displayRepository">Instance of <see cref="IDisplayRepository"/>.</param>
-    public GetDisplayByIdQueryHandler(IDisplayRepository displayRepository)
+    /// <param name="repository">Instance of <see cref="IDisplayRepository"/>.</param>
+    public GetDisplayByIdQueryHandler(IDisplayRepository repository)
     {
-        _displayRepository = displayRepository;
+        _repository = repository;
     }
 
     /// <inheritdoc/>
     public async Task<ErrorOr<Display>> Handle(GetDisplayByIdQuery request, CancellationToken cancellationToken)
     {
-        Display? display = await _displayRepository
+        Display? display = await _repository
             .GetByIdAsync(
-                id: DisplayId.ToDisplayId(request.Id),
+                id: request.Id,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

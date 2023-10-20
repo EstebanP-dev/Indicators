@@ -1,6 +1,10 @@
-﻿using IndicatorsApi.Domain.Features.Frequencies;
+﻿using IndicatorsApi.Domain.Features.Actors;
+using IndicatorsApi.Domain.Features.Displays;
+using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.Meanings;
 using IndicatorsApi.Domain.Features.MeasurementUnits;
+using IndicatorsApi.Domain.Features.Sources;
+using IndicatorsApi.Domain.Features.Variables;
 using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.Indicators;
@@ -139,4 +143,89 @@ public sealed class Indicator
     /// The <see cref="Indicator"/>'s <see cref="Frequency"/> instance.
     /// </value>
     public Frequency? Frequency { get; }
+
+    /// <summary>
+    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="IndicatorResult"/>s.
+    /// </summary>
+    /// <value>
+    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="IndicatorResult"/>s.
+    /// </value>
+    public ICollection<IndicatorResult> Results { get; } = new List<IndicatorResult>();
+
+    /// <summary>
+    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Display"/>s.
+    /// </summary>
+    /// <value>
+    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Display"/>s.
+    /// </value>
+    public ICollection<Display> Displays { get; } = new List<Display>();
+
+    /// <summary>
+    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="VariableIndicator"/>s.
+    /// </summary>
+    /// <value>
+    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="VariableIndicator"/>s.
+    /// </value>
+    public ICollection<VariableIndicator> Variables { get; } = new List<VariableIndicator>();
+
+    /// <summary>
+    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Source"/>s.
+    /// </summary>
+    /// <value>
+    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Source"/>s.
+    /// </value>
+    public ICollection<Source> Sources { get; } = new List<Source>();
+
+    /// <summary>
+    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Actor"/>s.
+    /// </summary>
+    /// <value>
+    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Actor"/>s.
+    /// </value>
+    public ICollection<Actor> Actors { get; } = new List<Actor>();
+
+    /// <summary>
+    /// Add indicator result to an indicator.
+    /// </summary>
+    /// <param name="result"><see cref="IndicatorResult"/> instance.</param>
+    public void AddResult(IndicatorResult result)
+    {
+        Results.Add(result);
+    }
+
+    /// <summary>
+    /// Add display to an indicator.
+    /// </summary>
+    /// <param name="display"><see cref="Display"/> instance.</param>
+    public void AddDisplay(Display display)
+    {
+        Displays.Add(display);
+    }
+
+    /// <summary>
+    /// Add variable to an indicator.
+    /// </summary>
+    /// <param name="variable"><see cref="VariableIndicator"/> instance.</param>
+    public void AddVariable(VariableIndicator variable)
+    {
+        Variables.Add(variable);
+    }
+
+    /// <summary>
+    /// Add source to an indicator.
+    /// </summary>
+    /// <param name="source"><see cref="Source"/> instance.</param>
+    public void AddSource(Source source)
+    {
+        Sources.Add(source);
+    }
+
+    /// <summary>
+    /// Add actor to an indicator.
+    /// </summary>
+    /// <param name="actor"><see cref="Actors"/> instance.</param>
+    public void AddActors(Actor actor)
+    {
+        Actors.Add(actor);
+    }
 }

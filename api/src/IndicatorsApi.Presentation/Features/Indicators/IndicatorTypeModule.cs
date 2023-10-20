@@ -1,7 +1,7 @@
 ﻿using IndicatorsApi.Application.Features.Indicators.Create;
+using IndicatorsApi.Application.Features.Indicators.Delete;
 using IndicatorsApi.Application.Features.Indicators.GetById;
 using IndicatorsApi.Application.Features.Indicators.GetPagination;
-using IndicatorsApi.Application.Features.IndicatorTypes.DeleteIndicatorType;
 using IndicatorsApi.Application.Features.IndicatorTypes.UpdateSection;
 using IndicatorsApi.Contracts.Indicators;
 

@@ -27,7 +27,7 @@ internal sealed class DeleteMeaningCommandHandler
         try
         {
             Meaning? meaning = await _meaningRepository
-                .GetByIdAsync(id: MeaningId.ToMeaningId(value: request.Id), cancellationToken: cancellationToken)
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (meaning is null)

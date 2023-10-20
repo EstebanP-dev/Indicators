@@ -5,7 +5,7 @@ namespace IndicatorsApi.Persistence.Features.Meanings;
 
 /// <inheritdoc/>
 internal sealed class MeaningRepository
-    : Repository<Meaning, MeaningId>, IMeaningRepository
+    : Repository<Meaning, int>, IMeaningRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MeaningRepository"/> class.

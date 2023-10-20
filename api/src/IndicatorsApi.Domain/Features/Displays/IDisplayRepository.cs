@@ -6,6 +6,6 @@ namespace IndicatorsApi.Domain.Features.Displays;
 /// Display repository methods.
 /// </summary>
 public interface IDisplayRepository
-    : IRepository<Display, DisplayId>
+    : IRepository<Display, int>
 {
 }

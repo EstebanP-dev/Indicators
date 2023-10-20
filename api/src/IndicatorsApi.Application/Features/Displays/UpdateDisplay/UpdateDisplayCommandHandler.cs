@@ -28,48 +28,37 @@ internal sealed class UpdateDisplayCommandHandler
     /// <inheritdoc/>
     public async Task<ErrorOr<Updated>> Handle(UpdateDisplayCommand request, CancellationToken cancellationToken)
     {
-        try
+        if (request.Id == null)
         {
-            if (request.Id == null)
-            {
-                return DomainErrors.NotFound<Display>();
-            }
-
-            Display? display = await _displayRepository
-                    .GetByIdAsync(id: DisplayId.ToDisplayId(value: request.Id.Value), cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            if (display is null)
-            {
-                return DomainErrors.NotFound<Display>();
-            }
-
-            switch (request.Operations)
-            {
-                case UpdateOperations.PUT:
-                    display = request.Adapt<Display>();
-                    break;
-                case UpdateOperations.PATCH:
-                    display.Name = request.Name ?? display.Name;
-                    break;
-                default:
-                    throw new InvalidCastException();
-            }
-
-            _displayRepository.Update(entity: display);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return Result.Updated;
+            return DomainErrors.NotFound<Display>();
         }
-        catch (DbUpdateException)
+
+        Display? display = await _displayRepository
+                .GetByIdAsync(id: request.Id.Value, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+        if (display is null)
         {
-            return DomainErrors.CreationOrUpdatingFailed;
+            return DomainErrors.NotFound<Display>();
         }
-        catch (OperationCanceledException)
+
+        switch (request.Operations)
         {
-            return DomainErrors.CancelledOperation;
+            case UpdateOperations.PUT:
+                display = request.Adapt<Display>();
+                break;
+            case UpdateOperations.PATCH:
+                display.Name = request.Name ?? display.Name;
+                break;
+            default:
+                throw new InvalidCastException();
         }
+
+        _displayRepository.Update(entity: display);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+        return Result.Updated;
     }
 }

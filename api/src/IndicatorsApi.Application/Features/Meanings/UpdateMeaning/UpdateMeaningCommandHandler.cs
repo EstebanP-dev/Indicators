@@ -30,7 +30,7 @@ internal sealed class UpdateMeaningCommandHandler
         try
         {
             Meaning? source = await _sourceRepository
-                    .GetByIdAsync(id: MeaningId.ToMeaningId(value: request.Id), cancellationToken: cancellationToken)
+                    .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             if (source is null)

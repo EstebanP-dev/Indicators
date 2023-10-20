@@ -13,12 +13,12 @@ internal sealed class UserMappingConfiguration
     {
         config
             .NewConfig<User, UserByIdResponse>()
-            .Map(dest => dest.Email, src => src.Id.Value)
+            .Map(dest => dest.Email, src => src.Id)
             .Map(dest => dest.Roles, src => src.Roles)
-            .ConstructUsing(src => new UserByIdResponse(src.Id.Value, src.Roles.Adapt<IEnumerable<RolePaginationResponse>>()));
+            .ConstructUsing(src => new UserByIdResponse(src.Id, src.Roles.Adapt<IEnumerable<RolePaginationResponse>>()));
 
         config.NewConfig<User, UserPaginationResponse>()
-            .Map(dest => dest.Email, src => src.Id.Value)
+            .Map(dest => dest.Email, src => src.Id)
             .Map(dest => dest.IsVerified, src => src.Salt != null);
     }
 }

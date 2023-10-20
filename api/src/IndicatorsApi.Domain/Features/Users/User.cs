@@ -7,14 +7,14 @@ namespace IndicatorsApi.Domain.Features.Users;
 /// User model from the database table.
 /// </summary>
 public class User
-    : Entity<UserId>
+    : Entity<string>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="User"/> class.
     /// </summary>
     /// <param name="id">User id.</param>
     /// <param name="password">User password.</param>
-    public User(UserId id, string password)
+    public User(string id, string password)
         : base(id)
     {
         Password = password;
@@ -43,9 +43,7 @@ public class User
     /// The <see cref="User"/>'s salt.
     /// </value>
 #pragma warning disable CA1819 // Properties should not return arrays
-#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
     public byte[][]? Salt { get; set; }
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 #pragma warning restore CA1819 // Properties should not return arrays
 
     /// <summary>

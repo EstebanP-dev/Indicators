@@ -26,31 +26,20 @@ internal sealed class DeleteUserCommandHandler
     /// <inheritdoc/>
     public async Task<ErrorOr<Deleted>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            User? user = await _userRepository
-                .GetByIdAsync(id: UserId.ToUserId(value: request.Id), cancellationToken: cancellationToken)
+        User? user = await _userRepository
+                .GetByIdAsync(id: request.Id, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (user is null)
-            {
-                return DomainErrors.NotFound<User>();
-            }
-
-            _userRepository.Delete(entity: user);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return Result.Deleted;
-        }
-        catch (DbUpdateException)
+        if (user is null)
         {
-            return DomainErrors.CreationOrUpdatingFailed;
+            return DomainErrors.NotFound<User>();
         }
-        catch (OperationCanceledException)
-        {
-            return DomainErrors.CancelledOperation;
-        }
+
+        _userRepository.Delete(entity: user);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+        return Result.Deleted;
     }
 }

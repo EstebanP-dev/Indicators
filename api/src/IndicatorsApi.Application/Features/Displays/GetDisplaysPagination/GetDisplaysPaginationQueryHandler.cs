@@ -6,28 +6,25 @@ namespace IndicatorsApi.Application.Features.Displays.GetDisplaysPagination;
 internal sealed class GetDisplaysPaginationQueryHandler
     : IQueryHandler<GetDisplaysPaginationQuery, Pagination<Display>>
 {
-    private readonly IDisplayRepository _displayRepository;
+    private readonly IDisplayRepository _repository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetDisplaysPaginationQueryHandler"/> class.
     /// </summary>
-    /// <param name="displayRepository">Instance of <see cref="IDisplayRepository"/>.</param>
-    public GetDisplaysPaginationQueryHandler(IDisplayRepository displayRepository)
+    /// <param name="repository">Instance of <see cref="IDisplayRepository"/>.</param>
+    public GetDisplaysPaginationQueryHandler(IDisplayRepository repository)
     {
-        _displayRepository = displayRepository;
+        _repository = repository;
     }
 
     /// <inheritdoc/>
     public async Task<ErrorOr<Pagination<Display>>> Handle(GetDisplaysPaginationQuery request, CancellationToken cancellationToken)
     {
-        Pagination<Display> pagination = await _displayRepository
+        Pagination<Display> pagination = await _repository
                 .GetPaginationAsync(
                     page: request.Page,
                     rows: request.Rows,
-                    ids: (request.Excludes ?? Array.Empty<int>())
-                        .Select(
-                            id => DisplayId.ToDisplayId(id))
-                        .ToArray(),
+                    ids: request.Excludes ?? Array.Empty<int>(),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

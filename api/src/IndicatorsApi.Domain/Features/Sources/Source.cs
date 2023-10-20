@@ -1,5 +1,4 @@
 ﻿using IndicatorsApi.Domain.Features.Roles;
-using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Features.Sources;
 
@@ -7,14 +6,14 @@ namespace IndicatorsApi.Domain.Features.Sources;
 /// Source model from the database table.
 /// </summary>
 public sealed class Source
-    : Entity<SourceId>
+    : Entity<int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Source"/> class.
     /// </summary>
     /// <param name="id">Source id.</param>
     /// <param name="name">Source name.</param>
-    public Source(SourceId id, string name)
+    public Source(int id, string name)
         : base(id)
     {
         Name = name;

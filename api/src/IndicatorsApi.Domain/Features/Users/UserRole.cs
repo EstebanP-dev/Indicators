@@ -13,7 +13,7 @@ public class UserRole
     /// <value>
     /// The <see cref="User"/>'s id.
     /// </value>
-    required public UserId UserId { get; init; }
+    required public string UserId { get; init; }
 
     /// <summary>
     /// Gets the <see cref="Role"/>'s id.
@@ -21,5 +21,5 @@ public class UserRole
     /// <value>
     /// The <see cref="Role"/>'s id.
     /// </value>
-    required public RoleId RoleId { get; init; }
+    required public int RoleId { get; init; }
 }

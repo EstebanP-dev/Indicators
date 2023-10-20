@@ -42,7 +42,7 @@ internal sealed class LoginCommandHandler
     {
         User? user = await _userRepository
             .GetByIdAsync(
-                id: UserId.ToUserId(request.Email),
+                id: request.Email,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

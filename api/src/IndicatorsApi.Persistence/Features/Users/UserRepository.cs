@@ -8,7 +8,7 @@ namespace IndicatorsApi.Persistence.Features.Users;
 
 /// <inheritdoc/>
 internal sealed class UserRepository
-    : Repository<User, UserId>, IUserRepository
+    : Repository<User, string>, IUserRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserRepository"/> class.
@@ -20,7 +20,7 @@ internal sealed class UserRepository
     }
 
     /// <inheritdoc/>
-    public override async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default)
+    public override async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await DbContext.Users
             .Include(user => user.Roles)

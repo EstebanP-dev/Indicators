@@ -15,9 +15,6 @@ internal sealed class UserConfiguration
         builder.HasKey(user => user.Id);
 
         builder.Property(user => user.Id)
-            .HasConversion(
-                userId => userId.Value,
-                value => UserId.ToUserId(value))
             .HasColumnName("email")
             .HasMaxLength(200)
             .IsRequired();
@@ -53,16 +50,10 @@ internal sealed class UserConfiguration
                 {
                     userRoleBuilder
                         .Property(userRole => userRole.UserId)
-                        .HasConversion(
-                            userId => userId.Value,
-                            value => UserId.ToUserId(value))
                         .HasColumnName("fkemail");
 
                     userRoleBuilder
                         .Property(userRole => userRole.RoleId)
-                        .HasConversion(
-                            roleId => roleId.Value,
-                            value => RoleId.ToRoleId(value))
                         .HasColumnName("fkidrol");
 
                     userRoleBuilder

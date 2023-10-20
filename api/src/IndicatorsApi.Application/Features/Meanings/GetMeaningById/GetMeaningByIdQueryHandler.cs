@@ -23,7 +23,7 @@ internal sealed class GetMeaningByIdQueryHandler
     {
         Meaning? source = await _sourceRepository
             .GetByIdAsync(
-                id: MeaningId.ToMeaningId(request.Id),
+                id: request.Id,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

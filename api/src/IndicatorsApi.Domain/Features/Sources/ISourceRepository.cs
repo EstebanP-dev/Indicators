@@ -7,6 +7,6 @@ namespace IndicatorsApi.Domain.Features.Sources;
 /// Source repository methods.
 /// </summary>
 public interface ISourceRepository
-    : IRepository<Source, SourceId>
+    : IRepository<Source, int>
 {
 }

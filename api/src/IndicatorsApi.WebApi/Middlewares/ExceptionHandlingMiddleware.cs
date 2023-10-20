@@ -66,7 +66,12 @@ public sealed class ExceptionHandlingMiddleware
             Detail = error.Description,
         };
 
-        problemDetails.Extensions["errors"] = exception;
+        problemDetails.Extensions["errors"] = new
+        {
+            exception.Source,
+            exception.StackTrace,
+            exception.Message,
+        };
 
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

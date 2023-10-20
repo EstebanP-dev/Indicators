@@ -7,14 +7,14 @@ namespace IndicatorsApi.Domain.Features.Meanings;
 /// Meaning model from the database table.
 /// </summary>
 public sealed class Meaning
-    : Entity<MeaningId>
+    : Entity<int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Meaning"/> class.
     /// </summary>
     /// <param name="id">Meaning id.</param>
     /// <param name="name">Meaning name.</param>
-    public Meaning(MeaningId id, string name)
+    public Meaning(int id, string name)
         : base(id)
     {
         Name = name;
