@@ -108,7 +108,7 @@ export const Indicators = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const abortController = loadAbort();
-  const [pagination, setPagination] = useState<Pagination<IndicatorsPaginationResponse> | undefined>(undefined);
+  const [pagination, setPagination] = useState<Pagination<IndicatorPaginationResponse> | undefined>(undefined);
   const [error, setError] = useState<ErrorOr | undefined>(undefined);
   const [refresh, setRefresh] = useState(false);
   const { callEndpoint, getService } = useAxiosApi(

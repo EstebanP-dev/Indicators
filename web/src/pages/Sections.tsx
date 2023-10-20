@@ -75,6 +75,7 @@ const Sections = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Secciones"
       slug={SLUG.toLowerCase()}
       showAdd={true}

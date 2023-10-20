@@ -75,6 +75,7 @@ const ActorTypes = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Tipos de Actores"
       slug={SLUG.toLowerCase()}
       showAdd={true}

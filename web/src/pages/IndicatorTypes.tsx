@@ -75,6 +75,7 @@ const IndicatorTypes = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Tipos de Indicadores"
       slug={SLUG.toLowerCase()}
       showAdd={true}

@@ -3,7 +3,8 @@ export const PublicRoutes = {
 }
 
 export const PrivateRoutes = {
-    HOME: '/',
+    HOME: '/indicators',
+    INDICATOR: '/indicators/:id',
     ROLES: '/roles',
     USERS: '/users',
     USER: '/users/:email',

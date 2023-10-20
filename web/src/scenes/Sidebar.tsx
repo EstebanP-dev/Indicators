@@ -25,9 +25,9 @@ import { FlexBetween } from "../components";
 
 const navItems = [
   {
-    text: "Dashboard",
+    text: "Indicadores",
     icon: <HomeOutlined />,
-    slug: "",
+    slug: "indicators",
   },
   {
     text: "Estándares",

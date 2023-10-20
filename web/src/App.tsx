@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import "./styles/global.scss";
 import { lazy, useMemo } from "react";
 import { ProtectedRoute } from "./components";
-import { Indicators } from "./pages";
 import { PrivateRoutes, PublicRoutes } from "./enviroments";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -10,6 +9,8 @@ import { themeSettings } from "./themes";
 import { AppStore } from "./redux/store";
 import { Layout } from "./scenes";
 
+const Indicators = lazy(() => import('./pages/Indicators/Indicators'));
+const Indicator = lazy(() => import('./pages/Indicators/Indicator'));
 const Login = lazy(() => import('./pages/Login'));
 const Users = lazy(() => import('./pages/Users/Users'));
 const User = lazy(() => import('./pages/Users/User'));
@@ -38,6 +39,10 @@ const App = () => {
         {
           path: PrivateRoutes.HOME,
           element: <Indicators />,
+        },
+        {
+          path: PrivateRoutes.INDICATOR,
+          element: <Indicator />,
         },
         {
           path: PrivateRoutes.USERS,

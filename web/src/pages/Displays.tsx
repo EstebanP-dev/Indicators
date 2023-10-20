@@ -75,6 +75,7 @@ const Displays = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Representaciones Visuales"
       subtitle="Tipos de visualización de datos."
       slug={SLUG.toLowerCase()}

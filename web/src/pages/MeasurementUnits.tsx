@@ -75,6 +75,7 @@ const MeasurementUnits = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Unidades de Medición"
       slug={SLUG.toLowerCase()}
       showAdd={true}

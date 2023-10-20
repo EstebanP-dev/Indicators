@@ -75,6 +75,7 @@ const Meanings = () => {
 
   return (
     <Body
+      isEditing={true}
       title="Sentidos"
       slug={SLUG.toLowerCase()}
       showAdd={true}
