@@ -1,5 +1,5 @@
-import { useDispatch } from "react-redux";
-import "./navbar.scss";
+import { useDispatch } from 'react-redux';
+import './navbar.scss';
 import {
   AppBar,
   Box,
@@ -11,8 +11,8 @@ import {
   Toolbar,
   Typography,
   useTheme,
-} from "@mui/material";
-import { FlexBetween } from "../../components";
+} from '@mui/material';
+import { FlexBetween } from '../../components';
 import {
   LightModeOutlined,
   DarkModeOutlined,
@@ -20,13 +20,13 @@ import {
   Search,
   SettingsOutlined,
   ArrowDropDownOutlined,
-} from "@mui/icons-material";
-import { setMode } from "../../redux/states/appTheme";
-import { AccountInfo } from "../../models";
-import { useState } from "react";
-import { resetAccountInfo } from "../../redux/states/accountInfo";
-import { useNavigate } from "react-router-dom";
-import { PublicRoutes } from "../../enviroments";
+} from '@mui/icons-material';
+import { setMode } from '../../redux/states/appTheme';
+import { AccountInfo } from '../../models';
+import { useState } from 'react';
+import { resetAccountInfo } from '../../redux/states/accountInfo';
+import { useNavigate } from 'react-router-dom';
+import { PublicRoutes } from '../../enviroments';
 
 type Props = {
   accountInfo: AccountInfo;
@@ -45,7 +45,7 @@ export const Navbar = (props: Props) => {
   const handleClose = () => {
     dispatch(resetAccountInfo());
     navigate(PublicRoutes.LOGIN, {
-      replace: true
+      replace: true,
     });
     setAnchorEl(null);
   };
@@ -53,12 +53,12 @@ export const Navbar = (props: Props) => {
   return (
     <AppBar
       sx={{
-        position: "static",
-        background: "none",
-        boxShadow: "none",
+        position: 'static',
+        background: 'none',
+        boxShadow: 'none',
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
         <FlexBetween>
           <IconButton
             onClick={() => props.setIsSidebarOpen(!props.isSidebarOpen)}
@@ -71,12 +71,12 @@ export const Navbar = (props: Props) => {
           <FlexBetween
             sx={{
               backgroundColor: theme.palette.background.paper,
-              borderRadius: "9px",
-              gap: "3rem",
-              p: "0.1rem 1.5rem",
+              borderRadius: '9px',
+              gap: '3rem',
+              p: '0.1rem 1.5rem',
             }}
           >
-            <InputBase placeholder="Buscar" />
+            <InputBase placeholder='Buscar' />
             <IconButton
               sx={{
                 color: theme.palette.primary.contrastText,
@@ -86,17 +86,17 @@ export const Navbar = (props: Props) => {
             </IconButton>
           </FlexBetween>
         </FlexBetween>
-        <FlexBetween gap="1.5rem">
+        <FlexBetween gap='1.5rem'>
           <IconButton
             onClick={() => dispatch(setMode())}
             sx={{
               color: theme.palette.primary.contrastText,
             }}
           >
-            {theme.palette.mode === "dark" ? (
-              <DarkModeOutlined sx={{ fontSize: "25px" }} />
+            {theme.palette.mode === 'dark' ? (
+              <DarkModeOutlined sx={{ fontSize: '25px' }} />
             ) : (
-              <LightModeOutlined sx={{ fontSize: "25px" }} />
+              <LightModeOutlined sx={{ fontSize: '25px' }} />
             )}
           </IconButton>
           <IconButton
@@ -104,50 +104,50 @@ export const Navbar = (props: Props) => {
               color: theme.palette.primary.contrastText,
             }}
           >
-            <SettingsOutlined sx={{ fontSize: "25px" }} />
+            <SettingsOutlined sx={{ fontSize: '25px' }} />
           </IconButton>
           <FlexBetween>
             <Button
               onClick={handleClick}
-              color="secondary"
+              color='secondary'
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                textTransform: "none",
-                gap: "1rem",
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                textTransform: 'none',
+                gap: '1rem',
               }}
             >
               <Box
-                component="img"
-                alt="profile"
-                src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                height="32px"
-                width="32px"
-                borderRadius="50%"
+                component='img'
+                alt='profile'
+                src='https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+                height='32px'
+                width='32px'
+                borderRadius='50%'
                 sx={{
-                  objectFit: "cover",
+                  objectFit: 'cover',
                 }}
               />
-              <Box textAlign="left">
+              <Box textAlign='left'>
                 <Typography
-                  fontWeight="bold"
-                  fontSize="0.85rem"
-                  color="secondary"
+                  fontWeight='bold'
+                  fontSize='0.85rem'
+                  color='secondary'
                 >
-                  {props.accountInfo.user.email.split("@")[0].toUpperCase()}
+                  {props.accountInfo.user.email?.split('@')[0].toUpperCase()}
                 </Typography>
                 <Typography
-                  fontWeight="bold"
-                  fontSize="0.75rem"
-                  color="secondary"
+                  fontWeight='bold'
+                  fontSize='0.75rem'
+                  color='secondary'
                 >
                   {props.accountInfo.user.roles[0].name}
                 </Typography>
               </Box>
               <ArrowDropDownOutlined
                 sx={{
-                  fontSize: "25px",
+                  fontSize: '25px',
                 }}
               />
             </Button>
@@ -156,8 +156,8 @@ export const Navbar = (props: Props) => {
               open={isOpen}
               onClose={handleClose}
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
+                vertical: 'bottom',
+                horizontal: 'center',
               }}
             >
               <MenuItem onClick={handleClose}>Cerrar Sesión</MenuItem>

@@ -4,16 +4,14 @@ import {
   AutocompleteChangeReason,
   AutocompleteOwnerState,
   AutocompleteRenderGetTagProps,
-  Chip,
   TextField,
 } from '@mui/material';
 import React from 'react';
 
 type Props = {
   label?: string;
-  options?: any | undefined;
+  options: ReadonlyArray<any>;
   defaultValue: any;
-  value?: any | undefined;
   getOptionLabel?: ((option: any) => string) | undefined;
   renderTags?:
     | ((
@@ -32,31 +30,13 @@ type Props = {
     | undefined;
 };
 
-const MultipleSelector = (props: Props) => {
+const Selector = (props: Props) => {
   return (
     <Autocomplete
-      multiple
-      value={props.value}
-      options={props.options ?? []}
-      getOptionLabel={(option) =>
-        !!props.getOptionLabel ? props.getOptionLabel(option) : option
-      }
+      {...props}
       isOptionEqualToValue={(option, value) => {
         return option.id === value.id;
       }}
-      defaultValue={props.value}
-      renderTags={
-        !!props.renderTags
-          ? props.renderTags
-          : (values, props, _) =>
-              values.map((value, index) => (
-                <Chip
-                  variant='outlined'
-                  label={value.name}
-                  {...props({ index })}
-                />
-              ))
-      }
       renderInput={(params) => (
         <TextField
           {...params}
@@ -78,4 +58,4 @@ const MultipleSelector = (props: Props) => {
   );
 };
 
-export default MultipleSelector;
+export default Selector;

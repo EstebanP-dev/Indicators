@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from '@mui/material';
 
 type Props = {
   title: string;
@@ -12,30 +12,40 @@ const Header = (props: Props) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      width="100%"
+      display='flex'
+      flexDirection='row'
+      justifyContent='space-between'
+      width='100%'
+      mb='1rem'
     >
       <Box>
         <Typography
-          variant="h2"
+          variant='h2'
           color={theme.palette.secondary.main}
-          fontWeight="bold"
+          fontWeight='bold'
           sx={{
-            mb: "5px",
+            mb: '5px',
           }}
         >
           {props.title}
         </Typography>
-        <Typography variant="h5" color={theme.palette.secondary.light}>
+        <Typography variant='h5' color={theme.palette.secondary.light}>
           {props.subtitle}
         </Typography>
       </Box>
-      <Box display={props.showAdd ? "flex" : "none"} alignItems="center" justifyContent="center">
-        <Button color="secondary" variant="outlined" onClick={() => props.setOpen(true)} sx={{
-          padding: ".6rem"
-        }}>
+      <Box
+        display={props.showAdd ? 'flex' : 'none'}
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Button
+          color='secondary'
+          variant='outlined'
+          onClick={() => props.setOpen(true)}
+          sx={{
+            padding: '.6rem',
+          }}
+        >
           Agregar Nuevo
         </Button>
       </Box>

@@ -1,10 +1,10 @@
-import { Box, Fab } from "@mui/material";
-import { Add, Header, Loading } from ".";
-import { GridColDef } from "@mui/x-data-grid";
-import { ReactNode, useState } from "react";
-import { AppStore } from "../redux/store";
-import { useSelector } from "react-redux";
-import { Delete, Save } from "@mui/icons-material";
+import { Box, Fab } from '@mui/material';
+import { Add, Header, Loading } from '.';
+import { ReactNode, useState } from 'react';
+import { AppStore } from '../redux/store';
+import { useSelector } from 'react-redux';
+import { Delete, Save } from '@mui/icons-material';
+import { AddColDef } from '../models';
 
 type Props = {
   children: ReactNode;
@@ -17,7 +17,7 @@ type Props = {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   subtitle?: string;
-  columns?: GridColDef[];
+  columns?: AddColDef[];
   selectionDataUrl?: string;
   addAdapterFuction?: (data: any) => any;
   onSaveButton?: () => void;
@@ -31,9 +31,9 @@ const Body = (props: Props) => {
   const [open, setOpen] = useState(false);
 
   return loadingData ? (
-    <Loading canCancel={false} cancelTitle={undefined} message="Cargando" />
+    <Loading canCancel={false} cancelTitle={undefined} message='Cargando' />
   ) : (
-    <Box m="1.5rem 2.5rem">
+    <Box m='1.5rem 2.5rem'>
       <Header
         showAdd={props.showAdd}
         title={props.title}
@@ -54,27 +54,27 @@ const Body = (props: Props) => {
         />
       )}
       <Box
-        display={props.isEditing ? "flex" : "none"}
-        flexDirection="row"
-        gap="1rem"
-        position="absolute"
-        bottom="0"
-        right="0"
-        m="1rem"
+        display={props.isEditing ? 'flex' : 'none'}
+        flexDirection='row'
+        gap='1rem'
+        position='absolute'
+        bottom='0'
+        right='0'
+        m='1rem'
       >
         <Fab
-          size="medium"
-          color="success"
-          aria-label="save"
+          size='medium'
+          color='success'
+          aria-label='save'
           disabled={props.disableSave}
           onClick={props.onSaveButton}
         >
           <Save />
         </Fab>
         <Fab
-          size="medium"
-          color="error"
-          aria-label="save"
+          size='medium'
+          color='error'
+          aria-label='save'
           disabled={props.disableDelete}
           onClick={props.onDeleteButton}
         >
