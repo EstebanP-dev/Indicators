@@ -184,7 +184,7 @@ const User = () => {
           <Box display='flex' flexDirection='column'>
             {!!roles && !!newData && !!newData.roles ? (
               <MultipleSelector
-                value={newData?.roles}
+                value={newData.roles}
                 options={roles}
                 defaultValue={data?.roles}
                 onChange={(_, newValue) => {

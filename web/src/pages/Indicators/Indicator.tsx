@@ -3,9 +3,42 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SnackbarUtilities, loadAbort, urlUtility } from '../../utilities';
 import { useAxiosApi } from '../../hooks';
 import { useDispatch } from 'react-redux';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Body, Field, Loading } from '../../components';
-import { AddColDef, ErrorOr, IndicatorByIdResponse } from '../../models';
+import {
+  AddColDef,
+  ErrorOr,
+  IndicatorByIdResponse,
+  UpdateIndicatorRequest,
+} from '../../models';
+import { indicatorAdapter } from '../../adapters';
+
+const variableColumns: AddColDef[] = [
+  {
+    field: 'datum',
+    headerName: 'Dato',
+    type: 'double',
+  },
+  {
+    field: 'date',
+    headerName: 'Creado en: ',
+    type: 'const',
+  },
+  {
+    field: 'userId',
+    headerName: 'Creado por: ',
+    type: 'const',
+  },
+  {
+    field: 'variable',
+    headerName: 'Variable',
+    type: 'select',
+    slug: 'variables',
+    getOptionLabel(option) {
+      return option.name;
+    },
+  },
+];
 
 const columns: AddColDef[] = [
   {
@@ -40,6 +73,7 @@ const columns: AddColDef[] = [
   },
   {
     field: 'indicatorType',
+    propertyName: 'indicatorTypeId',
     headerName: 'Tipo de Indicador',
     type: 'select',
     slug: 'indicators/indicatortypes',
@@ -82,15 +116,16 @@ const columns: AddColDef[] = [
     getOptionLabel(option) {
       return option.name;
     },
+    getOptionValue(option) {
+      return option?.map((x: any) => x.id);
+    },
   },
   {
     field: 'variables',
     headerName: 'Variables',
-    type: 'multipleSelect',
+    type: 'form',
     slug: 'variables',
-    getOptionLabel(option) {
-      return option.name;
-    },
+    options: variableColumns,
   },
   {
     field: 'sources',
@@ -99,6 +134,9 @@ const columns: AddColDef[] = [
     slug: 'sources',
     getOptionLabel(option) {
       return option.name;
+    },
+    getOptionValue(option) {
+      return option?.map((x: any) => x.id);
     },
   },
   {
@@ -109,12 +147,14 @@ const columns: AddColDef[] = [
     getOptionLabel(option) {
       return option.name;
     },
+    getOptionValue(option) {
+      return option?.map((x: any) => x.id);
+    },
   },
 ];
 
 const SLUG = 'Indicators';
 const Indicator = () => {
-  const theme = useTheme();
   const abortController: AbortController = loadAbort();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,10 +163,14 @@ const Indicator = () => {
     navigate,
     dispatch
   );
+  const {} = indicatorAdapter;
   const { urlDecode } = urlUtility;
   const { id } = useParams();
   const [data, setData] = useState<any | undefined>(undefined);
   const [newData, setNewData] = useState<any | undefined>(undefined);
+  const [requestData, setRequestData] = useState<
+    UpdateIndicatorRequest | undefined
+  >(undefined);
   const [error, setError] = useState<ErrorOr | undefined>(undefined);
 
   const fetchData = () => {
@@ -138,6 +182,11 @@ const Indicator = () => {
       undefined,
       (result) => {
         setNewData(result);
+        setRequestData(
+          indicatorAdapter.updateIndicatorRequestFromIndicatorByIdResponseAdapter(
+            result
+          )
+        );
       }
     );
 
@@ -152,22 +201,54 @@ const Indicator = () => {
             x.options = result.response;
           }
         );
+      } else if (x.type === 'form') {
+        x.options!.map((subColumn) => {
+          if (
+            subColumn.type === 'select' ||
+            subColumn.type === 'multipleSelect'
+          ) {
+            callEndpoint(
+              getService<any>(`${subColumn.slug}?page=0&rows=100`),
+              undefined,
+              undefined,
+              undefined,
+              (result) => {
+                subColumn.options = result.response;
+              }
+            );
+          }
+        });
+      }
+
+      if (!!data && !!requestData) {
+        let field: string = x.propertyName ?? x.field;
+        let value = data?.[field];
+        setRequestData({
+          ...requestData,
+          [field]: !!x.getOptionValue ? x.getOptionValue(value) : value,
+        });
       }
     });
   };
 
+  const canSave = (): boolean => {
+    return data !== newData;
+  };
+
   const handleSave = () => {
     let idParameter: string = urlDecode(id ?? '');
-    callEndpoint(
-      putService(`${SLUG.toLowerCase()}/${idParameter}`, newData),
-      undefined,
-      undefined,
-      undefined,
-      (_) => {
-        SnackbarUtilities.success('Indicador actualizado.');
-        navigate(-1);
-      }
-    );
+    if (canSave()) {
+      callEndpoint(
+        putService(`${SLUG.toLowerCase()}/${idParameter}`, requestData),
+        undefined,
+        undefined,
+        undefined,
+        (_) => {
+          SnackbarUtilities.success('Indicador actualizado.');
+          navigate(-1);
+        }
+      );
+    }
   };
 
   useEffect(() => {
@@ -181,6 +262,7 @@ const Indicator = () => {
       showAdd={false}
       isEditing={true}
       disableDelete={true}
+      disableSave={!canSave()}
       onSaveButton={handleSave}
     >
       <>
@@ -197,23 +279,36 @@ const Indicator = () => {
           {!!error ? (
             <Typography>{error.title}</Typography>
           ) : !!data ? (
-            columns.map((field) => {
-              return (
-                <Field
-                  key={'id-' + field.field}
-                  field={field}
-                  value={data?.[field.field]}
-                  options={field.options ?? []}
-                  getOptionLabel={field.getOptionLabel}
-                  onChanged={(newValue) => {
-                    newData({
-                      ...data,
-                      [field.field]: newValue,
-                    });
-                  }}
-                />
-              );
-            })
+            columns
+              .filter((x) => x.type !== 'form')
+              .map((field) => {
+                return (
+                  <Field
+                    key={'id-' + field.field}
+                    field={field}
+                    value={newData?.[field.field]}
+                    defaultValue={data?.[field.field]}
+                    options={field.options ?? []}
+                    getOptionLabel={field.getOptionLabel}
+                    onChanged={(newValue) => {
+                      setNewData({
+                        ...newData,
+                        [field.field]: newValue,
+                      });
+
+                      if (!!requestData) {
+                        setRequestData({
+                          ...requestData,
+                          [field.propertyName ?? field.field]:
+                            !!field.getOptionValue
+                              ? field.getOptionValue(newValue)
+                              : newValue,
+                        });
+                      }
+                    }}
+                  />
+                );
+              })
           ) : (
             <Loading
               message='Cargando'
@@ -221,24 +316,12 @@ const Indicator = () => {
               cancelTitle={undefined}
             />
           )}
-          <Box display='flex' flexDirection='column'>
-            {/* {!!roles && !!newData && !!newData.roles ? (
-                  <MultipleSelector
-                    value={newData?.roles}
-                    options={roles}
-                    defaultValue={data?.roles}
-                    onChange={(_, newValue) => {
-                      setNewData({
-                        email: newData?.email ?? "",
-                        roles: newValue,
-                      });
-                    }}
-                  />
-                ) : (
-                  <></>
-                )} */}
-          </Box>
         </Box>
+        {columns
+          .filter((x) => x.type === 'form')
+          .map((field) => {
+            return <Typography>{field.field}</Typography>;
+          })}
       </>
     </Body>
   );

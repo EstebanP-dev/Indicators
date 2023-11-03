@@ -24,21 +24,18 @@ internal sealed class IndicatorRepository
     public override Task<Indicator?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return DbContext.Indicators
-                .AsNoTracking()
                 .Where(x => x.Id == id)
                 .IgnoreAutoIncludes()
                 .Include(x => x.IndicatorType)
                 .Include(x => x.MeasurementUnit)
                 .Include(x => x.Meaning)
                 .Include(x => x.Frequency)
-                .AsSplitQuery()
-                .Include(x => x.Results)
                 .Include(x => x.Displays)
                 .Include(x => x.Sources)
-                .Include(x => x.Variables)
-                    .ThenInclude(x => x.Variable)
                 .Include(x => x.Actors)
                     .ThenInclude(x => x.ActorType)
+                .AsNoTracking()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(cancellationToken);
     }
 }
@@ -143,11 +140,6 @@ internal sealed class IndicatorConfiguration
             .HasConstraintName("indicador_ibfk_4");
 
         builder
-            .HasMany(x => x.Results)
-            .WithOne()
-            .HasForeignKey(x => x.IndicatorId);
-
-        builder
             .HasMany(x => x.Displays)
             .WithMany()
             .UsingEntity<DisplayIndicator>(
@@ -179,10 +171,6 @@ internal sealed class IndicatorConfiguration
                 });
 
         builder
-            .HasMany(x => x.Variables)
-            .WithOne();
-
-        builder
             .HasMany(x => x.Sources)
             .WithMany()
             .UsingEntity<SourceIndicator>(
@@ -201,6 +189,10 @@ internal sealed class IndicatorConfiguration
                 {
                     modelBuilder
                         .ToTable("fuentesporindicador");
+
+                    modelBuilder
+                        .HasKey(x => new { x.SourceId, x.IndicatorId })
+                        .HasName("fuentesporindicador_pkey");
 
                     modelBuilder
                         .Property(x => x.SourceId)

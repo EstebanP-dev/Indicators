@@ -15,7 +15,7 @@ namespace IndicatorsApi.Contracts.Indicators;
 /// <param name="Code">Indicator code.</param>
 /// <param name="Name">Indicator name.</param>
 /// <param name="Objective">Indicator objective.</param>
-/// <param name="Scoped">Indicator scoped.</param>
+/// <param name="Scope">Indicator scope.</param>
 /// <param name="Formula">Indicator formula.</param>
 /// <param name="IndicatorTypeId">Indicator type id.</param>
 /// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
@@ -30,7 +30,7 @@ public sealed record CreateIndicatorRequest(
     string Code,
     string Name,
     string Objective,
-    string Scoped,
+    string Scope,
     string Formula,
     int IndicatorTypeId,
     int MeasurementUnitId,
@@ -49,7 +49,7 @@ public sealed record CreateIndicatorRequest(
 /// <param name="Code">Indicator code.</param>
 /// <param name="Name">Indicator name.</param>
 /// <param name="Objective">Indicator objective.</param>
-/// <param name="Scoped">Indicator scoped.</param>
+/// <param name="Scope">Indicator scope.</param>
 /// <param name="Formula">Indicator formula.</param>
 /// <param name="IndicatorType">Indicator type.</param>
 /// <param name="MeasurementUnit">Indicator measurement unit.</param>
@@ -66,7 +66,7 @@ public sealed record class IndicatorByIdResponse(
     string Code,
     string Name,
     string Objective,
-    string Scoped,
+    string Scope,
     string Formula,
     string Goal,
     IndicatorTypePaginationResponse? IndicatorType,
@@ -97,23 +97,31 @@ public sealed record class IndicatorPaginationResponse(
 /// <param name="Code">Indicator code.</param>
 /// <param name="Name">Indicator name.</param>
 /// <param name="Objective">Indicator objective.</param>
-/// <param name="Scoped">Indicator scoped.</param>
+/// <param name="Scope">Indicator scope.</param>
 /// <param name="Formula">Indicator formula.</param>
 /// <param name="IndicatorTypeId">Indicator type id.</param>
 /// <param name="MeasurementUnitId">Indicator measurement unit id.</param>
 /// <param name="Goal">Indicator goal.</param>
 /// <param name="MeaningId">Indicator meaning id.</param>
 /// <param name="FrequencyId">Indicator frecuency id.</param>
+/// <param name="Results">Indicator results.</param>
+/// <param name="Displays">Indicator displays.</param>
+/// <param name="Sources">Indicator sources.</param>
+/// <param name="Actors">Indicator actors.</param>
 public sealed record class UpdateIndicatorRequest(
     int Id,
     string Code,
     string Name,
     string Objective,
-    string Scoped,
+    string Scope,
     string Formula,
     int IndicatorTypeId,
     int MeasurementUnitId,
     string Goal,
     int MeaningId,
-    int FrequencyId);
+    int FrequencyId,
+    IEnumerable<int> Results,
+    IEnumerable<int> Displays,
+    IEnumerable<int> Sources,
+    IEnumerable<string> Actors);
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter

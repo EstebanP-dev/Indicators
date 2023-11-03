@@ -1,11 +1,13 @@
 export class AddColDef {
   field: string = '';
+  propertyName?: string = this.field;
   headerName: string = '';
   type: string = '';
   slug?: string;
   value?: any | null;
   options?: ReadonlyArray<any> = [];
   getOptionLabel?: (option: any) => string;
+  getOptionValue?: ((option: any) => any) | undefined;
 
   /**
    *

@@ -24,8 +24,7 @@ public sealed record class IndicatorResultByIdResponse(int Id, double Result, Da
 /// <param name="Id">IndicatorResult id.</param>
 /// <param name="Result">IndicatorResult result.</param>
 /// <param name="CalculusDate">IndicatorResult calculus date.</param>
-/// <param name="IndicatorId">IndicatorResult indicator id.</param>
-public sealed record class IndicatorResultPaginationResponse(int Id, double Result, DateTime CalculusDate, int IndicatorId);
+public sealed record class IndicatorResultPaginationResponse(int Id, double Result, DateTime CalculusDate);
 
 /// <summary>
 /// Update request.

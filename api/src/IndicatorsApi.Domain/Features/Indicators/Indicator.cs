@@ -33,6 +33,13 @@ public sealed class Indicator
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Indicator"/> class.
+    /// </summary>
+    public Indicator()
+    {
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="Indicator"/>'s code.
     /// </summary>
     /// <value>
@@ -145,28 +152,12 @@ public sealed class Indicator
     public Frequency? Frequency { get; }
 
     /// <summary>
-    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="IndicatorResult"/>s.
-    /// </summary>
-    /// <value>
-    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="IndicatorResult"/>s.
-    /// </value>
-    public ICollection<IndicatorResult> Results { get; } = new List<IndicatorResult>();
-
-    /// <summary>
     /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Display"/>s.
     /// </summary>
     /// <value>
     /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Display"/>s.
     /// </value>
     public ICollection<Display> Displays { get; } = new List<Display>();
-
-    /// <summary>
-    /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="VariableIndicator"/>s.
-    /// </summary>
-    /// <value>
-    /// The <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="VariableIndicator"/>s.
-    /// </value>
-    public ICollection<VariableIndicator> Variables { get; } = new List<VariableIndicator>();
 
     /// <summary>
     /// Gets the <see cref="Indicator"/>'s <see cref="ICollection{T}"/> <see cref="Source"/>s.
@@ -185,30 +176,15 @@ public sealed class Indicator
     public ICollection<Actor> Actors { get; } = new List<Actor>();
 
     /// <summary>
-    /// Add indicator result to an indicator.
-    /// </summary>
-    /// <param name="result"><see cref="IndicatorResult"/> instance.</param>
-    public void AddResult(IndicatorResult result)
-    {
-        Results.Add(result);
-    }
-
-    /// <summary>
     /// Add display to an indicator.
     /// </summary>
     /// <param name="display"><see cref="Display"/> instance.</param>
     public void AddDisplay(Display display)
     {
-        Displays.Add(display);
-    }
-
-    /// <summary>
-    /// Add variable to an indicator.
-    /// </summary>
-    /// <param name="variable"><see cref="VariableIndicator"/> instance.</param>
-    public void AddVariable(VariableIndicator variable)
-    {
-        Variables.Add(variable);
+        if (!Displays.Any(x => x.Id == display.Id))
+        {
+            Displays.Add(display);
+        }
     }
 
     /// <summary>
@@ -217,7 +193,10 @@ public sealed class Indicator
     /// <param name="source"><see cref="Source"/> instance.</param>
     public void AddSource(Source source)
     {
-        Sources.Add(source);
+        if (!Sources.Any(x => x.Id == source.Id))
+        {
+            Sources.Add(source);
+        }
     }
 
     /// <summary>
@@ -226,6 +205,9 @@ public sealed class Indicator
     /// <param name="actor"><see cref="Actors"/> instance.</param>
     public void AddActors(Actor actor)
     {
-        Actors.Add(actor);
+        if (!Actors.Any(x => x.Id == actor.Id))
+        {
+            Actors.Add(actor);
+        }
     }
 }

@@ -53,7 +53,6 @@ const Selector = (props: Props) => {
           }}
         />
       )}
-      onChange={props.onChange}
     />
   );
 };

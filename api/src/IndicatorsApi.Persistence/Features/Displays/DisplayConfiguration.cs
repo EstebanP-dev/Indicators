@@ -11,15 +11,13 @@ internal sealed class DisplayConfiguration
     {
         builder.ToTable("represenvisual");
 
-        builder.HasKey(x => x.Id);
+        builder
+            .HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
             .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .IsRequired();
-
-        builder.HasIndex(x => x.Id)
-            .IsUnique();
 
         builder.Property(x => x.Name)
             .HasColumnName("nombre")

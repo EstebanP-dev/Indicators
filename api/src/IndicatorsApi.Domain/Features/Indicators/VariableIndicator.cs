@@ -1,5 +1,5 @@
-﻿using IndicatorsApi.Domain.Features.Variables;
-using IndicatorsApi.Domain.Primitives;
+﻿using System.Linq.Expressions;
+using IndicatorsApi.Domain.Features.Variables;
 
 namespace IndicatorsApi.Domain.Features.Indicators;
 
@@ -9,6 +9,18 @@ namespace IndicatorsApi.Domain.Features.Indicators;
 public interface IVariableIndicatorRepository
     : IRepository<VariableIndicator, int>
 {
+    /// <summary>
+    /// Gets a variable indicator instance by indicator id.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="indicatorId">Indicator id.</param>
+    /// <param name="selector">Variable mapping selector.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+    /// <returns>Returns either the variable indicator instance or null.</returns>
+    Task<IEnumerable<TResponse>> GetAllByIndicatorIdAsync<TResponse>(
+        int indicatorId,
+        Expression<Func<VariableIndicator, TResponse>> selector,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>

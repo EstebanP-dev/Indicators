@@ -2,7 +2,10 @@
 using IndicatorsApi.Contracts.Indicators;
 using IndicatorsApi.Domain.Features.Actors;
 using IndicatorsApi.Domain.Features.Displays;
+using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.Indicators;
+using IndicatorsApi.Domain.Features.Meanings;
+using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Sources;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Features.Variables;
@@ -74,10 +77,18 @@ internal sealed class CreateIndicatorValidator : AbstractValidator<CreateIndicat
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateIndicatorValidator"/> class.
     /// </summary>
+    /// <param name="indicatorTypeRepository">Instance of <see cref="IIndicatorTypeRepository"/>.</param>
+    /// <param name="measurementUnitRepository">Instance of <see cref="IMeasurementUnitRepository"/>.</param>
+    /// <param name="meaningRepository">Instance of <see cref="IMeaningRepository"/>.</param>
+    /// <param name="frequencyRepository">Instance of <see cref="IFrequencyRepository"/>.</param>
     /// <param name="displayRepository">Instance of <see cref="IDisplayRepository"/>.</param>
     /// <param name="sourceRepository">Instance of <see cref="ISourceRepository"/>.</param>
     /// <param name="actorRepository">Instance of <see cref="IActorRepository"/>.</param>
     public CreateIndicatorValidator(
+            IIndicatorTypeRepository indicatorTypeRepository,
+            IMeasurementUnitRepository measurementUnitRepository,
+            IMeaningRepository meaningRepository,
+            IFrequencyRepository frequencyRepository,
             IDisplayRepository displayRepository,
             ISourceRepository sourceRepository,
             IActorRepository actorRepository)
@@ -111,9 +122,17 @@ internal sealed class CreateIndicatorValidator : AbstractValidator<CreateIndicat
             .NotNull()
             .NotEmpty();
 
+        RuleFor(x => x.IndicatorTypeId)
+            .MustAsync(indicatorTypeRepository.DoEntityExistsAsync)
+            .WithMessage(DomainErrors.NotFound<IndicatorType>().Description);
+
         RuleFor(x => x.MeasurementUnitId)
             .NotNull()
             .NotEmpty();
+
+        RuleFor(x => x.MeasurementUnitId)
+            .MustAsync(measurementUnitRepository.DoEntityExistsAsync)
+            .WithMessage(DomainErrors.NotFound<MeasurementUnit>().Description);
 
         RuleFor(x => x.Goal)
             .NotNull()
@@ -124,9 +143,17 @@ internal sealed class CreateIndicatorValidator : AbstractValidator<CreateIndicat
             .NotNull()
             .NotEmpty();
 
+        RuleFor(x => x.MeaningId)
+           .MustAsync(meaningRepository.DoEntityExistsAsync)
+           .WithMessage(DomainErrors.NotFound<Meaning>().Description);
+
         RuleFor(x => x.FrequencyId)
             .NotNull()
             .NotEmpty();
+
+        RuleFor(x => x.FrequencyId)
+           .MustAsync(frequencyRepository.DoEntityExistsAsync)
+           .WithMessage(DomainErrors.NotFound<Frequency>().Description);
 
         RuleFor(x => x.Displays)
             .MustAsync((ids, cancellationToken) => displayRepository.DoEntitiesExistsAsync(ids.ToArray(), cancellationToken));

@@ -1,7 +1,21 @@
-﻿using IndicatorsApi.Domain.Features.Indicators;
-using IndicatorsApi.Persistence.Abstractions;
+﻿using System.Linq.Expressions;
+using IndicatorsApi.Domain.Features.Indicators;
 
 namespace IndicatorsApi.Persistence.Features.Indicators;
+
+/// <inheritdoc/>
+internal sealed class IndicatorResultByIndicatorIdSpecification
+    : Specification<IndicatorResult, int>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IndicatorResultByIndicatorIdSpecification"/> class.
+    /// </summary>
+    /// <param name="indicatorId">Indicator id.</param>
+    public IndicatorResultByIndicatorIdSpecification(int indicatorId)
+        : base(x => x.IndicatorId == indicatorId)
+    {
+    }
+}
 
 /// <inheritdoc/>
 internal sealed class IndicatorResultRepository
@@ -15,6 +29,16 @@ internal sealed class IndicatorResultRepository
         : base(context)
     {
     }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<TResponse>> GetAllByIndicatorIdAsync<TResponse>(
+            int indicatorId,
+            Expression<Func<IndicatorResult, TResponse>> selector,
+            CancellationToken cancellationToken)
+        => await ApplySpecification(new IndicatorResultByIndicatorIdSpecification(indicatorId))
+        .Select(selector)
+        .ToListAsync(cancellationToken)
+        .ConfigureAwait(false);
 }
 
 /// <inheritdoc/>

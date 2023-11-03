@@ -11,9 +11,9 @@ import React from 'react';
 
 type Props = {
   label?: string;
-  options?: any | undefined;
+  options: ReadonlyArray<any>;
+  value: any | undefined;
   defaultValue: any;
-  value?: any | undefined;
   getOptionLabel?: ((option: any) => string) | undefined;
   renderTags?:
     | ((
@@ -35,16 +35,11 @@ type Props = {
 const MultipleSelector = (props: Props) => {
   return (
     <Autocomplete
+      {...props}
       multiple
-      value={props.value}
-      options={props.options ?? []}
-      getOptionLabel={(option) =>
-        !!props.getOptionLabel ? props.getOptionLabel(option) : option
-      }
       isOptionEqualToValue={(option, value) => {
         return option.id === value.id;
       }}
-      defaultValue={props.value}
       renderTags={
         !!props.renderTags
           ? props.renderTags

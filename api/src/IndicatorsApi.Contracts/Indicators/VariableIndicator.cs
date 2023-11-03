@@ -21,13 +21,11 @@ public sealed record CreateVariableIndicatorRequest(
 /// </summary>
 /// <param name="Id">VaribleIndicator id.</param>
 /// <param name="Datum">VaribleIndicator datum.</param>
-/// <param name="Date">VaribleIndicator date.</param>
-/// <param name="UserId">VaribleIndicator user id.</param>
-/// <param name="Variable">VaribleIndicator variable.</param>
+/// <param name="VariableId">VaribleIndicator variable id.</param>
+/// <param name="VariableName">VaribleIndicator variable name.</param>
 public sealed record VariableIndicatorPaginationResponse(
     int Id,
     double Datum,
-    DateTime Date,
-    string UserId,
-    VariablePaginationResponse Variable);
+    int VariableId,
+    string VariableName);
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter

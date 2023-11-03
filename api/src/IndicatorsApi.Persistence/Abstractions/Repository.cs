@@ -3,6 +3,8 @@ using IndicatorsApi.Domain.Models;
 using IndicatorsApi.Domain.Primitives;
 using IndicatorsApi.Domain.Repositories;
 using IndicatorsApi.Domain.Utils;
+using IndicatorsApi.Persistence.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Persistence.Abstractions;
 
@@ -33,37 +35,25 @@ internal abstract class Repository<TEntity, TEntityId>
 
     /// <inheritdoc/>
     public async Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken)
-    {
-        TEntity? entity = await SingleAsync(
-                context: DbContext,
-                id: id,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-
-        return entity != null;
-    }
+        => await ApplySpecification(new EntityByIdSpecification<TEntity, TEntityId>(id))
+        .AsNoTracking()
+        .AnyAsync(cancellationToken)
+        .ConfigureAwait(false);
 
     /// <inheritdoc/>
     public async Task<bool> DoEntitiesExistsAsync(TEntityId[] ids, CancellationToken cancellationToken)
-    {
-        List<TEntity> entities = await BulkAsync(
-                context: DbContext,
-                ids: ids,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-
-        return entities.TrueForAll(x => ids.Contains(x.Id));
-    }
+        => await ApplySpecification(new EntitiesByIdsSpecification<TEntity, TEntityId>(ids))
+        .AsNoTracking()
+        .AnyAsync(x => !ids.Contains(x.Id), cancellationToken)
+        .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public virtual async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
-    {
-        return await SingleAsync(
-                context: DbContext,
-                id: id,
-                cancellationToken: cancellationToken)
+    public virtual async Task<TEntity?> GetByIdAsync(
+            TEntityId id,
+            CancellationToken cancellationToken = default)
+        => await ApplySpecification(new EntityByIdSpecification<TEntity, TEntityId>(id))
+            .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
-    }
 
     /// <inheritdoc/>
     public virtual async Task<Pagination<TEntity>> GetPaginationAsync(int page, int rows, TEntityId[] ids, CancellationToken cancellationToken = default)
@@ -129,14 +119,12 @@ internal abstract class Repository<TEntity, TEntityId>
     }
 
     /// <inheritdoc/>
-    public virtual async Task<IEnumerable<TEntity>> GetBulkIdsAsync(TEntityId[] ids, CancellationToken cancellationToken = default)
-    {
-        return await BulkAsync(
-                context: DbContext,
-                ids: ids,
-                cancellationToken: cancellationToken)
+    public virtual async Task<IEnumerable<TEntity>> GetBulkIdsAsync(
+            TEntityId[] ids,
+            CancellationToken cancellationToken = default)
+        => await ApplySpecification(new EntitiesByIdsSpecification<TEntity, TEntityId>(ids))
+            .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
-    }
 
     /// <inheritdoc/>
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(TEntityId[] ids, CancellationToken cancellationToken = default)
@@ -151,13 +139,11 @@ internal abstract class Repository<TEntity, TEntityId>
     /// <inheritdoc/>
     public virtual void Add(TEntity entity) =>
         DbContext
-            .Set<TEntity>()
             .Add(entity);
 
     /// <inheritdoc/>
     public virtual void Delete(TEntity entity) =>
         DbContext
-            .Set<TEntity>()
             .Remove(entity);
 
     /// <inheritdoc/>
@@ -165,6 +151,19 @@ internal abstract class Repository<TEntity, TEntityId>
         DbContext
             .Set<TEntity>()
             .Update(entity);
+
+    /// <summary>
+    /// Apply a specification implementation.
+    /// </summary>
+    /// <param name="specification">Specification instance.</param>
+    /// <returns>Returns a query with the specification implemented.</returns>
+    protected IQueryable<TEntity> ApplySpecification(
+        Specification<TEntity, TEntityId> specification)
+    {
+        return SpecificationEvaluator.GetQuery(
+            DbContext.Set<TEntity>().AsNoTracking(),
+            specification);
+    }
 
     private static Task<int> CountAsync(ApplicationDbContext context, CancellationToken cancellationToken = default) =>
         context
@@ -201,21 +200,6 @@ internal abstract class Repository<TEntity, TEntityId>
             .Select(selector: selector)
             .Skip(parameters.Page * parameters.Rows)
             .Take(parameters.Rows)
-            .ToListAsync(cancellationToken);
-
-    private static Task<TEntity?> SingleAsync(ApplicationDbContext context, TEntityId id, CancellationToken cancellationToken = default) =>
-        context
-            .Set<TEntity>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                predicate: entity => id!.Equals(entity.Id),
-                cancellationToken: cancellationToken);
-
-    private static Task<List<TEntity>> BulkAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>
-        context
-            .Set<TEntity>()
-            .AsNoTracking()
-            .Where(entity => ids.Any(id => id!.Equals(entity.Id)))
             .ToListAsync(cancellationToken);
 
     private static Task<List<TEntity>> AllAsync(ApplicationDbContext context, TEntityId[] ids, CancellationToken cancellationToken = default) =>

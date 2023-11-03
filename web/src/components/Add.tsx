@@ -1,24 +1,20 @@
-import { GridColDef } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
-import { useAxiosApi } from "../hooks";
-import { endpoints } from "../enviroments";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { loadAbort } from "../utilities";
-import { CoverPage, MultipleSelector } from ".";
+import { GridColDef } from '@mui/x-data-grid';
+import React, { useEffect, useState } from 'react';
+import { useAxiosApi } from '../hooks';
+import { endpoints } from '../enviroments';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loadAbort } from '../utilities';
+import { CoverPage, MultipleSelector } from '.';
 import {
   Box,
   Button,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   TextField,
   Typography,
   useTheme,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 type Props = {
   slug: string;
@@ -27,17 +23,6 @@ type Props = {
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   selectionDataUrl?: string;
   adapterFuction?: (data: any) => any;
-};
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
 };
 
 const Add = (props: Props) => {
@@ -49,7 +34,6 @@ const Add = (props: Props) => {
     dispatch,
     navigate
   );
-  const [multipleValue, setMultipleValue] = React.useState<string[]>([]);
   const [selectionData, setSelectionData] = useState<any[]>([]);
   const [data, setData] = useState<any>({});
   const theme = useTheme();
@@ -62,10 +46,10 @@ const Add = (props: Props) => {
       undefined,
       undefined,
       () => {
-        if (!!props.setRefresh){
+        if (!!props.setRefresh) {
           props.setRefresh(true);
         }
-        
+
         props.setOpen(false);
       }
     );
@@ -90,25 +74,25 @@ const Add = (props: Props) => {
   return (
     <CoverPage>
       <Box
-        position="relative"
-        padding="1rem"
-        borderRadius=".5rem"
+        position='relative'
+        padding='1rem'
+        borderRadius='.5rem'
         sx={{
           backgroundColor: theme.palette.background.default,
         }}
       >
         <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
+          display='flex'
+          flexDirection='row'
+          justifyContent='space-between'
+          alignItems='center'
         >
-          <Box display="flex" justifyContent="center" width="100%">
+          <Box display='flex' justifyContent='center' width='100%'>
             <Typography
-              variant="h1"
-              fontSize="1.25rem"
-              textTransform="uppercase"
-              fontWeight="bold"
+              variant='h1'
+              fontSize='1.25rem'
+              textTransform='uppercase'
+              fontWeight='bold'
             >
               Agregar nuevo
             </Typography>
@@ -118,27 +102,27 @@ const Add = (props: Props) => {
           </IconButton>
         </Box>
         <Box
-          component="form"
-          display="flex"
-          flexDirection="row"
-          flexWrap="wrap"
-          minWidth="300px"
-          maxWidth="500px"
+          component='form'
+          display='flex'
+          flexDirection='row'
+          flexWrap='wrap'
+          minWidth='300px'
+          maxWidth='500px'
           onSubmit={handleSubmit}
-          mt="1"
+          mt='1'
         >
           {props.columns
-            .filter((item) => item.field !== "id" && item.field !== "img")
+            .filter((item) => item.field !== 'id' && item.field !== 'img')
             .map((column) => (
               <Box
-                display="flex"
-                flexDirection="column"
-                width="40%"
-                gap="1rem"
-                m="1rem"
+                display='flex'
+                flexDirection='column'
+                width='40%'
+                gap='1rem'
+                m='1rem'
                 key={column.field}
               >
-                {column.type === "multipleSelect" ? (
+                {column.type === 'multipleSelect' ? (
                   <MultipleSelector
                     value={data?.[column.field]}
                     options={selectionData}
@@ -148,18 +132,18 @@ const Add = (props: Props) => {
                         ...data,
                         [column.field]: newValue.map((value: any) => value.id),
                       });
-                      console.log("Data", data)
+                      console.log('Data', data);
                     }}
                   />
                 ) : (
                   <TextField
-                    margin="normal"
+                    margin='normal'
                     required
-                    key={"textField" + column.field}
+                    key={'textField' + column.field}
                     id={column.field}
                     label={column.headerName}
                     name={column.headerName}
-                    color="secondary"
+                    color='secondary'
                     onChange={(e) => {
                       setData({
                         ...data,
@@ -171,12 +155,12 @@ const Add = (props: Props) => {
               </Box>
             ))}
           <Button
-            variant="outlined"
-            type="submit"
+            variant='outlined'
+            type='submit'
             fullWidth
-            color="secondary"
+            color='secondary'
             sx={{
-              padding: ".8rem",
+              padding: '.8rem',
             }}
           >
             Crear nuevo

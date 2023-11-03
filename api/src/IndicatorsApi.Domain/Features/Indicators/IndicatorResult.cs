@@ -1,4 +1,6 @@
-﻿namespace IndicatorsApi.Domain.Features.Indicators;
+﻿using System.Linq.Expressions;
+
+namespace IndicatorsApi.Domain.Features.Indicators;
 
 /// <summary>
 /// IndicatorResult repository methods.
@@ -6,6 +8,18 @@
 public interface IIndicatorResultRepository
     : IRepository<IndicatorResult, int>
 {
+    /// <summary>
+    /// Gets a variable indicator instance by indicator id.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="indicatorId">Indicator id.</param>
+    /// <param name="selector">Variable mapping selector.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+    /// <returns>Returns either the variable indicator instance or null.</returns>
+    Task<IEnumerable<TResponse>> GetAllByIndicatorIdAsync<TResponse>(
+        int indicatorId,
+        Expression<Func<IndicatorResult, TResponse>> selector,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>

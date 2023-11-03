@@ -32,7 +32,7 @@ internal sealed class GetIndicatorResultPaginationQueryHandler
         Pagination<IndicatorResultPaginationResponse> pagination = await _repository
                 .GetPaginationAsync(
                     parameters: request.Parameters,
-                    selector: x => new IndicatorResultPaginationResponse(x.Id, x.Result, x.CalculusDate, x.IndicatorId),
+                    selector: x => new IndicatorResultPaginationResponse(x.Id, x.Result, x.CalculusDate),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

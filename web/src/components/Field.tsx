@@ -4,13 +4,23 @@ import { MultipleSelector, Selector } from '.';
 
 type Props = {
   field: AddColDef;
-  value?: any | undefined;
+  value: any | undefined;
+  defaultValue: any;
   onChanged: (newValue: any) => void;
   getOptionLabel?: ((option: any) => string) | undefined;
+  getOptionValue?: ((option: any) => any) | undefined;
   options: ReadonlyArray<any>;
 };
 
 const Field = (props: Props) => {
+  const onChangeValueHandler = (targetValue: any) => {
+    let value = !!props.getOptionValue
+      ? props.getOptionValue(targetValue)
+      : targetValue;
+
+    props.onChanged(value);
+  };
+
   return (
     <Box display='flex' flexDirection='column'>
       {props.field.type === 'multipleSelect' ? (
@@ -18,10 +28,8 @@ const Field = (props: Props) => {
           <MultipleSelector
             {...props}
             label={props.field.headerName}
-            getOptionLabel={props.getOptionLabel}
-            defaultValue={props.field.value}
             onChange={(_, newValue) => {
-              props.onChanged(newValue);
+              onChangeValueHandler(newValue);
             }}
           />
         </>
@@ -30,21 +38,19 @@ const Field = (props: Props) => {
           <Selector
             {...props}
             label={props.field.headerName}
-            getOptionLabel={props.getOptionLabel}
-            defaultValue={props.field.value}
             onChange={(_, newValue) => {
-              props.onChanged(newValue);
+              onChangeValueHandler(newValue);
             }}
           />
         </>
       ) : (
         <TextField
+          {...props}
           label={props.field.headerName}
           name={props.field.field}
           color='secondary'
-          defaultValue={props.value}
           onChange={(e) => {
-            props.onChanged(e.target.value);
+            onChangeValueHandler(e.target.value);
           }}
         />
       )}
