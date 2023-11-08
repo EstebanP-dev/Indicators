@@ -33,104 +33,22 @@ namespace IndicatorsApi.Application.Features.Indicators.UpdateSection;
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 public sealed record class UpdateIndicatorCommand(
     int Id,
-    string Code,
-    string Name,
-    string Objective,
-    string Scope,
-    string Formula,
-    int IndicatorTypeId,
-    int MeasurementUnitId,
-    string Goal,
-    int MeaningId,
-    int FrequencyId,
-    IEnumerable<int> Results,
-    IEnumerable<int> Displays,
-    IEnumerable<int> Sources,
-    IEnumerable<string> Actors)
+    string? Code,
+    string? Name,
+    string? Objective,
+    string? Scope,
+    string? Formula,
+    int? IndicatorTypeId,
+    int? MeasurementUnitId,
+    string? Goal,
+    int? MeaningId,
+    int? FrequencyId,
+    IEnumerable<int>? Results,
+    IEnumerable<int>? Displays,
+    IEnumerable<int>? Sources,
+    IEnumerable<string>? Actors)
     : IUpdateCommand;
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter
-
-/// <inheritdoc/>
-internal sealed class UpdateIndicatorValidator : AbstractValidator<UpdateIndicatorCommand>
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateIndicatorValidator"/> class.
-    /// </summary>
-    /// <param name="indicatorTypeRepository">Instance of <see cref="IIndicatorTypeRepository"/>.</param>
-    /// <param name="measurementUnitRepository">Instance of <see cref="IMeasurementUnitRepository"/>.</param>
-    /// <param name="meaningRepository">Instance of <see cref="IMeaningRepository"/>.</param>
-    /// <param name="frequencyRepository">Instance of <see cref="IFrequencyRepository"/>.</param>
-    public UpdateIndicatorValidator(
-        IIndicatorTypeRepository indicatorTypeRepository,
-        IMeasurementUnitRepository measurementUnitRepository,
-        IMeaningRepository meaningRepository,
-        IFrequencyRepository frequencyRepository)
-    {
-        RuleFor(x => x.Id)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.Code)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(50);
-
-        RuleFor(x => x.Name)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(100);
-
-        RuleFor(x => x.Objective)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(4000);
-
-        RuleFor(x => x.Scope)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(1000);
-
-        RuleFor(x => x.Formula)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(1000);
-
-        RuleFor(x => x.IndicatorTypeId)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.IndicatorTypeId)
-            .MustAsync(indicatorTypeRepository.DoEntityExistsAsync)
-            .WithMessage(DomainErrors.NotFound<IndicatorType>().Description);
-
-        RuleFor(x => x.MeasurementUnitId)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.MeasurementUnitId)
-            .MustAsync(measurementUnitRepository.DoEntityExistsAsync)
-            .WithMessage(DomainErrors.NotFound<MeasurementUnit>().Description);
-
-        RuleFor(x => x.Goal)
-            .NotNull()
-            .NotEmpty()
-        .MaximumLength(1000);
-        RuleFor(x => x.MeaningId)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.MeaningId)
-           .MustAsync(meaningRepository.DoEntityExistsAsync)
-           .WithMessage(DomainErrors.NotFound<Meaning>().Description);
-        RuleFor(x => x.FrequencyId)
-            .NotNull()
-            .NotEmpty();
-
-        RuleFor(x => x.FrequencyId)
-           .MustAsync(frequencyRepository.DoEntityExistsAsync)
-           .WithMessage(DomainErrors.NotFound<Frequency>().Description);
-    }
-}
 
 /// <inheritdoc/>
 internal sealed class UpdateIndicatorCommandHandler
@@ -178,17 +96,17 @@ internal sealed class UpdateIndicatorCommandHandler
             return DomainErrors.NotFound<Indicator>();
         }
 
-        indicator.Id = request.Id;
-        indicator.Code = request.Code;
-        indicator.Name = request.Name;
-        indicator.Objective = request.Objective;
-        indicator.Scope = request.Scope;
-        indicator.Formula = request.Formula;
-        indicator.Goal = request.Goal;
-        indicator.IndicatorTypeId = request.IndicatorTypeId;
-        indicator.MeasurementUnitId = request.MeasurementUnitId;
-        indicator.MeaningId = request.MeaningId;
-        indicator.FrequencyId = request.FrequencyId;
+        indicator.UpdateIndicatorValues(
+            request.Code,
+            request.Name,
+            request.Objective,
+            request.Scope,
+            request.Formula,
+            request.Goal,
+            request.IndicatorTypeId,
+            request.MeasurementUnitId,
+            request.MeaningId,
+            request.FrequencyId);
 
         await _unitOfWork
                 .SaveChangesAsync(cancellationToken: cancellationToken)

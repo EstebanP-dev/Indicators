@@ -2,8 +2,6 @@
 using IndicatorsApi.Domain.Features.Displays;
 using IndicatorsApi.Domain.Features.Indicators;
 using IndicatorsApi.Domain.Features.Sources;
-using IndicatorsApi.Domain.Features.Variables;
-using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Indicators;
 

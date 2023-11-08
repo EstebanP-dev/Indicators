@@ -110,18 +110,18 @@ public sealed record class IndicatorPaginationResponse(
 /// <param name="Actors">Indicator actors.</param>
 public sealed record class UpdateIndicatorRequest(
     int Id,
-    string Code,
-    string Name,
-    string Objective,
-    string Scope,
-    string Formula,
-    int IndicatorTypeId,
-    int MeasurementUnitId,
-    string Goal,
-    int MeaningId,
-    int FrequencyId,
-    IEnumerable<int> Results,
-    IEnumerable<int> Displays,
-    IEnumerable<int> Sources,
-    IEnumerable<string> Actors);
+    string? Code,
+    string? Name,
+    string? Objective,
+    string? Scope,
+    string? Formula,
+    int? IndicatorTypeId,
+    int? MeasurementUnitId,
+    string? Goal,
+    int? MeaningId,
+    int? FrequencyId,
+    IEnumerable<int>? Results,
+    IEnumerable<int>? Displays,
+    IEnumerable<int>? Sources,
+    IEnumerable<string>? Actors);
 #pragma warning restore SA1313 // Parameter names should begin with lower-case letter

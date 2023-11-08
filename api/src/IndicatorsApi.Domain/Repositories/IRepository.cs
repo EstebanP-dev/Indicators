@@ -36,7 +36,7 @@ public interface IRepository<TEntity, TEntityId>
     /// <param name="id">Entity id.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
     /// <returns>If the entity exists.</returns>
-    Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken);
+    Task<bool> DoEntityExistsAsync(TEntityId? id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Verify if the entities exists.
@@ -52,7 +52,7 @@ public interface IRepository<TEntity, TEntityId>
     /// <param name="id">Entity id.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> instance.</param>
     /// <returns>Either entity or error instance.</returns>
-    Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default);
+    Task<TEntity?> GetByIdAsync(TEntityId? id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the entities by bulk ids.

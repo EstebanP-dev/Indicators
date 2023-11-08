@@ -56,21 +56,21 @@ type CreateIndicatorRequest = {
 };
 
 type UpdateIndicatorRequest = {
-  id: number;
-  code: string;
-  name: string;
-  objective: string;
-  scope: string;
-  formula: string;
-  goal: string;
-  indicatorTypeId: number;
-  measurementUnitId: number;
-  meaningId: number;
-  frequencyId: number;
-  displays: number[];
-  variables: number[];
-  sources: number[];
-  actors: string[];
+  id?: number | undefined;
+  code?: string | undefined;
+  name?: string | undefined;
+  objective?: string | undefined;
+  scope?: string | undefined;
+  formula?: string | undefined;
+  goal?: string | undefined;
+  indicatorTypeId?: number | undefined;
+  measurementUnitId?: number | undefined;
+  meaningId?: number | undefined;
+  frequencyId?: number | undefined;
+  displays?: number[] | undefined;
+  variables?: number[] | undefined;
+  sources?: number[] | undefined;
+  actors?: string[] | undefined;
 };
 
 export type {

@@ -5,12 +5,7 @@ import { useAxiosApi } from '../../hooks';
 import { useDispatch } from 'react-redux';
 import { Box, Typography } from '@mui/material';
 import { Body, Field, Loading } from '../../components';
-import {
-  AddColDef,
-  ErrorOr,
-  IndicatorByIdResponse,
-  UpdateIndicatorRequest,
-} from '../../models';
+import { AddColDef, ErrorOr, IndicatorByIdResponse } from '../../models';
 import { indicatorAdapter } from '../../adapters';
 
 const variableColumns: AddColDef[] = [
@@ -168,9 +163,12 @@ const Indicator = () => {
   const { id } = useParams();
   const [data, setData] = useState<any | undefined>(undefined);
   const [newData, setNewData] = useState<any | undefined>(undefined);
-  const [requestData, setRequestData] = useState<
-    UpdateIndicatorRequest | undefined
-  >(undefined);
+  const [requestData, setRequestData] = useState<any>(
+    columns.reduce<any>((previus, current) => {
+      previus[current.propertyName ?? current.field] = undefined;
+      return previus;
+    }, {})
+  );
   const [error, setError] = useState<ErrorOr | undefined>(undefined);
 
   const fetchData = () => {
@@ -182,11 +180,6 @@ const Indicator = () => {
       undefined,
       (result) => {
         setNewData(result);
-        setRequestData(
-          indicatorAdapter.updateIndicatorRequestFromIndicatorByIdResponseAdapter(
-            result
-          )
-        );
       }
     );
 

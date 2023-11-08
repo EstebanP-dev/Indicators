@@ -11,8 +11,8 @@ internal sealed class EntityByIdSpecification<TEntity, TEntityId>
     /// Initializes a new instance of the <see cref="EntityByIdSpecification{TEntity, TEntityId}"/> class.
     /// </summary>
     /// <param name="id">Entity id instance.</param>
-    internal EntityByIdSpecification(TEntityId id)
-        : base(entity => entity.Id!.Equals(id))
+    internal EntityByIdSpecification(TEntityId? id)
+        : base(entity => id != null && entity.Id != null && entity.Id.Equals(id))
     {
     }
 }

@@ -52,14 +52,26 @@ public abstract class Entity<TEntityId>
     /// 3. If all entities are found, it adds them to the provided <see cref="Entity{TEntityId}"/> using the provided action.
     /// </remarks>
     public async Task<ErrorOr<Success>> TryAddEntities<TEntity, TEntityKey>(
-        IRepository<TEntity, TEntityKey> repository,
-        IEnumerable<TEntityKey> entityIds,
-        Action<TEntity> addEntityAction,
+        IRepository<TEntity, TEntityKey>? repository,
+        IEnumerable<TEntityKey>? entityIds,
+        Action<TEntity>? addEntityAction,
         CancellationToken cancellationToken)
         where TEntity : Entity<TEntityKey>
     {
-        ArgumentNullException.ThrowIfNull(repository);
-        ArgumentNullException.ThrowIfNull(addEntityAction);
+        if (repository is null)
+        {
+            return DomainErrors.NotNullOrEmptyProperty(nameof(repository));
+        }
+
+        if (entityIds is null)
+        {
+            return DomainErrors.NotNullOrEmptyProperty(nameof(entityIds));
+        }
+
+        if (addEntityAction is null)
+        {
+            return DomainErrors.NotNullOrEmptyProperty(nameof(entityIds));
+        }
 
         IEnumerable<TEntity> childrenEntities = await repository
             .GetBulkIdsAsync(entityIds.ToArray(), cancellationToken)

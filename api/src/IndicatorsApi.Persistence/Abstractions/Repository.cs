@@ -34,7 +34,7 @@ internal abstract class Repository<TEntity, TEntityId>
     }
 
     /// <inheritdoc/>
-    public async Task<bool> DoEntityExistsAsync(TEntityId id, CancellationToken cancellationToken)
+    public async Task<bool> DoEntityExistsAsync(TEntityId? id, CancellationToken cancellationToken)
         => await ApplySpecification(new EntityByIdSpecification<TEntity, TEntityId>(id))
         .AsNoTracking()
         .AnyAsync(cancellationToken)
@@ -49,7 +49,7 @@ internal abstract class Repository<TEntity, TEntityId>
 
     /// <inheritdoc/>
     public virtual async Task<TEntity?> GetByIdAsync(
-            TEntityId id,
+            TEntityId? id,
             CancellationToken cancellationToken = default)
         => await ApplySpecification(new EntityByIdSpecification<TEntity, TEntityId>(id))
             .FirstOrDefaultAsync(cancellationToken)

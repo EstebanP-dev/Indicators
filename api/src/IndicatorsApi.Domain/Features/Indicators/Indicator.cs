@@ -176,6 +176,82 @@ public sealed class Indicator
     public ICollection<Actor> Actors { get; } = new List<Actor>();
 
     /// <summary>
+    /// Update the <see cref="Indicator"/> values.
+    /// </summary>
+    /// <param name="code"><see cref="Code"/>.</param>
+    /// <param name="name"><see cref="Name"/>.</param>
+    /// <param name="objective"><see cref="Objective"/>.</param>
+    /// <param name="scope"><see cref="Scope"/>.</param>
+    /// <param name="formula"><see cref="Formula"/>.</param>
+    /// <param name="goal"><see cref="Goal"/>.</param>
+    /// <param name="indicatorTypeId"><see cref="IndicatorTypeId"/>.</param>
+    /// <param name="measurementUnitId"><see cref="MeasurementUnitId"/>.</param>
+    /// <param name="meaningId"><see cref="MeaningId"/>.</param>
+    /// <param name="frequencyId"><see cref="FrequencyId"/>.</param>
+    public void UpdateIndicatorValues(
+        string? code,
+        string? name,
+        string? objective,
+        string? scope,
+        string? formula,
+        string? goal,
+        int? indicatorTypeId,
+        int? measurementUnitId,
+        int? meaningId,
+        int? frequencyId)
+    {
+        if (code is not null)
+        {
+            Code = code;
+        }
+
+        if (name is not null)
+        {
+            Name = name;
+        }
+
+        if (objective is not null)
+        {
+            Objective = objective;
+        }
+
+        if (scope is not null)
+        {
+            Scope = scope;
+        }
+
+        if (formula is not null)
+        {
+            Formula = formula;
+        }
+
+        if (goal is not null)
+        {
+            Goal = goal;
+        }
+
+        if (indicatorTypeId is not null)
+        {
+            IndicatorTypeId = indicatorTypeId.Value;
+        }
+
+        if (measurementUnitId is not null)
+        {
+            MeasurementUnitId = measurementUnitId.Value;
+        }
+
+        if (meaningId is not null)
+        {
+            MeaningId = meaningId.Value;
+        }
+
+        if (frequencyId is not null)
+        {
+            FrequencyId = frequencyId.Value;
+        }
+    }
+
+    /// <summary>
     /// Add display to an indicator.
     /// </summary>
     /// <param name="display"><see cref="Display"/> instance.</param>
