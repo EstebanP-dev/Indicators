@@ -264,6 +264,26 @@ public sealed class Indicator
     }
 
     /// <summary>
+    /// Add display to an indicator.
+    /// </summary>
+    /// <param name="display"><see cref="Display"/> instance.</param>
+    public void RemoveDisplay(Display display)
+    {
+        if (Displays.Any(x => x.Id == display.Id))
+        {
+            Displays.Remove(display);
+        }
+    }
+
+    /// <summary>
+    /// Add display to an indicator.
+    /// </summary>
+    public void ClearDisplays()
+    {
+        Displays.Clear();
+    }
+
+    /// <summary>
     /// Add source to an indicator.
     /// </summary>
     /// <param name="source"><see cref="Source"/> instance.</param>
@@ -276,6 +296,26 @@ public sealed class Indicator
     }
 
     /// <summary>
+    /// Add source to an indicator.
+    /// </summary>
+    /// <param name="source"><see cref="Source"/> instance.</param>
+    public void RemoveSource(Source source)
+    {
+        if (Sources.Any(x => x.Id == source.Id))
+        {
+            Sources.Remove(source);
+        }
+    }
+
+    /// <summary>
+    /// Add source to an indicator.
+    /// </summary>
+    public void ClearSources()
+    {
+        Sources.Clear();
+    }
+
+    /// <summary>
     /// Add actor to an indicator.
     /// </summary>
     /// <param name="actor"><see cref="Actors"/> instance.</param>
@@ -285,5 +325,25 @@ public sealed class Indicator
         {
             Actors.Add(actor);
         }
+    }
+
+    /// <summary>
+    /// Add actor to an indicator.
+    /// </summary>
+    /// <param name="actor"><see cref="Actor"/> instance.</param>
+    public void RemoveActor(Actor actor)
+    {
+        if (Actors.Any(x => x.Id == actor.Id))
+        {
+            Actors.Remove(actor);
+        }
+    }
+
+    /// <summary>
+    /// Add actor to an indicator.
+    /// </summary>
+    public void ClearActors()
+    {
+        Actors.Clear();
     }
 }

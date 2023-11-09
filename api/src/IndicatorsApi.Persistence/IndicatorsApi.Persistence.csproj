@@ -9,4 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\IndicatorsApi.Application\IndicatorsApi.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="9.12.0.78982" />
+  </ItemGroup>
 </Project>

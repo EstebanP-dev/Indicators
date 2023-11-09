@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Domain.Errors;
+﻿using System.Collections.ObjectModel;
+using IndicatorsApi.Domain.Errors;
 
 namespace IndicatorsApi.Domain.Primitives;
 
@@ -40,6 +41,8 @@ public abstract class Entity<TEntityId>
     /// <param name="repository"><typeparamref name="TEntity"/> repository instance.</param>
     /// <param name="entityIds">The IDs of the entities to fetch.</param>
     /// <param name="addEntityAction">An action that defines how to add an entity of type <typeparamref name="TEntity"/> to the <see cref="Entity{TEntityId}"/>.</param>
+    /// <param name="removeEntityAction">An action that defines how to remove an entity of type <typeparamref name="TEntity"/> to the <see cref="Entity{TEntityId}"/>.</param>
+    /// <param name="clearEntityAction">An action that defines how to clear a list of types, <typeparamref name="TEntity"/>, to the <see cref="Entity{TEntityId}"/>.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>
     /// Returns true if all entities were successfully fetched and added to the <see cref="Entity{TEntityId}"/>.
@@ -53,8 +56,10 @@ public abstract class Entity<TEntityId>
     /// </remarks>
     public async Task<ErrorOr<Success>> TryAddEntities<TEntity, TEntityKey>(
         IRepository<TEntity, TEntityKey>? repository,
-        IEnumerable<TEntityKey>? entityIds,
+        Collection<TEntityKey>? entityIds,
         Action<TEntity>? addEntityAction,
+        Action<TEntity>? removeEntityAction,
+        Action? clearEntityAction,
         CancellationToken cancellationToken)
         where TEntity : Entity<TEntityKey>
     {
@@ -70,7 +75,22 @@ public abstract class Entity<TEntityId>
 
         if (addEntityAction is null)
         {
-            return DomainErrors.NotNullOrEmptyProperty(nameof(entityIds));
+            return DomainErrors.NotNullOrEmptyProperty(nameof(addEntityAction));
+        }
+
+        if (removeEntityAction is null)
+        {
+            return DomainErrors.NotNullOrEmptyProperty(nameof(removeEntityAction));
+        }
+
+        if (clearEntityAction is null)
+        {
+            return DomainErrors.NotNullOrEmptyProperty(nameof(clearEntityAction));
+        }
+
+        if (entityIds.Any())
+        {
+            clearEntityAction.Invoke();
         }
 
         IEnumerable<TEntity> childrenEntities = await repository

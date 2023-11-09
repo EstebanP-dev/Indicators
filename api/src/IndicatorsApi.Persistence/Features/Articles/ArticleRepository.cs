@@ -17,7 +17,7 @@ internal sealed class ArticleRepository
     }
 
     /// <inheritdoc/>
-    public override async Task<Article?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public override async Task<Article?> GetByIdAsync(string? id, CancellationToken cancellationToken = default)
     {
         return await DbContext.Articles
             .AsNoTracking()

@@ -47,13 +47,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carter" Version="7.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Carter" Version="7.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IndicatorsApi.Infrastructure\IndicatorsApi.Infrastructure.csproj" />
     <ProjectReference Include="..\IndicatorsApi.Persistence\IndicatorsApi.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="9.12.0.78982" />
   </ItemGroup>
 
 </Project>

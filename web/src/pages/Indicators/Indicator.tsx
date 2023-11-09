@@ -180,6 +180,10 @@ const Indicator = () => {
       undefined,
       (result) => {
         setNewData(result);
+        setRequestData({
+          ...requestData,
+          id: result.id,
+        });
       }
     );
 

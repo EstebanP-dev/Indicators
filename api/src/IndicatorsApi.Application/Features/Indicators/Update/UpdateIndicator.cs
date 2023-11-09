@@ -1,13 +1,7 @@
-﻿using IndicatorsApi.Contracts.Frequencies;
-using IndicatorsApi.Contracts.Indicators;
-using IndicatorsApi.Contracts.Meanings;
-using IndicatorsApi.Contracts.MeasurementUnits;
+﻿using System.Collections.ObjectModel;
 using IndicatorsApi.Domain.Features.Actors;
 using IndicatorsApi.Domain.Features.Displays;
-using IndicatorsApi.Domain.Features.Frequencies;
 using IndicatorsApi.Domain.Features.Indicators;
-using IndicatorsApi.Domain.Features.Meanings;
-using IndicatorsApi.Domain.Features.MeasurementUnits;
 using IndicatorsApi.Domain.Features.Sources;
 
 namespace IndicatorsApi.Application.Features.Indicators.UpdateSection;
@@ -108,26 +102,34 @@ internal sealed class UpdateIndicatorCommandHandler
             request.MeaningId,
             request.FrequencyId);
 
-        await _unitOfWork
-                .SaveChangesAsync(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+        bulkGetTaskErrors.Add(
+            indicator.TryAddEntities(
+                _displayRepository,
+                new Collection<int>(request.Displays?.ToList() ?? indicator.Displays.Select(x => x.Id).ToList()),
+                indicator.AddDisplay,
+                indicator.RemoveDisplay,
+                indicator.ClearDisplays,
+                cancellationToken));
 
         bulkGetTaskErrors.Add(
-            indicator.TryAddEntities(_displayRepository, request.Displays, indicator.AddDisplay, cancellationToken));
+            indicator.TryAddEntities(
+                _sourceRepository,
+                new Collection<int>(request.Sources?.ToList() ?? indicator.Sources.Select(x => x.Id).ToList()),
+                indicator.AddSource,
+                indicator.RemoveSource,
+                indicator.ClearSources,
+                cancellationToken));
 
         bulkGetTaskErrors.Add(
-            indicator.TryAddEntities(_sourceRepository, request.Sources, indicator.AddSource, cancellationToken));
+            indicator.TryAddEntities(
+                _actorRepository,
+                new Collection<string>(request.Actors?.ToList() ?? indicator.Actors.Select(x => x.Id).ToList()),
+                indicator.AddActors,
+                indicator.RemoveActor,
+                indicator.ClearDisplays,
+                cancellationToken));
 
-        bulkGetTaskErrors.Add(
-            indicator.TryAddEntities(_actorRepository, request.Actors, indicator.AddActors, cancellationToken));
-
-        IEnumerable<ErrorOr<Success>> bulkGetErrors = await Task.WhenAll(bulkGetTaskErrors).ConfigureAwait(false);
-        IEnumerable<ErrorOr<Success>> errors = bulkGetErrors.Where(x => x.IsError).AsEnumerable();
-
-        if (errors.Any())
-        {
-            return errors.FirstOrDefault().FirstError;
-        }
+        await Task.WhenAll(bulkGetTaskErrors).ConfigureAwait(false);
 
         await _unitOfWork
                 .SaveChangesAsync(cancellationToken: cancellationToken)
