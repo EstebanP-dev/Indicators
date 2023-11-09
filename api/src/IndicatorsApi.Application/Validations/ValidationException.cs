@@ -15,7 +15,7 @@ public class ValidationException : BaseException
     /// Initializes a new instance of the <see cref="ValidationException"/> class.
     /// </summary>
     /// <param name="errors">Validation errors.</param>
-    public ValidationException(IReadOnlyCollection<ValidationError> errors)
+    public ValidationException(IEnumerable<Error> errors)
         : base("Validation failed.")
     {
         Errors = errors;
@@ -27,5 +27,5 @@ public class ValidationException : BaseException
     /// <value>
     /// The validation errors.
     /// </value>
-    public IReadOnlyCollection<ValidationError> Errors { get; }
+    public IEnumerable<Error> Errors { get; }
 }

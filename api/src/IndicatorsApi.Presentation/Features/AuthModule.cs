@@ -1,35 +1,41 @@
-﻿using IndicatorsApi.Application.Features.Users.Login;
-using IndicatorsApi.Domain.Primitives;
-using Microsoft.AspNetCore.Mvc;
+﻿using IndicatorsApi.Application.Features.Auth;
+using IndicatorsApi.Contracts.Auth;
+using IndicatorsApi.Domain.Features.Users;
 
 namespace IndicatorsApi.Presentation.Features;
 
 /// <summary>
 /// Auth endpoints.
 /// </summary>
-public class AuthModule
-    : CarterModule
+public sealed class AuthModule
+    : BaseModule
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthModule"/> class.
     /// </summary>
     public AuthModule()
-        : base("/api/auth")
+        : base("auth")
     {
     }
 
     /// <inheritdoc/>
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/login", async ([FromBody] LoginRequest request, ISender sender) =>
-        {
-            LoginCommand command = new(request.Email, request.Password);
+        app
+            .MapPost("/login", Login)
+            .WithName(nameof(Login))
+            .WithTags("Authentication")
+            .AllowAnonymous();
+    }
 
-            Result<string> result = await sender.Send(command).ConfigureAwait(true);
+    private static async Task<IResult> Login([FromBody] LoginRequest request, ISender sender)
+    {
+        LoginCommand command = request.Adapt<LoginCommand>();
 
-            return result.IsSuccess
-                ? Results.Ok(result)
-                : Results.BadRequest(result);
-        });
+        ErrorOr<LoginResponse> result = await sender
+            .Send(command)
+            .ConfigureAwait(true);
+
+        return Result(value: result);
     }
 }

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Scrutor;
+﻿using IndicatorsApi.Application.Validations;
 
 namespace IndicatorsApi.WebApi.Configurations;
 
@@ -14,10 +13,15 @@ public class ApplicationServiceInstaller
     {
         services
             .AddMediatR(options =>
-                options.RegisterServicesFromAssembly(Application.ApplicationAssembly.Assembly));
+            {
+                options.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
 
-        services.AddValidatorsFromAssembly(
-            Application.ApplicationAssembly.Assembly,
-            includeInternalTypes: true);
+                options.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
+
+        services
+            .AddValidatorsFromAssembly(
+                Application.AssemblyReference.Assembly,
+                includeInternalTypes: true);
     }
 }

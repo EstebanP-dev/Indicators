@@ -8,18 +8,18 @@ namespace IndicatorsApi.Domain.Features.Users;
 public class UserRole
 {
     /// <summary>
-    /// Gets or sets the <see cref="User"/>'s id.
+    /// Gets the <see cref="User"/>'s id.
     /// </summary>
     /// <value>
     /// The <see cref="User"/>'s id.
     /// </value>
-    required public string FkEmail { get; set; }
+    required public string UserId { get; init; }
 
     /// <summary>
-    /// Gets or sets the <see cref="Role"/>'s id.
+    /// Gets the <see cref="Role"/>'s id.
     /// </summary>
     /// <value>
     /// The <see cref="Role"/>'s id.
     /// </value>
-    required public int FkRol { get; set; }
+    required public int RoleId { get; init; }
 }

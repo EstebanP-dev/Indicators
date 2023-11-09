@@ -1,7 +1,4 @@
 ﻿using System.Reflection;
-using IndicatorsApi.Application.Features.Users.GetUserByEmail;
-using IndicatorsApi.Domain.Features.Users;
-using Mapster;
 
 namespace IndicatorsApi.WebApi.Configurations;
 

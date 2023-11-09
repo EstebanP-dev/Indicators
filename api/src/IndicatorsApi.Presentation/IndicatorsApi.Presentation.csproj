@@ -7,17 +7,57 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\ActorTypes\**" />
+    <Compile Remove="Features\Auth\**" />
+    <Compile Remove="Features\Displays\**" />
+    <Compile Remove="Features\IndicatorTypes\**" />
+    <Compile Remove="Features\Meanings\**" />
+    <Compile Remove="Features\MeasurementUnits\**" />
+    <Compile Remove="Features\Roles\**" />
+    <Compile Remove="Features\Sections\**" />
+    <Compile Remove="Features\Sources\**" />
+    <Compile Remove="Features\SubSections\**" />
+    <Compile Remove="Features\Users\**" />
+    <EmbeddedResource Remove="Features\ActorTypes\**" />
+    <EmbeddedResource Remove="Features\Auth\**" />
+    <EmbeddedResource Remove="Features\Displays\**" />
+    <EmbeddedResource Remove="Features\IndicatorTypes\**" />
+    <EmbeddedResource Remove="Features\Meanings\**" />
+    <EmbeddedResource Remove="Features\MeasurementUnits\**" />
+    <EmbeddedResource Remove="Features\Roles\**" />
+    <EmbeddedResource Remove="Features\Sections\**" />
+    <EmbeddedResource Remove="Features\Sources\**" />
+    <EmbeddedResource Remove="Features\SubSections\**" />
+    <EmbeddedResource Remove="Features\Users\**" />
+    <None Remove="Features\ActorTypes\**" />
+    <None Remove="Features\Auth\**" />
+    <None Remove="Features\Displays\**" />
+    <None Remove="Features\IndicatorTypes\**" />
+    <None Remove="Features\Meanings\**" />
+    <None Remove="Features\MeasurementUnits\**" />
+    <None Remove="Features\Roles\**" />
+    <None Remove="Features\Sections\**" />
+    <None Remove="Features\Sources\**" />
+    <None Remove="Features\SubSections\**" />
+    <None Remove="Features\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carter" Version="7.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Carter" Version="7.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IndicatorsApi.Infrastructure\IndicatorsApi.Infrastructure.csproj" />
     <ProjectReference Include="..\IndicatorsApi.Persistence\IndicatorsApi.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="9.12.0.78982" />
   </ItemGroup>
 
 </Project>

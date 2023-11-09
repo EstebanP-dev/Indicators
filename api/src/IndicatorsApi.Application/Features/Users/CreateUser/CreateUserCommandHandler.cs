@@ -1,75 +1,108 @@
-﻿using System.Net;
-using IndicatorsApi.Application.Abstraction;
+﻿using IndicatorsApi.Application.Abstraction;
+using IndicatorsApi.Domain.Errors;
+using IndicatorsApi.Domain.Features.Roles;
 using IndicatorsApi.Domain.Features.Users;
 using IndicatorsApi.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndicatorsApi.Application.Features.Users.CreateUser;
 
 /// <inheritdoc/>
-internal sealed class CreateUserCommandHandler
-    : ICommandHandler<CreateUserCommand>
+internal sealed class CreateUserValidator : AbstractValidator<CreateUserCommand>
 {
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IUserRepository _userRepository;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateUserValidator"/> class.
+    /// </summary>
+    /// <param name="repository">Instance of <see cref="IUserRepository"/>.</param>
+    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
+    public CreateUserValidator(IUserRepository repository, IRoleRepository roleRepository)
+    {
+        RuleFor(x => x.Email)
+            .NotNull()
+            .NotEmpty()
+            .MaximumLength(200);
+
+        RuleFor(x => x.Email)
+            .MustAsync(async (id, cancellationToken) =>
+                !(await repository
+                        .DoEntityExistsAsync(id, cancellationToken)
+                        .ConfigureAwait(false)))
+            .WithMessage(DomainErrors.AlreadyExists<User>().Description);
+
+        RuleFor(x => x.Password)
+            .NotNull()
+            .NotEmpty()
+            .MaximumLength(20);
+
+        RuleFor(x => x.Roles)
+            .MustAsync((ids, cancellationToken) => roleRepository.DoEntitiesExistsAsync(ids.ToArray(), cancellationToken))
+            .WithMessage(DomainErrors.BulkNotFound.Description);
+    }
+}
+
+/// <inheritdoc/>
+internal sealed class CreateUserCommandHandler
+    : ICommandHandler<CreateUserCommand, Created>
+{
+    private readonly IUserRepository _repository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPasswordHasher _passwordHasher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
     /// </summary>
-    /// <param name="passwordHasher">Instance of <see cref="IPasswordHasher"/>.</param>
-    /// <param name="userRepository">Instance of <see cref="IUserRepository"/>.</param>
+    /// <param name="repository">Instance of <see cref="IUserRepository"/>.</param>
+    /// <param name="roleRepository">Instance of <see cref="IRoleRepository"/>.</param>
     /// <param name="unitOfWork">Instance of <see cref="IUnitOfWork"/>.</param>
+    /// <param name="passwordHasher">Instance of <see cref="IPasswordHasher"/>.</param>
     public CreateUserCommandHandler(
-        IPasswordHasher passwordHasher,
-        IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUserRepository repository,
+        IRoleRepository roleRepository,
+        IUnitOfWork unitOfWork,
+        IPasswordHasher passwordHasher)
     {
-        _passwordHasher = passwordHasher;
-        _userRepository = userRepository;
+        _repository = repository;
+        _roleRepository = roleRepository;
         _unitOfWork = unitOfWork;
+        _passwordHasher = passwordHasher;
     }
 
     /// <inheritdoc/>
-    public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Created>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        try
+        IEnumerable<Role> roles = await _roleRepository
+            .GetBulkIdsAsync(
+                ids: request.Roles
+                    .Select(id => id)
+                    .ToArray(),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (roles.Any(role => !request.Roles.Contains(role.Id)))
         {
-            string passwordHash = _passwordHasher.HashPasword(request.Password, out byte[] salt);
+            return DomainErrors.BulkNotFound;
+        }
 
-            User user = new()
-            {
-                Email = request.Email,
-                Password = passwordHash,
-                Salt = new[] { salt },
-            };
+        string passwordHash = _passwordHasher.HashPasword(password: request.Password, salt: out byte[] salt);
 
-            _userRepository.Add(user);
+        User user = new()
+        {
+            Id = request.Email,
+            Password = passwordHash,
+            Salt = new[] { salt },
+        };
 
-            await _unitOfWork
-                .SaveChangesAsync(cancellationToken)
+        foreach (Role role in roles)
+        {
+            user.Add(role: role);
+        }
+
+        _repository.Add(entity: user);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            Either<User, Error> either = await _userRepository
-                .GetByEmailAsync(request.Email, cancellationToken)
-                .ConfigureAwait(false);
-
-            return either.Match(
-                            left: MapSuccessResult,
-                            right: MapFailureResult);
-        }
-        catch (OperationCanceledException ex)
-        {
-            return Result.Failure(DomainErrors.General.CancelledOperation(ex));
-        }
-    }
-
-    private static Result MapFailureResult(Error error)
-    {
-        return Result.Failure(error);
-    }
-
-    private static Result MapSuccessResult(User user)
-    {
-        return Result.Success();
+        return Result.Created;
     }
 }

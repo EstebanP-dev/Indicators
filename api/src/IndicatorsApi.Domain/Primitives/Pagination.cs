@@ -10,12 +10,14 @@ public class Pagination<TResponse>
     /// <summary>
     /// Initializes a new instance of the <see cref="Pagination{TResponse}"/> class.
     /// </summary>
+    /// <param name="totalRows">Total rows.</param>
     /// <param name="totalPages">Total pages.</param>
     /// <param name="currentPage">Current page.</param>
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="response">Result.</param>
-    public Pagination(int totalPages, int currentPage, int pageSize, IEnumerable<TResponse> response)
+    public Pagination(int totalRows, int totalPages, int currentPage, int pageSize, IEnumerable<TResponse> response)
     {
+        TotalRows = totalRows;
         TotalPages = totalPages;
         CurrentPage = currentPage;
         PageSize = pageSize;
@@ -23,12 +25,20 @@ public class Pagination<TResponse>
     }
 
     /// <summary>
+    /// Gets total rows.
+    /// </summary>
+    /// <value>
+    /// Total rows.
+    /// </value>
+    public int TotalRows { get; init; }
+
+    /// <summary>
     /// Gets total pages.
     /// </summary>
     /// <value>
     /// Total pages.
     /// </value>
-    required public int TotalPages { get; init; }
+    public int TotalPages { get; init; }
 
     /// <summary>
     /// Gets current page.
@@ -36,7 +46,7 @@ public class Pagination<TResponse>
     /// <value>
     /// Current page.
     /// </value>
-    required public int CurrentPage { get; init; }
+    public int CurrentPage { get; init; }
 
     /// <summary>
     /// Gets page size.
@@ -44,7 +54,7 @@ public class Pagination<TResponse>
     /// <value>
     /// Page size.
     /// </value>
-    required public int PageSize { get; init; }
+    public int PageSize { get; init; }
 
     /// <summary>
     /// Gets the response list.
@@ -52,5 +62,5 @@ public class Pagination<TResponse>
     /// <value>
     /// The response list.
     /// </value>
-    required public IEnumerable<TResponse> Response { get; init; }
+    public IEnumerable<TResponse> Response { get; init; }
 }

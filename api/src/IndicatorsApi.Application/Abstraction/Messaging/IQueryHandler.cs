@@ -7,7 +7,7 @@ namespace IndicatorsApi.Application.Abstraction.Messaging;
 /// </summary>
 /// <typeparam name="TQuery">Query type.</typeparam>
 /// <typeparam name="TResponse">Response value type.</typeparam>
-public interface IQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, Result<TResponse>>
+public interface IQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, ErrorOr<TResponse>>
         where TQuery : IQuery<TResponse>
 {
 }

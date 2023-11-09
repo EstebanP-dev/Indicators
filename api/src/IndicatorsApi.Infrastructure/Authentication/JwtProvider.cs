@@ -26,26 +26,30 @@ internal sealed class JwtProvider
     /// <inheritdoc/>
     public string GenerateJwt(User user)
     {
+        JwtSecurityTokenHandler tokenHandler = new();
+        byte[] key = Encoding.UTF8.GetBytes(_options.SecretKey!);
+        SecurityKey securityKey = new SymmetricSecurityKey(key);
+        SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256Signature);
+
         Claim[] claims = new Claim[]
         {
-            new(JwtRegisteredClaimNames.Sub, user.Email),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Id),
         };
 
-        SigningCredentials signingCredentials = new(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey!)),
-            SecurityAlgorithms.HmacSha256);
+        SecurityTokenDescriptor tokenDescriptor = new()
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(_options.ExpirationTime),
+            Audience = _options.Audience,
+            Issuer = _options.Issuer,
+            SigningCredentials = signingCredentials,
+        };
 
-        JwtSecurityToken token = new(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: signingCredentials);
+        SecurityToken securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        string token = tokenHandler.WriteToken(securityToken);
 
-        string tokenValue = new JwtSecurityTokenHandler()
-            .WriteToken(token);
-
-        return tokenValue;
+        return token;
     }
 }

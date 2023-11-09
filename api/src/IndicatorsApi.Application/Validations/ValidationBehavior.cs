@@ -1,4 +1,5 @@
-﻿using IndicatorsApi.Application.Abstraction.Messaging;
+﻿using FluentValidation.Results;
+using IndicatorsApi.Application.Abstraction.Messaging;
 
 namespace IndicatorsApi.Application.Validations;
 
@@ -31,16 +32,18 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     /// <exception cref="ValidationException">Instance of <see cref="ValidationException"/>.</exception>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(next);
+
         ValidationContext<TRequest> context = new(request);
 
-        var errors = _validators
-            .Select(validator => validator.Validate(context: context))
+        var validations = await Task.WhenAll(_validators
+            .Select(validator => validator.ValidateAsync(context: context)))
+            .ConfigureAwait(false);
+
+        IEnumerable<Error> errors = (validations ?? Array.Empty<ValidationResult>())
             .Where(validationResult => !validationResult.IsValid)
             .SelectMany(validationResult => validationResult.Errors)
-            .Select(validationFailure => new ValidationError(
-                validationFailure.PropertyName,
-                validationFailure.ErrorCode,
-                validationFailure.ErrorMessage))
+            .Select(validationFailure => Error.Conflict(description: validationFailure.ErrorMessage))
             .ToList();
 
         if (errors.Any())
@@ -48,9 +51,8 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             throw new ValidationException(errors: errors);
         }
 
-#pragma warning disable CA1062 // Validate arguments of public methods
-        TResponse response = await next().ConfigureAwait(false);
-#pragma warning restore CA1062 // Validate arguments of public methods
+        TResponse response = await next()
+            .ConfigureAwait(false);
 
         return response;
     }
