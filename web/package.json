@@ -18,7 +18,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "^20.5.9",
     "add": "^2.0.6",
-    "axios": "^1.5.0",
+    "axios": "^1.6.0",
     "notistack": "^2.0.3",
     "path": "^0.12.7",
     "react": "^18.2.0",
