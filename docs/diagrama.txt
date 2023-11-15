@@ -1,0 +1,25 @@
+@startuml
+
+!define ACTOR(name) actor name as "**<color:Black>User**\n(<color:Black>name)"
+!define DATABASE(name) entity name as "**<color:Black>Data**\n**<color:Black>Base**\n(<color:Black>name)"
+!define USECASE(uc,desc) usecase uc as "**<color:Black>uc**\n(<color:Black>desc)"
+
+ACTOR(Usuario)
+DATABASE(SisIndicadores)
+
+USECASE(Crear, "Crear Tipo Indicador")
+USECASE(Listar, "Listar Tipo Indicador")
+USECASE(Detalle, "Detallar Tipo Indicador")
+USECASE(Actualizar, "Actualizar Tipo Indicador")
+
+Usuario --> Crear : include
+Usuario --> Listar : include
+Usuario --> Detalle : include
+Usuario --> Actualizar : include
+
+Crear --> SisIndicadores : <<use>>
+Listar --> SisIndicadores : <<use>>
+Detalle --> SisIndicadores : <<use>>
+Actualizar --> SisIndicadores : <<use>>
+
+@enduml
