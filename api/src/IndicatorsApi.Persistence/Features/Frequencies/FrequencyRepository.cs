@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Frequencies;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IFrequencyRepository" />
 internal sealed class FrequencyRepository
     : Repository<Frequency, int>, IFrequencyRepository
 {

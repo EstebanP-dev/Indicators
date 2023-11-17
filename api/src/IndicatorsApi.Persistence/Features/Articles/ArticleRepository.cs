@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Articles;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IArticleRepository" />
 internal sealed class ArticleRepository
     : Repository<Article, string>, IArticleRepository
 {

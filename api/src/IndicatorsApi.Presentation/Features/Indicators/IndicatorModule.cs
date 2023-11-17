@@ -2,7 +2,7 @@
 using IndicatorsApi.Application.Features.Indicators.Delete;
 using IndicatorsApi.Application.Features.Indicators.GetById;
 using IndicatorsApi.Application.Features.Indicators.GetPagination;
-using IndicatorsApi.Application.Features.Indicators.UpdateSection;
+using IndicatorsApi.Application.Features.Indicators.Update;
 using IndicatorsApi.Contracts.Indicators;
 
 namespace IndicatorsApi.Presentation.Features.Indicators;

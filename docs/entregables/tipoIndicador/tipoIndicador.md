@@ -51,7 +51,7 @@
 | **Precondiciones** | El Usuario debe estar autenticado y tener permisos para crear un nuevo Tipo de Indicador. |
 | **Flujo Principal** | El Usuario accede a la opción "Agregar Nuevo" en la página (P-1). Rellena el formulario con los datos del nuevo Tipo de Indicador y selecciona "Guardar". El sistema valida y registra el nuevo Tipo de Indicador. |
 | **Subflujos** | Tras la creación exitosa, se puede redirigir al Usuario a la lista de Tipos de Indicador para verificar la inclusión del nuevo Tipo (listar). |
-| **Excepciones** | Si el Tipo de Indicador ya existe, se muestra el mensaje "The typeactor already exists." Si no se completa algún campo necesario del formulario, se muestra el mensaje "cannot be empty." Si ocurre un error durante la creación, se muestra el mensaje "Something was wrong. Try again later." |
+| **Excepciones** | Si el Tipo de Indicador ya existe, se muestra el mensaje "The indicator type already exists." Si no se completa algún campo necesario del formulario, se muestra el mensaje "cannot be empty." Si ocurre un error durante la creación, se muestra el mensaje "Something was wrong. Try again later." |
 ---
 
 ## Actualizar
@@ -65,5 +65,19 @@
 | **Precondiciones** | El Usuario debe estar autenticado y tener permisos para actualizar los datos de un Tipo de Indicador. |
 | **Flujo Principal** | Desde la página de gestión de Tipos de Indicador (P-1), el Usuario selecciona un Tipo de Indicador de la lista. Doble click en el campo que desea modificar y reemplaza el valor. Presiona el icono de "guardar". El sistema valida y actualiza el valor. |
 | **Subflujos** | Ninguno |
-| **Excepciones** | Si el Tipo de Indicador no se encuentra, se muestra el mensaje "The typeactor was not found." Si hay un conflicto con la información proporcionada, se muestra "The value does not coincide with." Si ocurre un fallo durante la actualización, se muestra "Something was wrong. Try again later." |
+| **Excepciones** | Si el Tipo de Indicador no se encuentra, se muestra el mensaje "The indicator type was not found." Si hay un conflicto con la información proporcionada, se muestra "The value does not coincide with." Si ocurre un fallo durante la actualización, se muestra "Something was wrong. Try again later." |
+---
+
+### Eliminar
+
+| **Caso de Uso** | Eliminar Tipo de Indicador |
+|---|---|
+| **Actores** | Usuario, Base de datos SisIndicadores |
+| **Tipo** | Exclusión |
+| **Propósito** | Permitir al Usuario eliminar un Tipo de Indicador existente del sistema de indicadores. |
+| **Resumen** | Este caso de uso permite al Usuario seleccionar un Tipo de Indicador de la lista y eliminarlo del sistema. Esta acción es irreversible y debe ser manejada con precaución para evitar la eliminación accidental de información importante. |
+| **Precondiciones** | El Usuario debe estar autenticado y tener permisos para eliminar Tipos de Indicador. |
+| **Flujo Principal** | Desde la página de gestión de Tipos de Indicador (P-1), el Usuario selecciona un Tipo de Indicador de la lista. Doble click en el campo que desea modificar y reemplaza el valor. Presiona el icono de "guardar". El sistema valida |
+| **Subflujos** | Ninguno. |
+| **Excepciones** | Si el Tipo de Indicador no se encuentra, se muestra "The indicator type was not found." Si el Tipo de Indicador no puede ser eliminado debido a dependencias existentes, se muestra "The indicator type cannot be deleted due to existing dependencies." Si ocurre un error durante el proceso de eliminación, se muestra "Something was wrong. Try again later." |
 ---

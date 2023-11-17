@@ -5,7 +5,7 @@ using IndicatorsApi.Domain.Features.Sources;
 
 namespace IndicatorsApi.Persistence.Features.Indicators;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IIndicatorRepository" />
 internal sealed class IndicatorRepository
     : Repository<Indicator, int>, IIndicatorRepository
 {

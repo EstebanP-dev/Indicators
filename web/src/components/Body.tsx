@@ -5,6 +5,7 @@ import { AppStore } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { Delete, Save } from '@mui/icons-material';
 import { AddColDef } from '../models';
+import {GridColDef} from "@mui/x-data-grid";
 
 type Props = {
   children: ReactNode;
@@ -17,9 +18,9 @@ type Props = {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   subtitle?: string;
-  columns?: AddColDef[];
+  columns?: AddColDef[] | GridColDef[];
   selectionDataUrl?: string;
-  addAdapterFuction?: (data: any) => any;
+  addAdapterFunction?: (data: any) => any;
   onSaveButton?: () => void;
   onDeleteButton?: () => void;
 };
@@ -49,7 +50,7 @@ const Body = (props: Props) => {
           columns={props.columns}
           selectionDataUrl={props.selectionDataUrl}
           adapterFuction={(data) =>
-            props.addAdapterFuction && props.addAdapterFuction(data)
+            props.addAdapterFunction && props.addAdapterFunction(data)
           }
         />
       )}

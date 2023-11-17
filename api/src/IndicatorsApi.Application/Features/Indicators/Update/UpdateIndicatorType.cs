@@ -1,7 +1,7 @@
 ﻿using IndicatorsApi.Domain.Features.Indicators;
 using IndicatorsApi.Domain.Repositories;
 
-namespace IndicatorsApi.Application.Features.IndicatorTypes.UpdateSection;
+namespace IndicatorsApi.Application.Features.Indicators.Update;
 
 /// <summary>
 /// Update command.

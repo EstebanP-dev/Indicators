@@ -6,7 +6,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Users;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IUserRepository" />
 internal sealed class UserRepository
     : Repository<User, string>, IUserRepository
 {

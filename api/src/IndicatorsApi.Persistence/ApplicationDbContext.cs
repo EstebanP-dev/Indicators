@@ -26,34 +26,34 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     }
 
     /// <inheritdoc/>
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Role> Roles { get; set; }
+    public DbSet<Role> Roles { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Section> Sections { get; set; }
+    public DbSet<Section> Sections { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<SubSection> SubSections { get; set; }
+    public DbSet<SubSection> SubSections { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Source> Sources { get; set; }
+    public DbSet<Source> Sources { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<MeasurementUnit> MeasurementUnits { get; set; }
+    public DbSet<MeasurementUnit> MeasurementUnits { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Article> Articles { get; set; }
+    public DbSet<Article> Articles { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Frequency> Frequencies { get; set; }
+    public DbSet<Frequency> Frequencies { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<Indicator> Indicators { get; set; }
+    public DbSet<Indicator> Indicators { get; set; } = null!;
 
     /// <inheritdoc/>
-    public DbSet<IndicatorResult> IndicatorResults { get; set; }
+    public DbSet<IndicatorResult> IndicatorResults { get; set; } = null!;
 
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

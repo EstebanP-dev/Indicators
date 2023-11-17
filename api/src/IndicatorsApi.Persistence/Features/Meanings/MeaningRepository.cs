@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Meanings;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IMeaningRepository" />
 internal sealed class MeaningRepository
     : Repository<Meaning, int>, IMeaningRepository
 {

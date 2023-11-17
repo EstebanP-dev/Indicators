@@ -24,7 +24,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const SLUG = "IndicatorTypes";
+const SLUG = "Indicators/IndicatorTypes";
 
 const IndicatorTypes = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const IndicatorTypes = () => {
   const [totalPages, setTotalPages] = useState<number>(Config.PAGINATION.DEFAULT_TOTALPAGES);
 
   const fetchData = async () => {
-    await callEndpoint<Pagination<IndicatorType>>(
+    callEndpoint<Pagination<IndicatorType>>(
       getService(
         endpoints.api.pagination(SLUG.toLowerCase(), page, rows, null)
       ),

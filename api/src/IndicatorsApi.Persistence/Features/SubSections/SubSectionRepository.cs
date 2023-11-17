@@ -1,13 +1,8 @@
-﻿using IndicatorsApi.Domain.Errors;
-using IndicatorsApi.Domain.Features.Roles;
-using IndicatorsApi.Domain.Features.SubSections;
-using IndicatorsApi.Domain.Primitives;
-using IndicatorsApi.Domain.Utils;
-using IndicatorsApi.Persistence.Abstractions;
+﻿using IndicatorsApi.Domain.Features.SubSections;
 
 namespace IndicatorsApi.Persistence.Features.SubSections;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="ISubSectionRepository" />
 internal sealed class SubSectionRepository
     : Repository<SubSection, string>, ISubSectionRepository
 {

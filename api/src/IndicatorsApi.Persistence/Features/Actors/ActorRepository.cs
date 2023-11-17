@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Actors;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IActorRepository" />
 internal sealed class ActorRepository
     : Repository<Actor, string>, IActorRepository
 {

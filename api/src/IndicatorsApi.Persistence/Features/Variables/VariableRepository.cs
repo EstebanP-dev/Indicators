@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Variables;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IVariableRepository" />
 internal sealed class VariableRepository
     : Repository<Variable, int>, IVariableRepository
 {

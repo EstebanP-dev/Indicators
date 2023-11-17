@@ -1,9 +1,8 @@
 ﻿using IndicatorsApi.Domain.Features.MeasurementUnits;
-using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.MeasurementUnits;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IMeasurementUnitRepository" />
 internal sealed class MeasurementUnitRepository
     : Repository<MeasurementUnit, int>, IMeasurementUnitRepository
 {

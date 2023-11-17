@@ -67,3 +67,17 @@
 | **Subflujos** | Ninguno |
 | **Excepciones** | Si el Tipo de Actor no se encuentra, se muestra el mensaje "The actor type was not found." Si hay un conflicto con la información proporcionada, se muestra "The value does not coincide with." Si ocurre un fallo durante la actualización, se muestra "Something was wrong. Try again later." |
 ---
+
+### Eliminar
+
+| **Caso de Uso** | Eliminar Tipo de Actor |
+|---|---|
+| **Actores** | Usuario, Base de datos SisIndicadores |
+| **Tipo** | Exclusión |
+| **Propósito** | Permitir al Usuario eliminar un Tipo de Actor existente del sistema de indicadores. |
+| **Resumen** | Este caso de uso permite al Usuario seleccionar un Tipo de Actor de la lista y eliminarlo del sistema. Esta acción es irreversible y debe ser manejada con precaución para evitar la eliminación accidental de información importante. |
+| **Precondiciones** | El Usuario debe estar autenticado y tener permisos para eliminar Tipos de Actor. |
+| **Flujo Principal** | Desde la página de gestión de Tipos de Actor (P-1), el Usuario selecciona un Tipo de Actor de la lista. Doble click en el campo que desea modificar y reemplaza el valor. Presiona el icono de "guardar". El sistema valida |
+| **Subflujos** | Ninguno. |
+| **Excepciones** | Si el Tipo de Actor no se encuentra, se muestra "The actor type was not found." Si el Tipo de Actor no puede ser eliminado debido a dependencias existentes, se muestra "The actor type cannot be deleted due to existing dependencies." Si ocurre un error durante el proceso de eliminación, se muestra "Something was wrong. Try again later." |
+---

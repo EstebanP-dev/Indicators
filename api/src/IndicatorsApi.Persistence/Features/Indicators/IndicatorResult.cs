@@ -17,7 +17,7 @@ internal sealed class IndicatorResultByIndicatorIdSpecification
     }
 }
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IIndicatorResultRepository" />
 internal sealed class IndicatorResultRepository
     : Repository<IndicatorResult, int>, IIndicatorResultRepository
 {
@@ -48,7 +48,7 @@ internal sealed class IndicatorResultConfiguration
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<IndicatorResult> builder)
     {
-        builder.ToTable("resultadoindicador");
+        builder.ToTable(@"resultadoindicador");
 
         builder.HasKey(x => x.Id);
 
@@ -61,15 +61,15 @@ internal sealed class IndicatorResultConfiguration
             .IsUnique();
 
         builder.Property(x => x.Result)
-            .HasColumnName("resultado")
+            .HasColumnName(@"resultado")
             .IsRequired();
 
         builder.Property(x => x.CalculusDate)
-            .HasColumnName("fechacalculo")
+            .HasColumnName(@"fechacalculo")
             .IsRequired();
 
         builder.Property(x => x.IndicatorId)
-            .HasColumnName("fkidindicador")
+            .HasColumnName(@"fkidindicador")
             .IsRequired();
     }
 }

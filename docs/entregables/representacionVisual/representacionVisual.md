@@ -67,3 +67,17 @@
 | **Subflujos** | Una vez actualizado la Representación Visual, el Usuario puede volver a la lista de Representaciones Visuales para ver los cambios realizados o para actualizar otros Representaciones Visuales. |
 | **Excepciones** | Si la Representación Visual no se encuentra para la actualización, se muestra "The display was not found." Si hay discrepancias en los datos proporcionados, se muestra "The value does not coincide with." Si se produce un fallo al guardar los cambios, se muestra "Something was wrong. Try again later." |
 ---
+
+### Eliminar
+
+| **Caso de Uso** | Eliminar Representación Visuales |
+|---|---|
+| **Actores** | Usuario, Base de datos SisIndicadores |
+| **Tipo** | Exclusión |
+| **Propósito** | Permitir al Usuario eliminar un Representación Visuales existente del sistema de indicadores. |
+| **Resumen** | Este caso de uso permite al Usuario seleccionar un Representación Visuales de la lista y eliminarlo del sistema. Esta acción es irreversible y debe ser manejada con precaución para evitar la eliminación accidental de información importante. |
+| **Precondiciones** | El Usuario debe estar autenticado y tener permisos para eliminar Representaciones Visuales. |
+| **Flujo Principal** | Desde la página de gestión de Representaciones Visuales (P-1), el Usuario selecciona un Representación Visuales de la lista. Doble click en el campo que desea modificar y reemplaza el valor. Presiona el icono de "guardar". El sistema valida |
+| **Subflujos** | Ninguno. |
+| **Excepciones** | Si el Representación Visuales no se encuentra, se muestra "The display was not found." Si el Representación Visuales no puede ser eliminado debido a dependencias existentes, se muestra "The display cannot be deleted due to existing dependencies." Si ocurre un error durante el proceso de eliminación, se muestra "Something was wrong. Try again later." |
+---

@@ -1,6 +1,4 @@
 ﻿using System.Linq.Expressions;
-using IndicatorsApi.Contracts.Indicators;
-using IndicatorsApi.Contracts.Variables;
 using IndicatorsApi.Domain.Features.Indicators;
 
 namespace IndicatorsApi.Persistence.Features.Indicators;
@@ -19,7 +17,7 @@ internal sealed class VariableIndicatorByIndicatorIdSpecification
     }
 }
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IVariableIndicatorRepository" />
 internal sealed class VariableIndicatorRepository
     : Repository<VariableIndicator, int>, IVariableIndicatorRepository
 {
@@ -51,40 +49,40 @@ internal sealed class VariableIndicatorConfiguration
     public void Configure(EntityTypeBuilder<VariableIndicator> builder)
     {
         builder
-            .ToTable("variablesporindicador");
+            .ToTable(@"variablesporindicador");
 
         builder
             .HasKey(x => x.Id);
 
         builder
             .Property(x => x.Id)
-            .HasColumnName("id")
+            .HasColumnName(@"id")
             .ValueGeneratedOnAdd()
             .IsRequired();
 
         builder
             .Property(x => x.Datum)
-            .HasColumnName("dato")
+            .HasColumnName(@"dato")
             .IsRequired();
 
         builder
             .Property(x => x.Date)
-            .HasColumnName("fechadato")
+            .HasColumnName(@"fechadato")
             .IsRequired();
 
         builder
             .Property(x => x.VariableId)
-            .HasColumnName("fkidvariable")
+            .HasColumnName(@"fkidvariable")
             .IsRequired();
 
         builder
             .Property(x => x.IndicatorId)
-            .HasColumnName("fkidindicador")
+            .HasColumnName(@"fkidindicador")
             .IsRequired();
 
         builder
             .Property(x => x.UserId)
-            .HasColumnName("fkemailusuario")
+            .HasColumnName(@"fkemailusuario")
             .HasMaxLength(100)
             .IsRequired();
 
@@ -92,6 +90,6 @@ internal sealed class VariableIndicatorConfiguration
             .HasOne(x => x.Variable)
             .WithMany()
             .HasForeignKey(x => x.VariableId)
-            .HasConstraintName("cons_fkidvariable");
+            .HasConstraintName(@"cons_fkidvariable");
     }
 }

@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Sections;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="ISectionRepository" />
 internal sealed class SectionRepository
     : Repository<Section, string>, ISectionRepository
 {

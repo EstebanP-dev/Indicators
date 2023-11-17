@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using IndicatorsApi.Domain.Errors;
+﻿using IndicatorsApi.Domain.Errors;
 
 namespace IndicatorsApi.Domain.Primitives;
 
@@ -56,7 +55,7 @@ public abstract class Entity<TEntityId>
     /// </remarks>
     public async Task<ErrorOr<Success>> TryAddEntities<TEntity, TEntityKey>(
         IRepository<TEntity, TEntityKey>? repository,
-        Collection<TEntityKey>? entityIds,
+        ICollection<TEntityKey>? entityIds,
         Action<TEntity>? addEntityAction,
         Action<TEntity>? removeEntityAction,
         Action? clearEntityAction,
@@ -88,21 +87,25 @@ public abstract class Entity<TEntityId>
             return DomainErrors.NotNullOrEmptyProperty(nameof(clearEntityAction));
         }
 
-        if (entityIds.Any())
+        if (entityIds.Count == 0)
         {
             clearEntityAction.Invoke();
         }
 
-        IEnumerable<TEntity> childrenEntities = await repository
+        var childrenEntities = await repository
             .GetBulkIdsAsync(entityIds.ToArray(), cancellationToken)
             .ConfigureAwait(false);
 
-        if (childrenEntities.Any(x => !entityIds.Contains(x.Id)))
+        var arrayChildrenEntities = childrenEntities.ToArray();
+
+#pragma warning disable S6605
+        if (arrayChildrenEntities.Any(x => !entityIds.Contains(x.Id)))
+#pragma warning restore S6605
         {
             return DomainErrors.BulkNotFound;
         }
 
-        foreach (TEntity childEntity in childrenEntities)
+        foreach (var childEntity in arrayChildrenEntities)
         {
             addEntityAction(childEntity);
         }

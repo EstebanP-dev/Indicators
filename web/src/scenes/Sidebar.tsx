@@ -30,6 +30,11 @@ const navItems = [
     slug: "indicators",
   },
   {
+    text: "Tipo Indicador",
+    icon: <HomeOutlined />,
+    slug: "indicatortypes",
+  },
+  {
     text: "Estándares",
     icon: null,
     route: null,
@@ -44,11 +49,6 @@ const navItems = [
     text: "Tipo Actor",
     icon: <HomeOutlined />,
     slug: "actortypes",
-  },
-  {
-    text: "Tipo Indicador",
-    icon: <HomeOutlined />,
-    slug: "indicatortypes",
   },
   {
     text: "Unidad de Medición",
@@ -209,7 +209,7 @@ const Sidebar = (props: Props) => {
                 <Box
                   component="img"
                   alt="profile"
-                  src="https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  src="../../logo.png"
                   height="40px"
                   width="40px"
                   borderRadius="50%"
@@ -223,16 +223,14 @@ const Sidebar = (props: Props) => {
                     fontSize="0.9rem"
                     color="secondary"
                   >
-                    {props.accountInfo.user.email.split('@')[0].toUpperCase()}
+                    Plataforma
                   </Typography>
                   <Typography
                     fontWeight="bold"
                     fontSize="0.8rem"
                     color="secondary"
                   >
-                    {
-                      props.accountInfo.user.roles[0].name
-                    }
+                    Indicadores
                   </Typography>
                 </Box>
                 <SettingsOutlined

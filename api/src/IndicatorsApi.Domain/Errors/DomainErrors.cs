@@ -5,6 +5,9 @@ using IndicatorsApi.Domain.Primitives;
 
 namespace IndicatorsApi.Domain.Errors;
 
+#pragma warning disable CA1308 // Normalize strings to uppercase
+#pragma warning disable SA1201
+
 /// <summary>
 /// Domain errors.
 /// </summary>
@@ -36,10 +39,8 @@ public static class DomainErrors
     /// <returns>Returns the not found error.</returns>
     public static Error NotFound<T>()
         where T : class
-#pragma warning disable CA1308 // Normalize strings to uppercase
         => Error.NotFound(
         description: $"The {typeof(T).Name.ToLowerInvariant()} was not found.");
-#pragma warning restore CA1308 // Normalize strings to uppercase
 
     /// <summary>
     /// Gets the bulk not found error.
@@ -58,11 +59,9 @@ public static class DomainErrors
     /// <returns>Returns the already exists error.</returns>
     public static Error AlreadyExists<T>()
         where T : class
-#pragma warning disable CA1308 // Normalize strings to uppercase
         => Error.Conflict(
         code: "General.AlreadyExists",
         description: $"The {typeof(T).Name.ToLowerInvariant()} already exists.");
-#pragma warning restore CA1308 // Normalize strings to uppercase
 
     /// <summary>
     /// Gets the no coicidence error.

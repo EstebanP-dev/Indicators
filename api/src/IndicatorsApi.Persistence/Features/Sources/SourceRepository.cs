@@ -7,7 +7,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Sources;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="ISourceRepository" />
 internal sealed class SourceRepository
     : Repository<Source, int>, ISourceRepository
 {

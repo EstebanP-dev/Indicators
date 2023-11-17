@@ -64,7 +64,21 @@
 | **Propósito** | Habilitar al Usuario para modificar los datos de un Indicador existente, así como gestionar sus relaciones con las variables y secciones a través de las tablas intermedias. |
 | **Resumen** | El Usuario selecciona un Indicador de la lista y procede a actualizar su información y relaciones. Esto incluye cambiar nombre, descripción, metodología y ajustar las relaciones con variables y secciones, lo cual se refleja en las actualizaciones de las tablas intermedias. |
 | **Precondiciones** | El Usuario debe estar autenticado y tener permisos para editar los Indicadores. |
-| **Flujo Principal** | El Usuario selecciona "Editar" en la interfaz (UI-1) del Indicador deseado, actualiza la información requerida en el formulario, y guarda los cambios. Las modificaciones se propagan automáticamente a las tablas intermedias 'VariablePorIndicador' y 'SeccionPorIndicador'. |
+| **Flujo Principal** | El Usuario selecciona el icono de "Visualizar" en la interfaz (UI-1) del Indicador deseado, actualiza la información requerida en el formulario, y guarda los cambios. Las modificaciones se propagan automáticamente a las tablas intermedias 'VariablePorIndicador' y 'SeccionPorIndicador'. |
 | **Subflujos** | Después de actualizar, el Usuario puede volver a la lista de Indicadores para revisar los cambios o continuar con la actualización de otros Indicadores y sus relaciones. |
-| **Excepciones** | Si el Indicador no se encuentra, se muestra "The indicador was not found." Si hay un conflicto con los datos, se muestra "The value does not coincide with." Si se produce un error al intentar actualizar, se muestra "Something was wrong. Try again later." |
+| **Excepciones** | Si el Indicador no se encuentra, se muestra "The indicator was not found." Si hay un conflicto con los datos, se muestra "The value does not coincide with." Si se produce un error al intentar actualizar, se muestra "Something was wrong. Try again later." |
+---
+
+### Eliminar
+
+| **Caso de Uso** | Eliminar Indicador |
+|---|---|
+| **Actores** | Usuario, Base de datos SisIndicadores |
+| **Tipo** | Exclusión |
+| **Propósito** | Permitir al Usuario eliminar un Indicador existente del sistema de indicadores. |
+| **Resumen** | Este caso de uso permite al Usuario seleccionar un Indicador de la lista y eliminarlo del sistema. Esta acción es irreversible y debe ser manejada con precaución para evitar la eliminación accidental de información importante. |
+| **Precondiciones** | El Usuario debe estar autenticado y tener permisos para eliminar Indicadores. |
+| **Flujo Principal** | El Usuario selecciona el icono de "Visualizar" en la interfaz (UI-1) del Indicador deseado y eliminas el indicador. Las eliminaciones, se propagan automáticamente a las tablas intermedias 'VariablePorIndicador' y 'SeccionPorIndicador'. |
+| **Subflujos** | Ninguno. |
+| **Excepciones** | Si el Indicador no se encuentra, se muestra "The indicator was not found." Si el Indicador no puede ser eliminado debido a dependencias existentes, se muestra "The indicator cannot be deleted due to existing dependencies." Si ocurre un error durante el proceso de eliminación, se muestra "Something was wrong. Try again later." |
 ---

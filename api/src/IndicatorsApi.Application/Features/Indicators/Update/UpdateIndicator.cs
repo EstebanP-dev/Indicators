@@ -4,7 +4,7 @@ using IndicatorsApi.Domain.Features.Displays;
 using IndicatorsApi.Domain.Features.Indicators;
 using IndicatorsApi.Domain.Features.Sources;
 
-namespace IndicatorsApi.Application.Features.Indicators.UpdateSection;
+namespace IndicatorsApi.Application.Features.Indicators.Update;
 
 /// <summary>
 /// Update command.

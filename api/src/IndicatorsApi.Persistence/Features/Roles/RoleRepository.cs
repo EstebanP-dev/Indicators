@@ -7,7 +7,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Roles;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IRoleRepository" />
 internal sealed class RoleRepository
     : Repository<Role, int>, IRoleRepository
 {

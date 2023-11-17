@@ -11,6 +11,8 @@
   <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
     <Rule Id="CA1716" Action="None" />
     <Rule Id="CA2229" Action="None" />
+    <Rule Id="CA1812" Action="None" />
+    <Rule Id="CA1707" Action="None" />
   </Rules>
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S4035" Action="None" />

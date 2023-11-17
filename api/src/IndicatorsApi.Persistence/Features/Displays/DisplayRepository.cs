@@ -3,7 +3,7 @@ using IndicatorsApi.Persistence.Abstractions;
 
 namespace IndicatorsApi.Persistence.Features.Displays;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IDisplayRepository" />
 internal sealed class DisplayRepository
     : Repository<Display, int>, IDisplayRepository
 {

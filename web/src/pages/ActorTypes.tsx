@@ -47,7 +47,7 @@ const ActorTypes = () => {
   const [totalPages, setTotalPages] = useState<number>(Config.PAGINATION.DEFAULT_TOTALPAGES);
 
   const fetchData = async () => {
-    await callEndpoint<Pagination<ActorType>>(
+    callEndpoint<Pagination<ActorType>>(
       getService(
         endpoints.api.pagination(SLUG.toLowerCase(), page, rows, null)
       ),
